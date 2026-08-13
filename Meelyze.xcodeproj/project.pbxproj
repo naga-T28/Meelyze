@@ -1,0 +1,600 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		230793A69095A6AA017D70B6 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC21E7FF0683EF6B1F0A1E5 /* ContentViewModel.swift */; };
+		2C7AB085D8D4BEE14FBD4E42 /* MeelyzeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC63067C182B339680BFC98 /* MeelyzeApp.swift */; };
+		756BD32782322FA515D6DC6E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F35A56A3C74C07E63A9B61D /* Assets.xcassets */; };
+		7C2764254E4D6B8487F727E9 /* ContentViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DCE70149A7A3D349696FD7 /* ContentViewModelTests.swift */; };
+		D0CB1F35BBC22A60A3E35AD5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3808C478CBD9943B6F26DF6F /* Preview Assets.xcassets */; };
+		D9085693B6512C41A0118673 /* MeelyzeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02F0025B6BD711FA7DD7E5E /* MeelyzeUITestsLaunchTests.swift */; };
+		DD521B43A44B47A9A447B4FC /* MeelyzeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAA0292A33B42A4AA997B27 /* MeelyzeUITests.swift */; };
+		E79FDD8A9C9C5A236ACD0D3C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B70D742796B2A4C68785A58 /* ContentView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		33B8E0C1B7DFB87E4295B75F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FE965FF0CACD5FA526B9E97A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA60CB5568C3E71CD4BD3286;
+			remoteInfo = Meelyze;
+		};
+		871C526DCA4183B35E3881DC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FE965FF0CACD5FA526B9E97A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA60CB5568C3E71CD4BD3286;
+			remoteInfo = Meelyze;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		11ADB29E668A7D70DC9CB020 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		218521C806E7B0ABB02FB2F9 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		35DCE70149A7A3D349696FD7 /* ContentViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModelTests.swift; sourceTree = "<group>"; };
+		3808C478CBD9943B6F26DF6F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		44C4319B950F229F30D4E81C /* Meelyze.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Meelyze.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B70D742796B2A4C68785A58 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		541122341A2A5C7CB98163AD /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		5BC63067C182B339680BFC98 /* MeelyzeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeelyzeApp.swift; sourceTree = "<group>"; };
+		5CEFCC19889D5611ECA68CFC /* MeelyzeTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MeelyzeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F35A56A3C74C07E63A9B61D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6AC21E7FF0683EF6B1F0A1E5 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
+		A02F0025B6BD711FA7DD7E5E /* MeelyzeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeelyzeUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		A9C1E3D430E98001F181F529 /* MeelyzeUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MeelyzeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CDAA0292A33B42A4AA997B27 /* MeelyzeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeelyzeUITests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		292409EAB2C417201FDED053 /* MeelyzeTests */ = {
+			isa = PBXGroup;
+			children = (
+				93B3637F9EFB7F8856FF2F23 /* ViewModels */,
+			);
+			path = MeelyzeTests;
+			sourceTree = "<group>";
+		};
+		2B806EC88A7404D248BB067E /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				3808C478CBD9943B6F26DF6F /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		3A8D1496B87781C97D3E82CB /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				6AC21E7FF0683EF6B1F0A1E5 /* ContentViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		93B3637F9EFB7F8856FF2F23 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				35DCE70149A7A3D349696FD7 /* ContentViewModelTests.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		93CFAFB97D768E7BD558600F /* Meelyze */ = {
+			isa = PBXGroup;
+			children = (
+				5F35A56A3C74C07E63A9B61D /* Assets.xcassets */,
+				5BC63067C182B339680BFC98 /* MeelyzeApp.swift */,
+				DADCC8D217B04C879EB2AFB6 /* Models */,
+				2B806EC88A7404D248BB067E /* Preview Content */,
+				C8DC7A2797D4C3F450F719F7 /* Repositories */,
+				D0BFB01C6A49B6ACF9294D04 /* Services */,
+				3A8D1496B87781C97D3E82CB /* ViewModels */,
+				CB3924E02FDC085233A8CF13 /* Views */,
+			);
+			path = Meelyze;
+			sourceTree = "<group>";
+		};
+		9DF5F4019DE88B0D81962385 = {
+			isa = PBXGroup;
+			children = (
+				93CFAFB97D768E7BD558600F /* Meelyze */,
+				292409EAB2C417201FDED053 /* MeelyzeTests */,
+				ACADEFC426248E0B568A8238 /* MeelyzeUITests */,
+				F358B9538AD7FEB507375A47 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		ACADEFC426248E0B568A8238 /* MeelyzeUITests */ = {
+			isa = PBXGroup;
+			children = (
+				CDAA0292A33B42A4AA997B27 /* MeelyzeUITests.swift */,
+				A02F0025B6BD711FA7DD7E5E /* MeelyzeUITestsLaunchTests.swift */,
+			);
+			path = MeelyzeUITests;
+			sourceTree = "<group>";
+		};
+		C8DC7A2797D4C3F450F719F7 /* Repositories */ = {
+			isa = PBXGroup;
+			children = (
+				541122341A2A5C7CB98163AD /* README.md */,
+			);
+			path = Repositories;
+			sourceTree = "<group>";
+		};
+		CB3924E02FDC085233A8CF13 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4B70D742796B2A4C68785A58 /* ContentView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		D0BFB01C6A49B6ACF9294D04 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				11ADB29E668A7D70DC9CB020 /* README.md */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		DADCC8D217B04C879EB2AFB6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				218521C806E7B0ABB02FB2F9 /* README.md */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		F358B9538AD7FEB507375A47 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				44C4319B950F229F30D4E81C /* Meelyze.app */,
+				5CEFCC19889D5611ECA68CFC /* MeelyzeTests.xctest */,
+				A9C1E3D430E98001F181F529 /* MeelyzeUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		18133A009F30B44815E37773 /* MeelyzeUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CA14F5B1EB402DEF05992AB4 /* Build configuration list for PBXNativeTarget "MeelyzeUITests" */;
+			buildPhases = (
+				85AF3F9D0AC56C4C398113AE /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				753576A2B3FF86A26E7C962F /* PBXTargetDependency */,
+			);
+			name = MeelyzeUITests;
+			packageProductDependencies = (
+			);
+			productName = MeelyzeUITests;
+			productReference = A9C1E3D430E98001F181F529 /* MeelyzeUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		4821194DC9D9ACE0C632A098 /* MeelyzeTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF57A1D54DA963652FBED641 /* Build configuration list for PBXNativeTarget "MeelyzeTests" */;
+			buildPhases = (
+				3CA1691599531F1724EA9A72 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				83F5770B77A234C8ACB09D72 /* PBXTargetDependency */,
+			);
+			name = MeelyzeTests;
+			packageProductDependencies = (
+			);
+			productName = MeelyzeTests;
+			productReference = 5CEFCC19889D5611ECA68CFC /* MeelyzeTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		AA60CB5568C3E71CD4BD3286 /* Meelyze */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 249062511012FB83BA0932D7 /* Build configuration list for PBXNativeTarget "Meelyze" */;
+			buildPhases = (
+				C0B35AA2B2939FA1875B9D11 /* Sources */,
+				DDCE0C7EB573812D4AA4DF2F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Meelyze;
+			packageProductDependencies = (
+			);
+			productName = Meelyze;
+			productReference = 44C4319B950F229F30D4E81C /* Meelyze.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FE965FF0CACD5FA526B9E97A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					18133A009F30B44815E37773 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+						TestTargetID = AA60CB5568C3E71CD4BD3286;
+					};
+					4821194DC9D9ACE0C632A098 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					AA60CB5568C3E71CD4BD3286 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 7FEFE58CDCEC92657B4B9B02 /* Build configuration list for PBXProject "Meelyze" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 9DF5F4019DE88B0D81962385;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = F358B9538AD7FEB507375A47 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA60CB5568C3E71CD4BD3286 /* Meelyze */,
+				4821194DC9D9ACE0C632A098 /* MeelyzeTests */,
+				18133A009F30B44815E37773 /* MeelyzeUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DDCE0C7EB573812D4AA4DF2F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				756BD32782322FA515D6DC6E /* Assets.xcassets in Resources */,
+				D0CB1F35BBC22A60A3E35AD5 /* Preview Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3CA1691599531F1724EA9A72 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7C2764254E4D6B8487F727E9 /* ContentViewModelTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		85AF3F9D0AC56C4C398113AE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD521B43A44B47A9A447B4FC /* MeelyzeUITests.swift in Sources */,
+				D9085693B6512C41A0118673 /* MeelyzeUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C0B35AA2B2939FA1875B9D11 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E79FDD8A9C9C5A236ACD0D3C /* ContentView.swift in Sources */,
+				230793A69095A6AA017D70B6 /* ContentViewModel.swift in Sources */,
+				2C7AB085D8D4BEE14FBD4E42 /* MeelyzeApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		753576A2B3FF86A26E7C962F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA60CB5568C3E71CD4BD3286 /* Meelyze */;
+			targetProxy = 871C526DCA4183B35E3881DC /* PBXContainerItemProxy */;
+		};
+		83F5770B77A234C8ACB09D72 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA60CB5568C3E71CD4BD3286 /* Meelyze */;
+			targetProxy = 33B8E0C1B7DFB87E4295B75F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		06AB995DD3C3F527A2AEF519 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meelyze.Meelyze.MeelyzeTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Meelyze.app/Meelyze";
+			};
+			name = Debug;
+		};
+		298DF560CCDEBE01BAFFFF0D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_ASSET_PATHS = "\"Meelyze/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Meelyze;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				"INFOPLIST_KEY_UISupportedInterfaceOrientations~ipad" = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meelyze.Meelyze;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		300889FFC84F0DD8A886B6AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meelyze.Meelyze.MeelyzeTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Meelyze.app/Meelyze";
+			};
+			name = Release;
+		};
+		3A21E9F22E0847494B2FA489 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_ASSET_PATHS = "\"Meelyze/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Meelyze;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				"INFOPLIST_KEY_UISupportedInterfaceOrientations~ipad" = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meelyze.Meelyze;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		81F86E7F2420835F9E8D1E73 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B600D8B4B606BC3D761150AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meelyze.Meelyze.MeelyzeUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Meelyze;
+			};
+			name = Debug;
+		};
+		D34C66A3D9046FD82D7E49F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.meelyze.Meelyze.MeelyzeUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Meelyze;
+			};
+			name = Release;
+		};
+		E30F3E66ADE89F447F155D04 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		249062511012FB83BA0932D7 /* Build configuration list for PBXNativeTarget "Meelyze" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3A21E9F22E0847494B2FA489 /* Debug */,
+				298DF560CCDEBE01BAFFFF0D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7FEFE58CDCEC92657B4B9B02 /* Build configuration list for PBXProject "Meelyze" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E30F3E66ADE89F447F155D04 /* Debug */,
+				81F86E7F2420835F9E8D1E73 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CA14F5B1EB402DEF05992AB4 /* Build configuration list for PBXNativeTarget "MeelyzeUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B600D8B4B606BC3D761150AA /* Debug */,
+				D34C66A3D9046FD82D7E49F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		EF57A1D54DA963652FBED641 /* Build configuration list for PBXNativeTarget "MeelyzeTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				06AB995DD3C3F527A2AEF519 /* Debug */,
+				300889FFC84F0DD8A886B6AF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FE965FF0CACD5FA526B9E97A /* Project object */;
+}

@@ -1,0 +1,68 @@
+name: Meelyze
+options:
+  createIntermediateGroups: true
+  deploymentTarget:
+    iOS: "26.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    TARGETED_DEVICE_FAMILY: "1,2"
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: ""
+    GENERATE_INFOPLIST_FILE: YES
+
+targets:
+  Meelyze:
+    type: application
+    platform: iOS
+    sources:
+      - path: Meelyze
+        excludes:
+          - "**/*.md"
+      - path: Meelyze/Models/README.md
+        buildPhase: none
+      - path: Meelyze/Services/README.md
+        buildPhase: none
+      - path: Meelyze/Repositories/README.md
+        buildPhase: none
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.meelyze.Meelyze
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        DEVELOPMENT_ASSET_PATHS: "\"Meelyze/Preview Content\""
+        ENABLE_PREVIEWS: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Meelyze
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_UISupportedInterfaceOrientations~ipad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+    scheme:
+      testTargets:
+        - MeelyzeTests
+        - MeelyzeUITests
+      gatherCoverageData: true
+
+  MeelyzeTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: MeelyzeTests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.meelyze.Meelyze.MeelyzeTests
+    dependencies:
+      - target: Meelyze
+
+  MeelyzeUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: MeelyzeUITests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.meelyze.Meelyze.MeelyzeUITests
+        TEST_TARGET_NAME: Meelyze
+    dependencies:
+      - target: Meelyze
