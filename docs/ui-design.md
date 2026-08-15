@@ -1,35 +1,39 @@
 # Meelyze MVP UI設計
 
-> Status: Ready for review（TASK-008〜TASK-011統合済み、上位仕様差分はProduct Owner決定により解消済み。PR作成・外部レビュー・mainマージ待ち）
+> Status: Ready for review（TASK-008〜TASK-011統合済み、上位仕様差分は解消済み。origin/mainとのマージ・コンフリクト解消も完了。外部レビュー・mainマージ待ち）
 > Last updated: 2026-08-16
 
-本書は、Issue #10で確定するMVPの画面責務、画面遷移、表示状態、共通UI方針を統合したレビュー用文書である。下記の上位仕様差分はProduct Owner（@naga-T28）が2026-08-16に決定済みであり、mainへマージした後、#11、#14〜#17、#19〜#22が参照する一次文書とする。
+本書は、Issue #10で確定するMVPの画面責務、画面遷移、表示状態、共通UI方針を統合したレビュー用文書である。下記の上位仕様差分は解消済みであり、mainへマージした後、#11、#14〜#17、#19〜#22が参照する一次文書とする。
 
 ## 参照資料
 
 - [Figma: Meelyze MVP UI・画面遷移設計 #10](https://www.figma.com/design/NcshmAfWzrWcXiRfCMnz6W/Meelyze-MVP-UI%E3%83%BB%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E8%A8%AD%E8%A8%88--10?node-id=0-1&p=f)
 - [Figma: Main User Flow](https://www.figma.com/design/NcshmAfWzrWcXiRfCMnz6W/Meelyze-MVP-UI%E3%83%BB%E7%94%BB%E9%9D%A2%E9%81%B7%E7%A7%BB%E8%A8%AD%E8%A8%88--10?node-id=2-139&p=f)
 - [GitHub Issue #10: MVP全体のUI/UX設計と画面遷移を確定する](https://github.com/naga-T28/Meelyze/issues/10)
+- [`mvp-scope.md`](mvp-scope.md) — 2026-08-25時点のMVP対応区分（Must/Should/CouldをMVP実装対象か否かへ分類した文書）。requirements.mdより粒度が細かいMVPスコープ判断はこちらを一次情報とする。
 
 ## 仕様の優先順位と整合性
 
 1. プロダクトの対象範囲、受け入れ基準、非機能要件は[`requirements.md`](requirements.md)を正とする。
-2. SwiftUI、Apple Vision、Foundation Models、SwiftData、Apple Translation Frameworkなどの実装技術とアーキテクチャは、Acceptedの[`technology-selection.md`](technology-selection.md)を正とする。
-3. 画面責務、presentation、状態表示、文言、共通UI候補は本書を正とする。本書が上位2文書と矛盾する場合は上位文書を優先し、Issue #10で本書を更新する。
+2. どのMust/Should要件を2026-08-25時点のMVPに含めるかは[`mvp-scope.md`](mvp-scope.md)を正とする。
+3. SwiftUI、Apple Vision、Foundation Models、SwiftData、Apple Translation Frameworkなどの実装技術とアーキテクチャは、Acceptedの[`technology-selection.md`](technology-selection.md)を正とする。
+4. 画面責務、presentation、状態表示、文言、共通UI候補は本書を正とする。本書が上位3文書と矛盾する場合は上位文書を優先し、Issue #10で本書を更新する。
 
 `requirements.md`に残る外部AI API、オンライン時だけのAI推論・翻訳、SQLite等の技術記述は、現MVPでは`technology-selection.md`の端末内技術へ読み替える。ただし「コア機能をサーバー障害へ依存させない」「未知・未解決を推測で安全判定しない」「翻訳障害を判定へ波及させない」というプロダクト上の制約は維持する。
 
 ### 上位仕様差分と決定
 
-統合監査で、Issue #10のUI範囲だけでは安全に解決できない差分が見つかった。2026-08-16にProduct Owner（@naga-T28）が下表のとおり決定し、`requirements.md`側の反映が必要なもの（K01〜K03）は同日付で反映済みである。K04はIssue #10の範囲外の実装調整事項であり、決定ではなく実装着手時の記録事項として扱う。
+統合監査で、Issue #10のUI範囲だけでは安全に解決できない差分候補が見つかった。2026-08-16にProduct Owner（@naga-T28）へK01・K02・K03・K05を確認したが、その後`origin/main`をマージした結果、K01〜K03は`requirements.md`本体および新規追加された`mvp-scope.md`側の更新によって、いずれもProduct Ownerの回答と同じ方向ですでに解消済みであることが判明した。以下は最終状態の記録である。
 
-| ID | 差分 | 決定（2026-08-16, Product Owner: @naga-T28） | 反映先 |
+| ID | 差分候補 | 解消状況 | 根拠 |
 |---|---|---|---|
-| K01 | `requirements.md`のFR-2.7は同一料理の複数解釈から「最もアレルゲンを多く含む解釈」を採用する。一方、Acceptedの`technology-selection.md`は一意に解決できない候補を`unknown`として「判定不可」にする。 | 安全側の「判定不可」を維持する。一意に解決できない（`unknown`）候補は`technology-selection.md` §10.3に従い「判定不可」とし、FR-2.7は、DBが複数の解決済み候補を列挙でき、その中から選択できる場合にのみ適用する。本書・#16/#17の実装契約は変更なし。 | `requirements.md` FR-2表の直下に注記を追加済み |
-| K02 | `requirements.md`のAC-5.2、FR-6.3、FR-6.4は、オフライン未知料理の履歴保存と通信回復後の再判定提案を要求するが、Issue #10の12画面、Figma、実装担当Issueに対応する状態・導線がない。 | MVPから対象外とする。履歴・再判定UIおよび所有Issueは追加しない。「判定不可」表示・確認カード・再撮影のみを提供する。 | `requirements.md` §7 スコープ外に追加済み |
-| K03 | `requirements.md`のAC-4.3、FR-5.4、FR-5.5が求める複数プロファイル切替と自由入力アレルゲンは、現行FigmaのS04/S05/S12と#11の画面契約で確認できない。 | MVPから対象外とする。単一プロファイル・28品目選択までとし、画面状態・遷移・保存契約の追加は行わない。 | `requirements.md` §7 スコープ外に追加済み |
-| K04 | #11は初期設定全体と完了後のroot切替を所有する一方、S03だけは#22の所有であり、#11と#22の実装順・統合点がIssue本文で定義されていない。 | 「画面遷移」の遷移ルール3（翻訳データ準備の失敗・後回しは主要導線をブロックしない）で運用上は既に非blocking契約となっている。追加の製品判断は不要。GitHub認証後、#11・#22双方のIssue本文へ統合順（#11がroot/route slotを提供し#22のViewを差し込む）を記録する。 | 両Issue本文（PR作成・認証後に追記） |
-| K05 | `requirements.md`のNFR-4.1は「起動→撮影→判定→確認カード」を5タップ以内とするが、複数選択を含む初回設定を計測に含めるかが未定義である。 | 初回設定は計測に含めない。初期設定完了後の起動（S06撮影〜S10確認カード操作）を主要導線の計測対象とする。 | 本書のみ。NFR-4.1本文は「起動」を起点としており文言変更は不要 |
+| K01 | `requirements.md`旧版のFR-2.7は同一料理の複数解釈から「最もアレルゲンを多く含む解釈」を採用するとしており、Acceptedの`technology-selection.md`（一意に解決できない候補は`unknown`として「判定不可」）と字面上ズレていた。 | 解消済み（`requirements.md`本体の更新により解消。本書からの追加対応は不要） | mainの`requirements.md`はFR-2.7を「最も安全側の解釈を採用し、解決不能な場合は『判定不可』とする」へ更新済み。Product Ownerの回答（安全側の判定不可を維持）と完全に一致する。 |
+| K02 | `requirements.md`旧版のAC-5.2・FR-6.3・FR-6.4は、オフライン未知料理の履歴保存と通信回復後の再判定提案を要求していたが、Issue #10の12画面・Figma・実装担当Issueに対応する状態・導線がなかった。 | 解消済み（`mvp-scope.md`で既に非対応と決定済み。本書からの追加対応は不要） | mainの`requirements.md`ではAC-5.2は翻訳データ準備状況の要件へ置き換わり、「通信回復後の再判定提案」という要件自体が存在しない。関連するFR-6.5（履歴保存, Should）は`mvp-scope.md`で「非対応・MVP以降に対応する」と明記され、FR-6.6（未知料理は常に「判定不可」、Must）が推測による再判定を明確に禁止している。Product Ownerの回答（MVP対象外）と一致する。 |
+| K03 | `requirements.md`のAC-4.3・FR-5.4・FR-5.5が求める複数プロファイル切替と自由入力アレルゲンは、現行FigmaのS04/S05/S12と#11の画面契約で確認できなかった。 | 解消済み（`mvp-scope.md`で既に非対応と決定済み。本書からの追加対応は不要） | `mvp-scope.md`はFR-5.4・FR-5.5をいずれも「非対応・MVP以降に対応する」と明記している。AC-4.3（複数プロファイル）はFR-5.4に対応する受け入れ基準であり、同じ扱いとする。Product Ownerの回答（MVP対象外）と一致する。S04/S05/S12は単一プロファイル・28品目選択の実装のみを前提とする。 |
+| K04 | #11は初期設定全体と完了後のroot切替を所有する一方、S03だけは#22の所有であり、#11と#22の実装順・統合点がIssue本文で定義されていない。 | 未解消（Issue #10の範囲外の実装調整事項） | 「画面遷移」の遷移ルール3（翻訳データ準備の失敗・後回しは主要導線をブロックしない）で運用上は既に非blocking契約となっている。追加の製品判断は不要。GitHub認証後、#11・#22双方のIssue本文へ統合順（#11がroot/route slotを提供し#22のViewを差し込む）を記録する。 |
+| K05 | `requirements.md`のNFR-4.1は「起動→撮影→判定→確認カード」を5タップ以内とするが、複数選択を含む初回設定を計測に含めるかが未定義である。 | 解消済み（本書のみで解消。`requirements.md`側の追加対応は不要） | Product Ownerの回答（初回設定は計測に含めない）に基づき、初期設定完了後の起動（S06撮影〜S10確認カード操作）を主要導線の計測対象とする。mainのNFR-4.1本文は「起動」を起点としており、この解釈と矛盾しない。 |
+
+K01〜K03について本書が独自に`requirements.md`へ追記していた内容（FR-2.7直下の注記、§7スコープ外への2行追加）は、mainとのマージの結果、本体の記述と`mvp-scope.md`の既存決定に置き換えられたため削除した。二重管理を避けるため、以後MVPスコープの判断は`mvp-scope.md`を参照する。
 
 ## 文書上の扱い
 
@@ -354,4 +358,4 @@ S03は#22の画面責務だが、#11が初期設定のrootと完了判定を所�
 | 11 | 共通SwiftUI Component候補が整理されている | 「共通UIコンポーネント」の候補・責務表 | 完了 |
 | 12 | 後続のUI実装Issueが本設計を参照できる状態になっている | 冒頭の位置づけ、個別Issue対応、実装責任の境界 | **PRレビュー・mainマージ待ち** |
 
-項目1と3は、2026-08-16のK02/K03決定（オフライン再判定・複数プロファイルをMVP対象外とする）により完了とした。項目12は、本書がmainへマージされ、Issue #10から参照できる状態になった時点で完了とする。ローカルブランチまたは未マージPRの存在だけでは完了扱いにしない。
+項目1と3は、K02（オフライン再判定）・K03（複数プロファイル）が`mvp-scope.md`で既にMVP対象外と決定済みであることを確認し、Product Ownerの回答とも一致したため完了とした。項目12は、本書がmainへマージされ、Issue #10から参照できる状態になった時点で完了とする。ローカルブランチまたは未マージPRの存在だけでは完了扱いにしない。
