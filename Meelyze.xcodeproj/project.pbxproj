@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		038A8396515D70B91E97B457 /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB51CE3FD41BE5D176A90A04 /* ScanView.swift */; };
 		1ED023492937FA4AD0277227 /* SwiftDataProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778434AFAC3EB4786763F2C8 /* SwiftDataProfileRepository.swift */; };
 		209D6DFBCE82A8A8CD241D50 /* LanguageSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4BAFAB497A658276674E242 /* LanguageSelectionViewModel.swift */; };
 		230793A69095A6AA017D70B6 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC21E7FF0683EF6B1F0A1E5 /* ContentViewModel.swift */; };
@@ -15,16 +16,19 @@
 		3240C866B7C2DCE00E17AFE9 /* AllergenDietaryRestrictionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EB1F18AACFF4D0CC4FE683 /* AllergenDietaryRestrictionViewModelTests.swift */; };
 		433CCB4ADF5D437BD2A2721D /* DisplayLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E5F436D44B72F78A3E135D /* DisplayLanguage.swift */; };
 		47DF2ECEBDCD388E8639F34A /* LanguageSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C7C27A69BB9BB60DCA4500B /* LanguageSelectionView.swift */; };
+		4D25862F033205EAB70DEE5C /* OnboardingFlowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562D9B8400F751BC97C33CA0 /* OnboardingFlowViewModel.swift */; };
 		554DE3DFA0DEBD72D987E873 /* ChoiceChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE4CC8AC2215C0E408065CF /* ChoiceChipView.swift */; };
 		56723CC5B97B7AB371E471AE /* AllergenDietaryRestrictionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7687A10D41A87BA73186324 /* AllergenDietaryRestrictionViewModel.swift */; };
 		756BD32782322FA515D6DC6E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F35A56A3C74C07E63A9B61D /* Assets.xcassets */; };
 		76ED8352C6DE30CD5249F050 /* AllergenDietaryRestrictionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 613D058FE927E7B101B872AC /* AllergenDietaryRestrictionView.swift */; };
 		7C2764254E4D6B8487F727E9 /* ContentViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DCE70149A7A3D349696FD7 /* ContentViewModelTests.swift */; };
 		7DE5BF06C09ADF308D6FD39A /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD779C69BAA57BE87AF3BB21 /* DisclaimerView.swift */; };
+		7FD3FE9D98DAA48AA50C8D67 /* OnboardingFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E5C91EE3CB513A71A10363 /* OnboardingFlowView.swift */; };
 		8FD5C8FF81002F9C2EBD91FC /* SwiftDataProfileRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBFA2E920EFBF32275500C8 /* SwiftDataProfileRepositoryTests.swift */; };
 		A490F3D5B42B92F4339B39E7 /* ProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC16DFA9AB4BD011E392700 /* ProfileRepository.swift */; };
 		A9959E55F71BCF035A4189B1 /* DisclaimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E21ACCAB4671F3910C32CB09 /* DisclaimerViewModel.swift */; };
 		D0CB1F35BBC22A60A3E35AD5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3808C478CBD9943B6F26DF6F /* Preview Assets.xcassets */; };
+		D4E720A75823C35AEE6EC016 /* OnboardingFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5EF0535E89A83B73DB6A6E /* OnboardingFlowUITests.swift */; };
 		D57FA4FE077906F86A05132F /* LanguageSelectionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213B89C1110A6074EBE9E49 /* LanguageSelectionViewModelTests.swift */; };
 		D9085693B6512C41A0118673 /* MeelyzeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02F0025B6BD711FA7DD7E5E /* MeelyzeUITestsLaunchTests.swift */; };
 		DD521B43A44B47A9A447B4FC /* MeelyzeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAA0292A33B42A4AA997B27 /* MeelyzeUITests.swift */; };
@@ -32,6 +36,7 @@
 		E2EDB1EF12F4EF8633D9E539 /* SafetyNoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F4493C56EE8F4086CCD1CB /* SafetyNoticeView.swift */; };
 		E79FDD8A9C9C5A236ACD0D3C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B70D742796B2A4C68785A58 /* ContentView.swift */; };
 		ED88E05A616991276579D494 /* DisclaimerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE73A55412CDA5165638B49 /* DisclaimerViewModelTests.swift */; };
+		F7484F7C1C5FD928FF244064 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59037E9A631860382493E7FD /* RootView.swift */; };
 		FC22CD6E595355D52F162120 /* AllergenItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DB92545554B577741C8D9A2 /* AllergenItem.swift */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +59,7 @@
 
 /* Begin PBXFileReference section */
 		11ADB29E668A7D70DC9CB020 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		12E5C91EE3CB513A71A10363 /* OnboardingFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowView.swift; sourceTree = "<group>"; };
 		12E5F436D44B72F78A3E135D /* DisplayLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayLanguage.swift; sourceTree = "<group>"; };
 		1BAB82008F0A2A8EB4081292 /* DietaryRestrictionCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DietaryRestrictionCategory.swift; sourceTree = "<group>"; };
 		1DB92545554B577741C8D9A2 /* AllergenItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenItem.swift; sourceTree = "<group>"; };
@@ -65,6 +71,8 @@
 		44C4319B950F229F30D4E81C /* Meelyze.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Meelyze.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B70D742796B2A4C68785A58 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		541122341A2A5C7CB98163AD /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		562D9B8400F751BC97C33CA0 /* OnboardingFlowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowViewModel.swift; sourceTree = "<group>"; };
+		59037E9A631860382493E7FD /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		5BC63067C182B339680BFC98 /* MeelyzeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeelyzeApp.swift; sourceTree = "<group>"; };
 		5C7C27A69BB9BB60DCA4500B /* LanguageSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionView.swift; sourceTree = "<group>"; };
 		5CEFCC19889D5611ECA68CFC /* MeelyzeTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MeelyzeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,6 +80,7 @@
 		613D058FE927E7B101B872AC /* AllergenDietaryRestrictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenDietaryRestrictionView.swift; sourceTree = "<group>"; };
 		6AC21E7FF0683EF6B1F0A1E5 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		778434AFAC3EB4786763F2C8 /* SwiftDataProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataProfileRepository.swift; sourceTree = "<group>"; };
+		9E5EF0535E89A83B73DB6A6E /* OnboardingFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowUITests.swift; sourceTree = "<group>"; };
 		A02F0025B6BD711FA7DD7E5E /* MeelyzeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeelyzeUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A4BAFAB497A658276674E242 /* LanguageSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionViewModel.swift; sourceTree = "<group>"; };
 		A9C1E3D430E98001F181F529 /* MeelyzeUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MeelyzeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +90,7 @@
 		CDC16DFA9AB4BD011E392700 /* ProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRepository.swift; sourceTree = "<group>"; };
 		D5F4493C56EE8F4086CCD1CB /* SafetyNoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafetyNoticeView.swift; sourceTree = "<group>"; };
 		E21ACCAB4671F3910C32CB09 /* DisclaimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerViewModel.swift; sourceTree = "<group>"; };
+		EB51CE3FD41BE5D176A90A04 /* ScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanView.swift; sourceTree = "<group>"; };
 		EBE73A55412CDA5165638B49 /* DisclaimerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerViewModelTests.swift; sourceTree = "<group>"; };
 		EFE4CC8AC2215C0E408065CF /* ChoiceChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoiceChipView.swift; sourceTree = "<group>"; };
 		F7687A10D41A87BA73186324 /* AllergenDietaryRestrictionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenDietaryRestrictionViewModel.swift; sourceTree = "<group>"; };
@@ -112,6 +122,7 @@
 				6AC21E7FF0683EF6B1F0A1E5 /* ContentViewModel.swift */,
 				E21ACCAB4671F3910C32CB09 /* DisclaimerViewModel.swift */,
 				A4BAFAB497A658276674E242 /* LanguageSelectionViewModel.swift */,
+				562D9B8400F751BC97C33CA0 /* OnboardingFlowViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -157,6 +168,7 @@
 			children = (
 				CDAA0292A33B42A4AA997B27 /* MeelyzeUITests.swift */,
 				A02F0025B6BD711FA7DD7E5E /* MeelyzeUITestsLaunchTests.swift */,
+				9E5EF0535E89A83B73DB6A6E /* OnboardingFlowUITests.swift */,
 			);
 			path = MeelyzeUITests;
 			sourceTree = "<group>";
@@ -195,6 +207,9 @@
 				4B70D742796B2A4C68785A58 /* ContentView.swift */,
 				FD779C69BAA57BE87AF3BB21 /* DisclaimerView.swift */,
 				5C7C27A69BB9BB60DCA4500B /* LanguageSelectionView.swift */,
+				12E5C91EE3CB513A71A10363 /* OnboardingFlowView.swift */,
+				59037E9A631860382493E7FD /* RootView.swift */,
+				EB51CE3FD41BE5D176A90A04 /* ScanView.swift */,
 				C6D6BA9E4E2ABE4077657F06 /* Components */,
 			);
 			path = Views;
@@ -363,6 +378,7 @@
 			files = (
 				DD521B43A44B47A9A447B4FC /* MeelyzeUITests.swift in Sources */,
 				D9085693B6512C41A0118673 /* MeelyzeUITestsLaunchTests.swift in Sources */,
+				D4E720A75823C35AEE6EC016 /* OnboardingFlowUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,8 +399,12 @@
 				47DF2ECEBDCD388E8639F34A /* LanguageSelectionView.swift in Sources */,
 				209D6DFBCE82A8A8CD241D50 /* LanguageSelectionViewModel.swift in Sources */,
 				2C7AB085D8D4BEE14FBD4E42 /* MeelyzeApp.swift in Sources */,
+				7FD3FE9D98DAA48AA50C8D67 /* OnboardingFlowView.swift in Sources */,
+				4D25862F033205EAB70DEE5C /* OnboardingFlowViewModel.swift in Sources */,
 				A490F3D5B42B92F4339B39E7 /* ProfileRepository.swift in Sources */,
+				F7484F7C1C5FD928FF244064 /* RootView.swift in Sources */,
 				E2EDB1EF12F4EF8633D9E539 /* SafetyNoticeView.swift in Sources */,
+				038A8396515D70B91E97B457 /* ScanView.swift in Sources */,
 				1ED023492937FA4AD0277227 /* SwiftDataProfileRepository.swift in Sources */,
 				E17D53F89F84E5763ECB51B5 /* UserProfile.swift in Sources */,
 			);

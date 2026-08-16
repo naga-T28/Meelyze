@@ -30,10 +30,21 @@ struct DisclaimerView: View {
             Divider()
 
             VStack(spacing: 16) {
-                Toggle(isOn: $viewModel.hasAgreed) {
-                    Text("上記の内容を理解し、同意します")
+                Button {
+                    viewModel.hasAgreed.toggle()
+                } label: {
+                    HStack {
+                        Image(systemName: viewModel.hasAgreed ? "checkmark.square.fill" : "square")
+                            .foregroundStyle(viewModel.hasAgreed ? Color.accentColor : Color.secondary)
+                        Text("上記の内容を理解し、同意します")
+                            .foregroundStyle(.primary)
+                        Spacer()
+                    }
+                    .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
                 .accessibilityIdentifier("DisclaimerAgreeToggle")
+                .accessibilityAddTraits(viewModel.hasAgreed ? [.isSelected] : [])
 
                 Button {
                     if let agreedAt = viewModel.agreedAt {
