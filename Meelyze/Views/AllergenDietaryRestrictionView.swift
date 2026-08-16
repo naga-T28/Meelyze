@@ -2,7 +2,7 @@ import SwiftUI
 
 /// S04/S05 アレルゲン・食事制限選択画面。
 ///
-/// 特定原材料8品目・特定原材料に準ずるもの20品目を区別できる形で複数選択でき、あわせてMVP対象の
+/// 特定原材料・特定原材料に準ずるもの（`AllergenItem`参照）を区別できる形で複数選択でき、あわせてMVP対象の
 /// 食事制限区分を複数選択できる。0件選択（アレルギーなし）でも「プロファイルを保存」へ進める。
 struct AllergenDietaryRestrictionView: View {
     @State private var viewModel: AllergenDietaryRestrictionViewModel
@@ -35,7 +35,7 @@ struct AllergenDietaryRestrictionView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     chipSection(
-                        title: "アレルゲン（特定原材料・表示義務8品目）",
+                        title: "アレルゲン（特定原材料・表示義務\(viewModel.mandatoryAllergenItems.count)品目）",
                         items: viewModel.mandatoryAllergenItems,
                         label: viewModel.displayName(for:),
                         isSelected: viewModel.isSelected(_:),
@@ -43,7 +43,7 @@ struct AllergenDietaryRestrictionView: View {
                     )
 
                     chipSection(
-                        title: "アレルゲン（特定原材料に準ずるもの・表示推奨20品目）",
+                        title: "アレルゲン（特定原材料に準ずるもの・表示推奨\(viewModel.recommendedAllergenItems.count)品目）",
                         items: viewModel.recommendedAllergenItems,
                         label: viewModel.displayName(for:),
                         isSelected: viewModel.isSelected(_:),

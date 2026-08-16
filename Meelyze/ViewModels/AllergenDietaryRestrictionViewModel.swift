@@ -2,7 +2,7 @@ import Foundation
 
 /// S04/S05 アレルゲン・食事制限選択画面（`AllergenDietaryRestrictionView`）の選択状態を保持する。
 ///
-/// 特定原材料8品目・特定原材料に準ずるもの20品目、およびMVP対象の食事制限区分を複数選択できる。
+/// 特定原材料・特定原材料に準ずるもの（`AllergenItem`参照）、およびMVP対象の食事制限区分を複数選択できる。
 /// 0件選択（アレルギーなし）も有効な状態として許可する。TASK-014・TASK-015で確定した同意状態・
 /// 表示言語と本画面の選択結果をあわせて`UserProfile`として組み立て、`ProfileRepository`経由で保存する。
 @Observable
