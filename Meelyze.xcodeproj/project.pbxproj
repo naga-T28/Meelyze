@@ -12,9 +12,13 @@
 		230793A69095A6AA017D70B6 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC21E7FF0683EF6B1F0A1E5 /* ContentViewModel.swift */; };
 		2395FF597B9F9B960E02D68A /* DietaryRestrictionCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BAB82008F0A2A8EB4081292 /* DietaryRestrictionCategory.swift */; };
 		2C7AB085D8D4BEE14FBD4E42 /* MeelyzeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC63067C182B339680BFC98 /* MeelyzeApp.swift */; };
+		3240C866B7C2DCE00E17AFE9 /* AllergenDietaryRestrictionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EB1F18AACFF4D0CC4FE683 /* AllergenDietaryRestrictionViewModelTests.swift */; };
 		433CCB4ADF5D437BD2A2721D /* DisplayLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E5F436D44B72F78A3E135D /* DisplayLanguage.swift */; };
 		47DF2ECEBDCD388E8639F34A /* LanguageSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C7C27A69BB9BB60DCA4500B /* LanguageSelectionView.swift */; };
+		554DE3DFA0DEBD72D987E873 /* ChoiceChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE4CC8AC2215C0E408065CF /* ChoiceChipView.swift */; };
+		56723CC5B97B7AB371E471AE /* AllergenDietaryRestrictionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7687A10D41A87BA73186324 /* AllergenDietaryRestrictionViewModel.swift */; };
 		756BD32782322FA515D6DC6E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F35A56A3C74C07E63A9B61D /* Assets.xcassets */; };
+		76ED8352C6DE30CD5249F050 /* AllergenDietaryRestrictionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 613D058FE927E7B101B872AC /* AllergenDietaryRestrictionView.swift */; };
 		7C2764254E4D6B8487F727E9 /* ContentViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DCE70149A7A3D349696FD7 /* ContentViewModelTests.swift */; };
 		7DE5BF06C09ADF308D6FD39A /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD779C69BAA57BE87AF3BB21 /* DisclaimerView.swift */; };
 		8FD5C8FF81002F9C2EBD91FC /* SwiftDataProfileRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBFA2E920EFBF32275500C8 /* SwiftDataProfileRepositoryTests.swift */; };
@@ -65,17 +69,21 @@
 		5C7C27A69BB9BB60DCA4500B /* LanguageSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionView.swift; sourceTree = "<group>"; };
 		5CEFCC19889D5611ECA68CFC /* MeelyzeTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MeelyzeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F35A56A3C74C07E63A9B61D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		613D058FE927E7B101B872AC /* AllergenDietaryRestrictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenDietaryRestrictionView.swift; sourceTree = "<group>"; };
 		6AC21E7FF0683EF6B1F0A1E5 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		778434AFAC3EB4786763F2C8 /* SwiftDataProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataProfileRepository.swift; sourceTree = "<group>"; };
 		A02F0025B6BD711FA7DD7E5E /* MeelyzeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeelyzeUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A4BAFAB497A658276674E242 /* LanguageSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionViewModel.swift; sourceTree = "<group>"; };
 		A9C1E3D430E98001F181F529 /* MeelyzeUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MeelyzeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7EB1F18AACFF4D0CC4FE683 /* AllergenDietaryRestrictionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenDietaryRestrictionViewModelTests.swift; sourceTree = "<group>"; };
 		BD0F5AB1729853FF7B380071 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		CDAA0292A33B42A4AA997B27 /* MeelyzeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeelyzeUITests.swift; sourceTree = "<group>"; };
 		CDC16DFA9AB4BD011E392700 /* ProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRepository.swift; sourceTree = "<group>"; };
 		D5F4493C56EE8F4086CCD1CB /* SafetyNoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafetyNoticeView.swift; sourceTree = "<group>"; };
 		E21ACCAB4671F3910C32CB09 /* DisclaimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerViewModel.swift; sourceTree = "<group>"; };
 		EBE73A55412CDA5165638B49 /* DisclaimerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerViewModelTests.swift; sourceTree = "<group>"; };
+		EFE4CC8AC2215C0E408065CF /* ChoiceChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoiceChipView.swift; sourceTree = "<group>"; };
+		F7687A10D41A87BA73186324 /* AllergenDietaryRestrictionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenDietaryRestrictionViewModel.swift; sourceTree = "<group>"; };
 		FD779C69BAA57BE87AF3BB21 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -100,6 +108,7 @@
 		3A8D1496B87781C97D3E82CB /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				F7687A10D41A87BA73186324 /* AllergenDietaryRestrictionViewModel.swift */,
 				6AC21E7FF0683EF6B1F0A1E5 /* ContentViewModel.swift */,
 				E21ACCAB4671F3910C32CB09 /* DisclaimerViewModel.swift */,
 				A4BAFAB497A658276674E242 /* LanguageSelectionViewModel.swift */,
@@ -110,6 +119,7 @@
 		93B3637F9EFB7F8856FF2F23 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				B7EB1F18AACFF4D0CC4FE683 /* AllergenDietaryRestrictionViewModelTests.swift */,
 				35DCE70149A7A3D349696FD7 /* ContentViewModelTests.swift */,
 				EBE73A55412CDA5165638B49 /* DisclaimerViewModelTests.swift */,
 				2213B89C1110A6074EBE9E49 /* LanguageSelectionViewModelTests.swift */,
@@ -162,6 +172,7 @@
 		C6D6BA9E4E2ABE4077657F06 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				EFE4CC8AC2215C0E408065CF /* ChoiceChipView.swift */,
 				D5F4493C56EE8F4086CCD1CB /* SafetyNoticeView.swift */,
 			);
 			path = Components;
@@ -180,6 +191,7 @@
 		CB3924E02FDC085233A8CF13 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				613D058FE927E7B101B872AC /* AllergenDietaryRestrictionView.swift */,
 				4B70D742796B2A4C68785A58 /* ContentView.swift */,
 				FD779C69BAA57BE87AF3BB21 /* DisclaimerView.swift */,
 				5C7C27A69BB9BB60DCA4500B /* LanguageSelectionView.swift */,
@@ -337,6 +349,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3240C866B7C2DCE00E17AFE9 /* AllergenDietaryRestrictionViewModelTests.swift in Sources */,
 				7C2764254E4D6B8487F727E9 /* ContentViewModelTests.swift in Sources */,
 				ED88E05A616991276579D494 /* DisclaimerViewModelTests.swift in Sources */,
 				D57FA4FE077906F86A05132F /* LanguageSelectionViewModelTests.swift in Sources */,
@@ -357,7 +370,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				76ED8352C6DE30CD5249F050 /* AllergenDietaryRestrictionView.swift in Sources */,
+				56723CC5B97B7AB371E471AE /* AllergenDietaryRestrictionViewModel.swift in Sources */,
 				FC22CD6E595355D52F162120 /* AllergenItem.swift in Sources */,
+				554DE3DFA0DEBD72D987E873 /* ChoiceChipView.swift in Sources */,
 				E79FDD8A9C9C5A236ACD0D3C /* ContentView.swift in Sources */,
 				230793A69095A6AA017D70B6 /* ContentViewModel.swift in Sources */,
 				2395FF597B9F9B960E02D68A /* DietaryRestrictionCategory.swift in Sources */,
