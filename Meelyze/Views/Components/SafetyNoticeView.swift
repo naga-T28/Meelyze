@@ -35,7 +35,7 @@ struct SafetyNoticeView: View {
     private var message: String {
         switch variant {
         case .disclaimerConsent:
-            return "判定結果にかかわらず、実際の材料・調理方法を店員にご確認ください。このアプリは安全を保証するものではありません。"
+            return "Regardless of the result, please confirm the actual ingredients and cooking method with staff. This app does not guarantee your safety."
         }
     }
 }

@@ -18,11 +18,11 @@ final class OnboardingFlowUITests: XCTestCase {
         app.launchEnvironment["UITEST_STORE_IDENTIFIER"] = UUID().uuidString
         app.launch()
 
-        XCTAssertTrue(app.staticTexts["免責事項"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Disclaimer"].waitForExistence(timeout: 5))
 
         completeOnboarding(in: app)
 
-        XCTAssertTrue(app.staticTexts["メニュー撮影は準備中です"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Menu scanning is coming soon"].waitForExistence(timeout: 5))
     }
 
     @MainActor
@@ -33,19 +33,19 @@ final class OnboardingFlowUITests: XCTestCase {
         app.launch()
 
         completeOnboarding(in: app)
-        XCTAssertTrue(app.staticTexts["メニュー撮影は準備中です"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Menu scanning is coming soon"].waitForExistence(timeout: 5))
 
         app.terminate()
         app.launchEnvironment["UITEST_STORE_IDENTIFIER"] = storeIdentifier
         app.launch()
 
-        XCTAssertTrue(app.staticTexts["メニュー撮影は準備中です"].waitForExistence(timeout: 5))
-        XCTAssertFalse(app.staticTexts["免責事項"].exists)
+        XCTAssertTrue(app.staticTexts["Menu scanning is coming soon"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.staticTexts["Disclaimer"].exists)
     }
 
     @MainActor
     private func completeOnboarding(in app: XCUIApplication) {
-        XCTAssertTrue(app.staticTexts["免責事項"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Disclaimer"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["DisclaimerAgreeToggle"].waitForExistence(timeout: 5))
         app.buttons["DisclaimerAgreeToggle"].tap()
         app.buttons["DisclaimerContinueButton"].tap()

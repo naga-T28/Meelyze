@@ -2,7 +2,8 @@ import SwiftUI
 
 /// S02 表示言語選択画面。
 ///
-/// MVP対象4言語から表示言語を1つ選択する。行の見出しは日本語だが、各言語自体の表示名は
+/// MVP対象4言語から表示言語を1つ選択する。この画面は表示言語が確定する前に表示されるため、
+/// 画面chrome（見出し・CTA）は英語で固定表示する。各言語自体の行ラベルは選択言語に依存せず
 /// 自称（endonym）で表示する（`task/TASK-015-language-selection-screen.md`参照）。
 struct LanguageSelectionView: View {
     @State private var viewModel = LanguageSelectionViewModel()
@@ -32,7 +33,7 @@ struct LanguageSelectionView: View {
                         .accessibilityAddTraits(viewModel.isSelected(language) ? .isSelected : [])
                     }
                 } header: {
-                    Text("表示言語を選択してください")
+                    Text("Select your display language")
                 }
             }
 
@@ -43,7 +44,7 @@ struct LanguageSelectionView: View {
                     onContinue(selected)
                 }
             } label: {
-                Text("次へ")
+                Text("Next")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
@@ -51,7 +52,7 @@ struct LanguageSelectionView: View {
             .padding()
             .accessibilityIdentifier("LanguageSelectionContinueButton")
         }
-        .navigationTitle("表示言語")
+        .navigationTitle("Display Language")
     }
 }
 

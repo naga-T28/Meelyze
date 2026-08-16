@@ -5,14 +5,16 @@ import SwiftData
 /// Root Gate。
 ///
 /// 初期設定完了後はS01〜S05をback stackへ残さず、`ScanView`へrootそのものを切り替える
-/// （`docs/ui-design.md`「Navigation / Sheet / Loading / Error方針」Root gateの行）。
+/// （`docs/ui-design.md`「Navigation / Sheet / Loading / Error方針」Root gateの行）。`ScanView`は
+/// 選択済み表示言語で表示するため、新規完了時は保存直後の`UserProfile`から、再起動時は復元した
+/// `UserProfile`からそれぞれ`displayLanguage`を引き継ぐ。
 struct RootView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var destination: Destination?
 
     private enum Destination {
         case onboarding
-        case scan
+        case scan(DisplayLanguage)
     }
 
     var body: some View {
@@ -20,11 +22,11 @@ struct RootView: View {
             if let destination {
                 switch destination {
                 case .onboarding:
-                    OnboardingFlowView(profileRepository: profileRepository) { _ in
-                        self.destination = .scan
+                    OnboardingFlowView(profileRepository: profileRepository) { profile in
+                        self.destination = .scan(profile.displayLanguage)
                     }
-                case .scan:
-                    ScanView()
+                case .scan(let displayLanguage):
+                    ScanView(displayLanguage: displayLanguage)
                 }
             } else {
                 ProgressView()
@@ -43,7 +45,11 @@ struct RootView: View {
 
     private func determineInitialDestination() {
         let profile = try? profileRepository.currentProfile()
-        destination = (profile?.isInitialSetupCompleted == true) ? .scan : .onboarding
+        if let profile, profile.isInitialSetupCompleted {
+            destination = .scan(profile.displayLanguage)
+        } else {
+            destination = .onboarding
+        }
     }
 }
 

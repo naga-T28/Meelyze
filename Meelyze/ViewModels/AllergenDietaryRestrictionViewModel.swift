@@ -40,6 +40,27 @@ final class AllergenDietaryRestrictionViewModel {
         category.localizedName(for: displayLanguage)
     }
 
+    /// 画面chrome（見出し・CTA）の文言。S02で確定した表示言語で表示する。
+    var navigationTitle: String {
+        AllergenDietaryRestrictionText.navigationTitle.value(for: displayLanguage)
+    }
+
+    var mandatorySectionTitle: String {
+        AllergenDietaryRestrictionText.mandatorySectionTitle(count: mandatoryAllergenItems.count).value(for: displayLanguage)
+    }
+
+    var recommendedSectionTitle: String {
+        AllergenDietaryRestrictionText.recommendedSectionTitle(count: recommendedAllergenItems.count).value(for: displayLanguage)
+    }
+
+    var dietaryRestrictionSectionTitle: String {
+        AllergenDietaryRestrictionText.dietaryRestrictionSectionTitle.value(for: displayLanguage)
+    }
+
+    var saveButtonTitle: String {
+        AllergenDietaryRestrictionText.saveButton.value(for: displayLanguage)
+    }
+
     func isSelected(_ item: AllergenItem) -> Bool {
         selectedAllergenItems.contains(item)
     }
@@ -78,5 +99,47 @@ final class AllergenDietaryRestrictionViewModel {
         try profileRepository.save(profile)
         savedProfile = profile
         return profile
+    }
+}
+
+/// `AllergenDietaryRestrictionView`の画面chrome文言。MVP対象4言語で固定の意味を維持する。
+private enum AllergenDietaryRestrictionText {
+    static let navigationTitle = LocalizedText(
+        english: "Allergens & Dietary Restrictions",
+        traditionalChinese: "過敏原與飲食限制",
+        simplifiedChinese: "过敏原与饮食限制",
+        korean: "알레르기 유발물질 및 식이 제한"
+    )
+
+    static let dietaryRestrictionSectionTitle = LocalizedText(
+        english: "Dietary Restrictions",
+        traditionalChinese: "飲食限制",
+        simplifiedChinese: "饮食限制",
+        korean: "식이 제한"
+    )
+
+    static let saveButton = LocalizedText(
+        english: "Save Profile",
+        traditionalChinese: "儲存個人檔案",
+        simplifiedChinese: "保存个人资料",
+        korean: "프로필 저장"
+    )
+
+    static func mandatorySectionTitle(count: Int) -> LocalizedText {
+        LocalizedText(
+            english: "Allergens (Mandatory Labeling, \(count) items)",
+            traditionalChinese: "過敏原（強制標示，共\(count)項）",
+            simplifiedChinese: "过敏原（强制标示，共\(count)项）",
+            korean: "알레르기 유발물질 (표시 의무, \(count)개 품목)"
+        )
+    }
+
+    static func recommendedSectionTitle(count: Int) -> LocalizedText {
+        LocalizedText(
+            english: "Allergens (Recommended Labeling, \(count) items)",
+            traditionalChinese: "過敏原（建議標示，共\(count)項）",
+            simplifiedChinese: "过敏原（建议标示，共\(count)项）",
+            korean: "알레르기 유발물질 (표시 권장, \(count)개 품목)"
+        )
     }
 }

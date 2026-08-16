@@ -3,7 +3,8 @@ import SwiftUI
 /// S04/S05 アレルゲン・食事制限選択画面。
 ///
 /// 特定原材料・特定原材料に準ずるもの（`AllergenItem`参照）を区別できる形で複数選択でき、あわせてMVP対象の
-/// 食事制限区分を複数選択できる。0件選択（アレルギーなし）でも「プロファイルを保存」へ進める。
+/// 食事制限区分を複数選択できる。0件選択（アレルギーなし）でも保存へ進める。この画面はS02で表示言語が
+/// 確定した後に表示されるため、画面chrome（見出し・CTA）・品目名ともに選択済み表示言語で表示する。
 struct AllergenDietaryRestrictionView: View {
     @State private var viewModel: AllergenDietaryRestrictionViewModel
 
@@ -35,7 +36,7 @@ struct AllergenDietaryRestrictionView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     chipSection(
-                        title: "アレルゲン（特定原材料・表示義務\(viewModel.mandatoryAllergenItems.count)品目）",
+                        title: viewModel.mandatorySectionTitle,
                         items: viewModel.mandatoryAllergenItems,
                         label: viewModel.displayName(for:),
                         isSelected: viewModel.isSelected(_:),
@@ -43,7 +44,7 @@ struct AllergenDietaryRestrictionView: View {
                     )
 
                     chipSection(
-                        title: "アレルゲン（特定原材料に準ずるもの・表示推奨\(viewModel.recommendedAllergenItems.count)品目）",
+                        title: viewModel.recommendedSectionTitle,
                         items: viewModel.recommendedAllergenItems,
                         label: viewModel.displayName(for:),
                         isSelected: viewModel.isSelected(_:),
@@ -51,7 +52,7 @@ struct AllergenDietaryRestrictionView: View {
                     )
 
                     chipSection(
-                        title: "食事制限",
+                        title: viewModel.dietaryRestrictionSectionTitle,
                         items: viewModel.dietaryRestrictionCategories,
                         label: viewModel.displayName(for:),
                         isSelected: viewModel.isSelected(_:),
@@ -68,14 +69,14 @@ struct AllergenDietaryRestrictionView: View {
                     onSave(profile)
                 }
             } label: {
-                Text("プロファイルを保存")
+                Text(viewModel.saveButtonTitle)
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
             .padding()
             .accessibilityIdentifier("AllergenDietaryRestrictionSaveButton")
         }
-        .navigationTitle("アレルゲン・食事制限")
+        .navigationTitle(viewModel.navigationTitle)
     }
 
     @ViewBuilder

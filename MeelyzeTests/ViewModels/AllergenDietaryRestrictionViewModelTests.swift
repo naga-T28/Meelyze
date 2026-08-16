@@ -14,11 +14,14 @@ private final class FakeProfileRepository: ProfileRepository {
 
 struct AllergenDietaryRestrictionViewModelTests {
 
-    private func makeViewModel(repository: FakeProfileRepository = FakeProfileRepository()) -> AllergenDietaryRestrictionViewModel {
+    private func makeViewModel(
+        displayLanguage: DisplayLanguage = .english,
+        repository: FakeProfileRepository = FakeProfileRepository()
+    ) -> AllergenDietaryRestrictionViewModel {
         AllergenDietaryRestrictionViewModel(
             hasAgreedToDisclaimer: true,
             disclaimerAgreedAt: Date(),
-            displayLanguage: .english,
+            displayLanguage: displayLanguage,
             profileRepository: repository
         )
     }
@@ -79,5 +82,21 @@ struct AllergenDietaryRestrictionViewModelTests {
         #expect(profile.displayLanguage == .english)
         #expect(profile.isInitialSetupCompleted == true)
         #expect(repository.savedProfiles.last === profile)
+    }
+
+    @Test func chromeTextFollowsTheSelectedDisplayLanguage() {
+        let englishViewModel = makeViewModel(displayLanguage: .english)
+        let koreanViewModel = makeViewModel(displayLanguage: .korean)
+
+        #expect(englishViewModel.navigationTitle == "Allergens & Dietary Restrictions")
+        #expect(koreanViewModel.navigationTitle == "알레르기 유발물질 및 식이 제한")
+        #expect(englishViewModel.navigationTitle != koreanViewModel.navigationTitle)
+    }
+
+    @Test func sectionTitlesEmbedTheActualItemCounts() {
+        let viewModel = makeViewModel(displayLanguage: .english)
+
+        #expect(viewModel.mandatorySectionTitle == "Allergens (Mandatory Labeling, \(viewModel.mandatoryAllergenItems.count) items)")
+        #expect(viewModel.recommendedSectionTitle == "Allergens (Recommended Labeling, \(viewModel.recommendedAllergenItems.count) items)")
     }
 }

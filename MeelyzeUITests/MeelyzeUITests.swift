@@ -15,7 +15,7 @@ final class MeelyzeUITests: XCTestCase {
         app.launchEnvironment["UITEST_STORE_IDENTIFIER"] = UUID().uuidString
         app.launch()
 
-        XCTAssertTrue(app.staticTexts["免責事項"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Disclaimer"].waitForExistence(timeout: 5))
     }
 
 }
