@@ -17,3 +17,4 @@ Dish、Ingredientなど判定ロジック用のモデルは別Issueで追加す�
 
 - `RecognizedTextObservation.swift`: OCRが検出した1件のテキスト領域（認識文字列・Confidence・Bounding Box）を表す。
 - `OCRResult.swift`: 1回の撮影・OCR実行結果全体（`[RecognizedTextObservation]`）を表す。空配列は「Visionが文字を1件も抽出できなかった」ことを表す。
+
