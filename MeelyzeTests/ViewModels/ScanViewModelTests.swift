@@ -9,7 +9,7 @@ struct ScanViewModelTests {
     @Test func alreadyAuthorizedStartsSessionWithoutRequestingAgain() async {
         let cameraService = FakeCameraService()
         cameraService.authorizationStatusToReturn = .authorized
-        let viewModel = ScanViewModel(cameraService: cameraService)
+        let viewModel = ScanViewModel(cameraService: cameraService, ocrService: FakeOCRService())
 
         await viewModel.onAppear()
 
@@ -22,7 +22,7 @@ struct ScanViewModelTests {
         let cameraService = FakeCameraService()
         cameraService.authorizationStatusToReturn = .notDetermined
         cameraService.requestAuthorizationResult = .authorized
-        let viewModel = ScanViewModel(cameraService: cameraService)
+        let viewModel = ScanViewModel(cameraService: cameraService, ocrService: FakeOCRService())
 
         await viewModel.onAppear()
 
@@ -34,7 +34,7 @@ struct ScanViewModelTests {
         let cameraService = FakeCameraService()
         cameraService.authorizationStatusToReturn = .notDetermined
         cameraService.requestAuthorizationResult = .denied
-        let viewModel = ScanViewModel(cameraService: cameraService)
+        let viewModel = ScanViewModel(cameraService: cameraService, ocrService: FakeOCRService())
 
         await viewModel.onAppear()
 
@@ -46,7 +46,7 @@ struct ScanViewModelTests {
     @Test func alreadyDeniedShowsPermissionDeniedAlertWithoutRequestingAgain() async {
         let cameraService = FakeCameraService()
         cameraService.authorizationStatusToReturn = .denied
-        let viewModel = ScanViewModel(cameraService: cameraService)
+        let viewModel = ScanViewModel(cameraService: cameraService, ocrService: FakeOCRService())
 
         await viewModel.onAppear()
 
@@ -55,33 +55,101 @@ struct ScanViewModelTests {
         #expect(cameraService.requestAuthorizationCallCount == 0)
     }
 
-    @Test func capturePhotoStoresDataInMemoryOnly() async {
-        let cameraService = FakeCameraService()
-        cameraService.capturePhotoResult = .success(Data([0xAA, 0xBB]))
-        let viewModel = ScanViewModel(cameraService: cameraService)
-
-        await viewModel.capturePhoto()
-
-        #expect(viewModel.capturedImageData == Data([0xAA, 0xBB]))
-    }
-
-    @Test func failedCapturedLeavesNoImageData() async {
-        let cameraService = FakeCameraService()
-        cameraService.capturePhotoResult = .failure(CameraServiceError.captureFailed)
-        let viewModel = ScanViewModel(cameraService: cameraService)
-
-        await viewModel.capturePhoto()
-
-        #expect(viewModel.capturedImageData == nil)
-    }
-
     @Test func disappearStopsSession() {
         let cameraService = FakeCameraService()
-        let viewModel = ScanViewModel(cameraService: cameraService)
+        let viewModel = ScanViewModel(cameraService: cameraService, ocrService: FakeOCRService())
 
         viewModel.onDisappear()
 
         #expect(cameraService.stopSessionCallCount == 1)
+    }
+
+    @Test func successfulCaptureAndRecognitionHoldsResultAsRecognized() async {
+        let observation = RecognizedTextObservation(text: "唐揚げ定食", confidence: 0.9, boundingBox: .zero)
+        let ocrService = FakeOCRService()
+        ocrService.recognizeTextResult = .success(OCRResult(observations: [observation]))
+        let viewModel = ScanViewModel(cameraService: FakeCameraService(), ocrService: ocrService)
+
+        await viewModel.capturePhoto()
+
+        #expect(viewModel.scanState == .recognized(OCRResult(observations: [observation])))
+    }
+
+    @Test func lowConfidenceSingleObservationIsNotTreatedAsFailure() async {
+        let lowConfidence = RecognizedTextObservation(text: "?", confidence: 0.05, boundingBox: .zero)
+        let ocrService = FakeOCRService()
+        ocrService.recognizeTextResult = .success(OCRResult(observations: [lowConfidence]))
+        let viewModel = ScanViewModel(cameraService: FakeCameraService(), ocrService: ocrService)
+
+        await viewModel.capturePhoto()
+
+        #expect(viewModel.scanState != .failed)
+    }
+
+    @Test func zeroObservationsTransitionsToFailed() async {
+        let ocrService = FakeOCRService()
+        ocrService.recognizeTextResult = .success(OCRResult(observations: []))
+        let viewModel = ScanViewModel(cameraService: FakeCameraService(), ocrService: ocrService)
+
+        await viewModel.capturePhoto()
+
+        #expect(viewModel.scanState == .failed)
+    }
+
+    @Test func ocrThrowingErrorTransitionsToFailed() async {
+        let ocrService = FakeOCRService()
+        ocrService.recognizeTextResult = .failure(OCRError.recognitionRequestFailed)
+        let viewModel = ScanViewModel(cameraService: FakeCameraService(), ocrService: ocrService)
+
+        await viewModel.capturePhoto()
+
+        #expect(viewModel.scanState == .failed)
+    }
+
+    @Test func captureFailureTransitionsToFailedWithoutCallingOCR() async {
+        let cameraService = FakeCameraService()
+        cameraService.capturePhotoResult = .failure(CameraServiceError.captureFailed)
+        let ocrService = FakeOCRService()
+        let viewModel = ScanViewModel(cameraService: cameraService, ocrService: ocrService)
+
+        await viewModel.capturePhoto()
+
+        #expect(viewModel.scanState == .failed)
+        #expect(ocrService.recognizeTextCallCount == 0)
+    }
+
+    @Test func retakeFromFailedReturnsToIdle() async {
+        let ocrService = FakeOCRService()
+        ocrService.recognizeTextResult = .success(OCRResult(observations: []))
+        let viewModel = ScanViewModel(cameraService: FakeCameraService(), ocrService: ocrService)
+        await viewModel.capturePhoto()
+        #expect(viewModel.scanState == .failed)
+
+        viewModel.retake()
+
+        #expect(viewModel.scanState == .idle)
+    }
+
+    @Test func secondCaptureRequestWhileBusyIsIgnored() async {
+        let cameraService = FakeCameraService()
+        cameraService.capturePhotoDelayNanoseconds = 50_000_000
+        let ocrService = FakeOCRService()
+        ocrService.recognizeTextResult = .success(OCRResult(observations: []))
+        let viewModel = ScanViewModel(cameraService: cameraService, ocrService: ocrService)
+
+        async let first: Void = viewModel.capturePhoto()
+        try? await Task.sleep(nanoseconds: 10_000_000)
+        #expect(viewModel.isBusy == true)
+        await viewModel.capturePhoto()
+        await first
+
+        #expect(cameraService.capturePhotoCallCount == 1)
+    }
+
+    @Test func isBusyReflectsCapturingAndRecognizingStatesOnly() {
+        let viewModel = ScanViewModel(cameraService: FakeCameraService(), ocrService: FakeOCRService())
+
+        #expect(viewModel.isBusy == false)
     }
 }
 
@@ -92,7 +160,9 @@ private final class FakeCameraService: CameraService {
     var requestAuthorizationCallCount = 0
     var startSessionCallCount = 0
     var stopSessionCallCount = 0
+    var capturePhotoCallCount = 0
     var capturePhotoResult: Result<Data, Error> = .success(Data([0x01]))
+    var capturePhotoDelayNanoseconds: UInt64 = 0
 
     func authorizationStatus() -> CameraAuthorizationStatus { authorizationStatusToReturn }
 
@@ -110,6 +180,10 @@ private final class FakeCameraService: CameraService {
     }
 
     func capturePhoto() async throws -> Data {
+        capturePhotoCallCount += 1
+        if capturePhotoDelayNanoseconds > 0 {
+            try? await Task.sleep(nanoseconds: capturePhotoDelayNanoseconds)
+        }
         switch capturePhotoResult {
         case .success(let data):
             return data
@@ -119,4 +193,19 @@ private final class FakeCameraService: CameraService {
     }
 
     func makePreviewView() -> AnyView { AnyView(EmptyView()) }
+}
+
+private final class FakeOCRService: OCRService, @unchecked Sendable {
+    var recognizeTextResult: Result<OCRResult, Error> = .success(OCRResult(observations: []))
+    private(set) var recognizeTextCallCount = 0
+
+    func recognizeText(in imageData: Data) async throws -> OCRResult {
+        recognizeTextCallCount += 1
+        switch recognizeTextResult {
+        case .success(let result):
+            return result
+        case .failure(let error):
+            throw error
+        }
+    }
 }

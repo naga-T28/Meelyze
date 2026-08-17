@@ -2,34 +2,29 @@ import SwiftUI
 import UIKit
 
 /// S06 メニュー撮影画面。カメラプレビューをsafe areaまで広げ、撮影ガイドとシャッターボタンを重ねる
-/// （`docs/ui-design.md`「Navigation」方針によりS06は`fullScreenCover`を使わない）。
+/// （`docs/ui-design.md`「Navigation」方針によりS06は`fullScreenCover`を使わない）。撮影→OCR実行の
+/// 結果が0件・失敗の場合はE01（`OCRFailureView`）へ切り替える。
 ///
-/// カメラ・OCRへのアクセスは`CameraService`経由（`ScanViewModel`が保持）にとどめ、AVFoundationを
-/// 直接importしない。OCR実行・OCR失敗時のフォールバックUI（E01）はTASK-022で追加する。
+/// カメラ・OCRへのアクセスは`CameraService` `OCRService`経由（`ScanViewModel`が保持）にとどめ、
+/// AVFoundation・Visionを直接importしない。
 struct ScanView: View {
     @State private var viewModel: ScanViewModel
     let displayLanguage: DisplayLanguage
 
-    init(displayLanguage: DisplayLanguage, cameraService: CameraService) {
+    init(displayLanguage: DisplayLanguage, cameraService: CameraService, ocrService: OCRService) {
         self.displayLanguage = displayLanguage
-        self._viewModel = State(initialValue: ScanViewModel(cameraService: cameraService))
+        self._viewModel = State(initialValue: ScanViewModel(cameraService: cameraService, ocrService: ocrService))
     }
 
     var body: some View {
-        ZStack {
-            Color.black.ignoresSafeArea()
-
-            viewModel.cameraPreviewView
-                .ignoresSafeArea()
-
-            CameraGuideOverlayView(message: ScanViewText.guideMessage.value(for: displayLanguage))
-
-            VStack {
-                Spacer()
-                ShutterButtonView {
-                    Task { await viewModel.capturePhoto() }
+        Group {
+            switch viewModel.scanState {
+            case .failed:
+                OCRFailureView(displayLanguage: displayLanguage) {
+                    viewModel.retake()
                 }
-                .padding(.bottom, 32)
+            case .idle, .capturing, .recognizing, .recognized:
+                cameraContent
             }
         }
         .task {
@@ -48,6 +43,26 @@ struct ScanView: View {
             Button(ScanViewText.cancel.value(for: displayLanguage), role: .cancel) {}
         } message: {
             Text(ScanViewText.permissionDeniedMessage.value(for: displayLanguage))
+        }
+    }
+
+    private var cameraContent: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+
+            viewModel.cameraPreviewView
+                .ignoresSafeArea()
+
+            CameraGuideOverlayView(message: ScanViewText.guideMessage.value(for: displayLanguage))
+
+            VStack {
+                Spacer()
+                ShutterButtonView {
+                    Task { await viewModel.capturePhoto() }
+                }
+                .disabled(viewModel.isBusy)
+                .padding(.bottom, 32)
+            }
         }
     }
 
@@ -96,7 +111,7 @@ private enum ScanViewText {
 }
 
 #Preview {
-    ScanView(displayLanguage: .english, cameraService: PreviewCameraService())
+    ScanView(displayLanguage: .english, cameraService: PreviewCameraService(), ocrService: PreviewOCRService())
 }
 
 /// Preview専用の`CameraService`スタブ。実際のカメラ・権限フローには接続しない。
@@ -107,4 +122,11 @@ private final class PreviewCameraService: CameraService {
     func stopSession() {}
     func capturePhoto() async throws -> Data { Data() }
     func makePreviewView() -> AnyView { AnyView(Color.black) }
+}
+
+/// Preview専用の`OCRService`スタブ。
+private struct PreviewOCRService: OCRService {
+    func recognizeText(in imageData: Data) async throws -> OCRResult {
+        OCRResult(observations: [])
+    }
 }

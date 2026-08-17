@@ -11,7 +11,8 @@ import SwiftData
 struct RootView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var destination: Destination?
-    @State private var cameraService: CameraService = AVFoundationCameraService()
+    @State private var cameraService: CameraService = RootView.makeCameraService()
+    @State private var ocrService: OCRService = RootView.makeOCRService()
 
     private enum Destination {
         case onboarding
@@ -27,7 +28,7 @@ struct RootView: View {
                         self.destination = .scan(profile.displayLanguage)
                     }
                 case .scan(let displayLanguage):
-                    ScanView(displayLanguage: displayLanguage, cameraService: cameraService)
+                    ScanView(displayLanguage: displayLanguage, cameraService: cameraService, ocrService: ocrService)
                 }
             } else {
                 ProgressView()
@@ -51,6 +52,27 @@ struct RootView: View {
         } else {
             destination = .onboarding
         }
+    }
+
+    /// UI Testからの実カメラ依存排除。`UITEST_OCR_STUB_MODE`環境変数が指定された場合は
+    /// `StubCameraService`を使う（`Meelyze/Services/UITestScanStubs.swift`参照）。
+    private static func makeCameraService() -> CameraService {
+        guard ProcessInfo.processInfo.environment["UITEST_OCR_STUB_MODE"] != nil else {
+            return AVFoundationCameraService()
+        }
+        return StubCameraService()
+    }
+
+    /// UI Testからの実Vision依存排除。`UITEST_OCR_STUB_MODE`が`StubOCRService.Mode`の値
+    /// （`empty` / `success`）を指定する場合は`StubOCRService`を使う。
+    private static func makeOCRService() -> OCRService {
+        guard
+            let rawMode = ProcessInfo.processInfo.environment["UITEST_OCR_STUB_MODE"],
+            let mode = StubOCRService.Mode(rawValue: rawMode)
+        else {
+            return VisionOCRService()
+        }
+        return StubOCRService(mode: mode)
     }
 }
 

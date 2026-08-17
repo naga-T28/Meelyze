@@ -45,21 +45,6 @@ final class OnboardingFlowUITests: XCTestCase {
         XCTAssertFalse(app.staticTexts["Disclaimer"].exists)
     }
 
-    @MainActor
-    private func completeOnboarding(in app: XCUIApplication) {
-        XCTAssertTrue(app.staticTexts["Disclaimer"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["DisclaimerAgreeToggle"].waitForExistence(timeout: 5))
-        app.buttons["DisclaimerAgreeToggle"].tap()
-        app.buttons["DisclaimerContinueButton"].tap()
-
-        XCTAssertTrue(app.buttons["LanguageRow_english"].waitForExistence(timeout: 5))
-        app.buttons["LanguageRow_english"].tap()
-        app.buttons["LanguageSelectionContinueButton"].tap()
-
-        XCTAssertTrue(app.buttons["AllergenDietaryRestrictionSaveButton"].waitForExistence(timeout: 5))
-        app.buttons["AllergenDietaryRestrictionSaveButton"].tap()
-    }
-
     /// S06（`ScanView`）到達時、`ScanViewModel.onAppear()`がカメラ権限を要求しSystem alertが
     /// 表示されうる。テストが停止しないよう自動的に許可する（Simulatorには実カメラがないため、
     /// 許可後も映像そのものは取得できないが、権限ダイアログ自体は実機と同じ経路を通る）。
