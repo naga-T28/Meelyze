@@ -44,6 +44,7 @@
 		D4E720A75823C35AEE6EC016 /* OnboardingFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5EF0535E89A83B73DB6A6E /* OnboardingFlowUITests.swift */; };
 		D57FA4FE077906F86A05132F /* LanguageSelectionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213B89C1110A6074EBE9E49 /* LanguageSelectionViewModelTests.swift */; };
 		D9085693B6512C41A0118673 /* MeelyzeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02F0025B6BD711FA7DD7E5E /* MeelyzeUITestsLaunchTests.swift */; };
+		DC5B6641F4A388E61A020164 /* SimulatorMenuPhotos in Resources */ = {isa = PBXBuildFile; fileRef = FCD5C0672FB7C02301917308 /* SimulatorMenuPhotos */; };
 		DD521B43A44B47A9A447B4FC /* MeelyzeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAA0292A33B42A4AA997B27 /* MeelyzeUITests.swift */; };
 		E17D53F89F84E5763ECB51B5 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0F5AB1729853FF7B380071 /* UserProfile.swift */; };
 		E2EDB1EF12F4EF8633D9E539 /* SafetyNoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F4493C56EE8F4086CCD1CB /* SafetyNoticeView.swift */; };
@@ -53,6 +54,7 @@
 		ED88E05A616991276579D494 /* DisclaimerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE73A55412CDA5165638B49 /* DisclaimerViewModelTests.swift */; };
 		F213393341BFF7547389A898 /* OCRFailureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15341ECABE445F9B2783D651 /* OCRFailureView.swift */; };
 		F7484F7C1C5FD928FF244064 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59037E9A631860382493E7FD /* RootView.swift */; };
+		F803A9955C88010D13CB7B5B /* SimulatorCameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1710CDEFA0C8935DDAB5D89 /* SimulatorCameraService.swift */; };
 		FC22CD6E595355D52F162120 /* AllergenItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DB92545554B577741C8D9A2 /* AllergenItem.swift */; };
 		FE1BF28542A739BC233F6354 /* UITestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E464E2B50CB8A2DE3E4EDF /* UITestHelpers.swift */; };
 /* End PBXBuildFile section */
@@ -112,6 +114,7 @@
 		948CECD5B2BFCABBFEEEE154 /* ScanViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanViewModel.swift; sourceTree = "<group>"; };
 		9E5EF0535E89A83B73DB6A6E /* OnboardingFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowUITests.swift; sourceTree = "<group>"; };
 		A02F0025B6BD711FA7DD7E5E /* MeelyzeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeelyzeUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		A1710CDEFA0C8935DDAB5D89 /* SimulatorCameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorCameraService.swift; sourceTree = "<group>"; };
 		A4BAFAB497A658276674E242 /* LanguageSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionViewModel.swift; sourceTree = "<group>"; };
 		A9C1E3D430E98001F181F529 /* MeelyzeUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MeelyzeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7EB1F18AACFF4D0CC4FE683 /* AllergenDietaryRestrictionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenDietaryRestrictionViewModelTests.swift; sourceTree = "<group>"; };
@@ -128,10 +131,19 @@
 		EBE73A55412CDA5165638B49 /* DisclaimerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerViewModelTests.swift; sourceTree = "<group>"; };
 		EFE4CC8AC2215C0E408065CF /* ChoiceChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoiceChipView.swift; sourceTree = "<group>"; };
 		F7687A10D41A87BA73186324 /* AllergenDietaryRestrictionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenDietaryRestrictionViewModel.swift; sourceTree = "<group>"; };
+		FCD5C0672FB7C02301917308 /* SimulatorMenuPhotos */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SimulatorMenuPhotos; path = Meelyze/DebugResources/SimulatorMenuPhotos; sourceTree = SOURCE_ROOT; };
 		FD779C69BAA57BE87AF3BB21 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		11B98615F48270A11ABFB49C /* DebugResources */ = {
+			isa = PBXGroup;
+			children = (
+				FCD5C0672FB7C02301917308 /* SimulatorMenuPhotos */,
+			);
+			path = DebugResources;
+			sourceTree = "<group>";
+		};
 		26E21141D95926F3D67DF3A4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -197,6 +209,7 @@
 			children = (
 				5F35A56A3C74C07E63A9B61D /* Assets.xcassets */,
 				5BC63067C182B339680BFC98 /* MeelyzeApp.swift */,
+				11B98615F48270A11ABFB49C /* DebugResources */,
 				DADCC8D217B04C879EB2AFB6 /* Models */,
 				2B806EC88A7404D248BB067E /* Preview Content */,
 				C8DC7A2797D4C3F450F719F7 /* Repositories */,
@@ -281,6 +294,7 @@
 				B90AD5EF040181D7B167919F /* CameraService.swift */,
 				DC3E11AF29762731792DE256 /* OCRService.swift */,
 				11ADB29E668A7D70DC9CB020 /* README.md */,
+				A1710CDEFA0C8935DDAB5D89 /* SimulatorCameraService.swift */,
 				056B842C2CBF23446B18D76F /* UITestScanStubs.swift */,
 				6C5BD0FA5722FAC40D364644 /* VisionOCRService.swift */,
 			);
@@ -421,6 +435,7 @@
 			files = (
 				756BD32782322FA515D6DC6E /* Assets.xcassets in Resources */,
 				D0CB1F35BBC22A60A3E35AD5 /* Preview Assets.xcassets in Resources */,
+				DC5B6641F4A388E61A020164 /* SimulatorMenuPhotos in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -487,6 +502,7 @@
 				038A8396515D70B91E97B457 /* ScanView.swift in Sources */,
 				0ED139D34EAEE3CB48448FE2 /* ScanViewModel.swift in Sources */,
 				93A743B873325135631A1E36 /* ShutterButtonView.swift in Sources */,
+				F803A9955C88010D13CB7B5B /* SimulatorCameraService.swift in Sources */,
 				1ED023492937FA4AD0277227 /* SwiftDataProfileRepository.swift in Sources */,
 				C68D5D9A0A7BE64149C57374 /* UITestScanStubs.swift in Sources */,
 				E17D53F89F84E5763ECB51B5 /* UserProfile.swift in Sources */,

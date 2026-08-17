@@ -18,3 +18,8 @@ DerivedData/
 # documentation
 task/
 fix/
+
+# Simulator-only manual test photos (personal images, not for commit; see
+# Meelyze/DebugResources/SimulatorMenuPhotos/README.md)
+/Meelyze/DebugResources/SimulatorMenuPhotos/*
+!/Meelyze/DebugResources/SimulatorMenuPhotos/README.md

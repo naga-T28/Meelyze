@@ -55,12 +55,18 @@ struct RootView: View {
     }
 
     /// UI Testからの実カメラ依存排除。`UITEST_OCR_STUB_MODE`環境変数が指定された場合は
-    /// `StubCameraService`を使う（`Meelyze/Services/UITestScanStubs.swift`参照）。
+    /// `StubCameraService`を使う（`Meelyze/Services/UITestScanStubs.swift`参照）。それ以外でSimulator
+    /// 実行時は、実カメラSessionを持たないSimulatorでも手動確認できるよう`SimulatorCameraService`
+    /// （`Meelyze/Services/SimulatorCameraService.swift`）を使う。実機では常に`AVFoundationCameraService`。
     private static func makeCameraService() -> CameraService {
-        guard ProcessInfo.processInfo.environment["UITEST_OCR_STUB_MODE"] != nil else {
-            return AVFoundationCameraService()
+        if ProcessInfo.processInfo.environment["UITEST_OCR_STUB_MODE"] != nil {
+            return StubCameraService()
         }
-        return StubCameraService()
+        #if targetEnvironment(simulator)
+        return SimulatorCameraService()
+        #else
+        return AVFoundationCameraService()
+        #endif
     }
 
     /// UI Testからの実Vision依存排除。`UITEST_OCR_STUB_MODE`が`StubOCRService.Mode`の値
