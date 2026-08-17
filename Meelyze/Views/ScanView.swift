@@ -55,6 +55,16 @@ struct ScanView: View {
 
             CameraGuideOverlayView(message: ScanViewText.guideMessage.value(for: displayLanguage))
 
+            #if DEBUG
+            if case .recognized(let result) = viewModel.scanState {
+                VStack {
+                    Spacer()
+                    DebugOCRResultOverlay(result: result)
+                        .padding(.bottom, 120)
+                }
+            }
+            #endif
+
             VStack {
                 Spacer()
                 ShutterButtonView {
@@ -109,6 +119,41 @@ private enum ScanViewText {
         korean: "취소"
     )
 }
+
+#if DEBUG
+/// デバッグ専用の簡易表示。OCR成功時（`.recognized`）に認識できた文字列とConfidenceを一覧表示し、
+/// シャッター操作が実際にOCRまで到達しているかを手動テストで確認できるようにする。
+///
+/// S07（解析中）・S08（判定結果オーバーレイ）は別Issue（#19・#20）の担当範囲であり、本Viewはそれらの
+/// 代替ではない。`#if DEBUG`でRelease/実配布ビルドからは常に除外される一時的な開発補助であり、
+/// `docs/ui-design.md`のS06/E01デザインの一部ではない。
+private struct DebugOCRResultOverlay: View {
+    let result: OCRResult
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text("DEBUG: \(result.observations.count) text(s) recognized")
+                .font(.caption.bold())
+                .foregroundStyle(.yellow)
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 2) {
+                    ForEach(Array(result.observations.enumerated()), id: \.offset) { _, observation in
+                        Text("\(observation.text)  (\(String(format: "%.2f", observation.confidence)))")
+                            .font(.caption2)
+                            .foregroundStyle(.white)
+                    }
+                }
+            }
+            .frame(maxHeight: 220)
+        }
+        .padding(10)
+        .background(.black.opacity(0.75), in: RoundedRectangle(cornerRadius: 10))
+        .padding(.horizontal, 16)
+        .accessibilityIdentifier("DebugOCRResultOverlay")
+    }
+}
+#endif
 
 #Preview {
     ScanView(displayLanguage: .english, cameraService: PreviewCameraService(), ocrService: PreviewOCRService())
