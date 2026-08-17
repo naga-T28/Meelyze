@@ -11,6 +11,7 @@ import SwiftData
 struct RootView: View {
     @Environment(\.modelContext) private var modelContext
     @State private var destination: Destination?
+    @State private var cameraService: CameraService = AVFoundationCameraService()
 
     private enum Destination {
         case onboarding
@@ -26,7 +27,7 @@ struct RootView: View {
                         self.destination = .scan(profile.displayLanguage)
                     }
                 case .scan(let displayLanguage):
-                    ScanView(displayLanguage: displayLanguage)
+                    ScanView(displayLanguage: displayLanguage, cameraService: cameraService)
                 }
             } else {
                 ProgressView()

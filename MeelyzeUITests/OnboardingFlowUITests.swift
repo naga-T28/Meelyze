@@ -13,16 +13,17 @@ final class OnboardingFlowUITests: XCTestCase {
     }
 
     @MainActor
-    func testFirstLaunchStartsFromDisclaimerAndReachesScanPlaceholder() throws {
+    func testFirstLaunchStartsFromDisclaimerAndReachesScan() throws {
         let app = XCUIApplication()
         app.launchEnvironment["UITEST_STORE_IDENTIFIER"] = UUID().uuidString
+        addCameraPermissionAlertMonitor(for: app)
         app.launch()
 
         XCTAssertTrue(app.staticTexts["Disclaimer"].waitForExistence(timeout: 5))
 
         completeOnboarding(in: app)
 
-        XCTAssertTrue(app.staticTexts["Menu scanning is coming soon"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["ShutterButton"].waitForExistence(timeout: 5))
     }
 
     @MainActor
@@ -30,16 +31,17 @@ final class OnboardingFlowUITests: XCTestCase {
         let app = XCUIApplication()
         let storeIdentifier = UUID().uuidString
         app.launchEnvironment["UITEST_STORE_IDENTIFIER"] = storeIdentifier
+        addCameraPermissionAlertMonitor(for: app)
         app.launch()
 
         completeOnboarding(in: app)
-        XCTAssertTrue(app.staticTexts["Menu scanning is coming soon"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["ShutterButton"].waitForExistence(timeout: 5))
 
         app.terminate()
         app.launchEnvironment["UITEST_STORE_IDENTIFIER"] = storeIdentifier
         app.launch()
 
-        XCTAssertTrue(app.staticTexts["Menu scanning is coming soon"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["ShutterButton"].waitForExistence(timeout: 5))
         XCTAssertFalse(app.staticTexts["Disclaimer"].exists)
     }
 
@@ -56,5 +58,18 @@ final class OnboardingFlowUITests: XCTestCase {
 
         XCTAssertTrue(app.buttons["AllergenDietaryRestrictionSaveButton"].waitForExistence(timeout: 5))
         app.buttons["AllergenDietaryRestrictionSaveButton"].tap()
+    }
+
+    /// S06（`ScanView`）到達時、`ScanViewModel.onAppear()`がカメラ権限を要求しSystem alertが
+    /// 表示されうる。テストが停止しないよう自動的に許可する（Simulatorには実カメラがないため、
+    /// 許可後も映像そのものは取得できないが、権限ダイアログ自体は実機と同じ経路を通る）。
+    @MainActor
+    private func addCameraPermissionAlertMonitor(for app: XCUIApplication) {
+        addUIInterruptionMonitor(withDescription: "Camera Permission") { alert in
+            let allowButton = alert.buttons["Allow"].exists ? alert.buttons["Allow"] : alert.buttons["OK"]
+            guard allowButton.exists else { return false }
+            allowButton.tap()
+            return true
+        }
     }
 }
