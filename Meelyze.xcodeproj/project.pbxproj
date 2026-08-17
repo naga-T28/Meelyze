@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		038A8396515D70B91E97B457 /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB51CE3FD41BE5D176A90A04 /* ScanView.swift */; };
+		08E9248A75FBF3970E7A9781 /* VisionOCRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5BD0FA5722FAC40D364644 /* VisionOCRService.swift */; };
 		0ED139D34EAEE3CB48448FE2 /* ScanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CECD5B2BFCABBFEEEE154 /* ScanViewModel.swift */; };
 		1ED023492937FA4AD0277227 /* SwiftDataProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778434AFAC3EB4786763F2C8 /* SwiftDataProfileRepository.swift */; };
 		209D6DFBCE82A8A8CD241D50 /* LanguageSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4BAFAB497A658276674E242 /* LanguageSelectionViewModel.swift */; };
@@ -18,6 +19,7 @@
 		3240C866B7C2DCE00E17AFE9 /* AllergenDietaryRestrictionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EB1F18AACFF4D0CC4FE683 /* AllergenDietaryRestrictionViewModelTests.swift */; };
 		433CCB4ADF5D437BD2A2721D /* DisplayLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E5F436D44B72F78A3E135D /* DisplayLanguage.swift */; };
 		47DF2ECEBDCD388E8639F34A /* LanguageSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C7C27A69BB9BB60DCA4500B /* LanguageSelectionView.swift */; };
+		48AE76BBEE50AFCE3568CB3C /* VisionOCRServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57BF632551CB89C0AF1B1C9F /* VisionOCRServiceTests.swift */; };
 		4D25862F033205EAB70DEE5C /* OnboardingFlowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562D9B8400F751BC97C33CA0 /* OnboardingFlowViewModel.swift */; };
 		554DE3DFA0DEBD72D987E873 /* ChoiceChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE4CC8AC2215C0E408065CF /* ChoiceChipView.swift */; };
 		56723CC5B97B7AB371E471AE /* AllergenDietaryRestrictionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7687A10D41A87BA73186324 /* AllergenDietaryRestrictionViewModel.swift */; };
@@ -85,6 +87,7 @@
 		4B70D742796B2A4C68785A58 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		541122341A2A5C7CB98163AD /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		562D9B8400F751BC97C33CA0 /* OnboardingFlowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowViewModel.swift; sourceTree = "<group>"; };
+		57BF632551CB89C0AF1B1C9F /* VisionOCRServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionOCRServiceTests.swift; sourceTree = "<group>"; };
 		59037E9A631860382493E7FD /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		5BC63067C182B339680BFC98 /* MeelyzeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeelyzeApp.swift; sourceTree = "<group>"; };
 		5C7C27A69BB9BB60DCA4500B /* LanguageSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionView.swift; sourceTree = "<group>"; };
@@ -93,6 +96,7 @@
 		613D058FE927E7B101B872AC /* AllergenDietaryRestrictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenDietaryRestrictionView.swift; sourceTree = "<group>"; };
 		66BA6CF2960D1A63C122781C /* OCRResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRResult.swift; sourceTree = "<group>"; };
 		6AC21E7FF0683EF6B1F0A1E5 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
+		6C5BD0FA5722FAC40D364644 /* VisionOCRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionOCRService.swift; sourceTree = "<group>"; };
 		778434AFAC3EB4786763F2C8 /* SwiftDataProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataProfileRepository.swift; sourceTree = "<group>"; };
 		7963A306E3AE6837FC2A8D95 /* CameraGuideOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraGuideOverlayView.swift; sourceTree = "<group>"; };
 		7B7B484E49E6DC43421215F4 /* RecognizedTextObservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizedTextObservation.swift; sourceTree = "<group>"; };
@@ -133,6 +137,7 @@
 			children = (
 				26E21141D95926F3D67DF3A4 /* Models */,
 				B362CF1861E85DF2C252D2FB /* Repositories */,
+				6755F56FF800CAD58DD5C4DB /* Services */,
 				93B3637F9EFB7F8856FF2F23 /* ViewModels */,
 			);
 			path = MeelyzeTests;
@@ -157,6 +162,14 @@
 				948CECD5B2BFCABBFEEEE154 /* ScanViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		6755F56FF800CAD58DD5C4DB /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				57BF632551CB89C0AF1B1C9F /* VisionOCRServiceTests.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		93B3637F9EFB7F8856FF2F23 /* ViewModels */ = {
@@ -257,6 +270,7 @@
 				B90AD5EF040181D7B167919F /* CameraService.swift */,
 				DC3E11AF29762731792DE256 /* OCRService.swift */,
 				11ADB29E668A7D70DC9CB020 /* README.md */,
+				6C5BD0FA5722FAC40D364644 /* VisionOCRService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -412,6 +426,7 @@
 				8E4ED6D9A8F15A36828C1877 /* OCRResultTests.swift in Sources */,
 				C59B3228ADF0D183049EF6F1 /* ScanViewModelTests.swift in Sources */,
 				8FD5C8FF81002F9C2EBD91FC /* SwiftDataProfileRepositoryTests.swift in Sources */,
+				48AE76BBEE50AFCE3568CB3C /* VisionOCRServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,6 +474,7 @@
 				93A743B873325135631A1E36 /* ShutterButtonView.swift in Sources */,
 				1ED023492937FA4AD0277227 /* SwiftDataProfileRepository.swift in Sources */,
 				E17D53F89F84E5763ECB51B5 /* UserProfile.swift in Sources */,
+				08E9248A75FBF3970E7A9781 /* VisionOCRService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
