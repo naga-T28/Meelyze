@@ -19,6 +19,7 @@
 		4D25862F033205EAB70DEE5C /* OnboardingFlowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562D9B8400F751BC97C33CA0 /* OnboardingFlowViewModel.swift */; };
 		554DE3DFA0DEBD72D987E873 /* ChoiceChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE4CC8AC2215C0E408065CF /* ChoiceChipView.swift */; };
 		56723CC5B97B7AB371E471AE /* AllergenDietaryRestrictionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7687A10D41A87BA73186324 /* AllergenDietaryRestrictionViewModel.swift */; };
+		568B97920CE72DB4E1D1389A /* 190608123754-5cfb2d92996d5 (1).jpg in Resources */ = {isa = PBXBuildFile; fileRef = CEDAD2ABAF0CFF6CF0C01C64 /* 190608123754-5cfb2d92996d5 (1).jpg */; };
 		6C88114F4B1036D6004D9480 /* LocalizedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2E62A449F012C3E98BE9B /* LocalizedText.swift */; };
 		756BD32782322FA515D6DC6E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F35A56A3C74C07E63A9B61D /* Assets.xcassets */; };
 		76ED8352C6DE30CD5249F050 /* AllergenDietaryRestrictionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 613D058FE927E7B101B872AC /* AllergenDietaryRestrictionView.swift */; };
@@ -38,6 +39,7 @@
 		E79FDD8A9C9C5A236ACD0D3C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B70D742796B2A4C68785A58 /* ContentView.swift */; };
 		ED88E05A616991276579D494 /* DisclaimerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE73A55412CDA5165638B49 /* DisclaimerViewModelTests.swift */; };
 		F7484F7C1C5FD928FF244064 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59037E9A631860382493E7FD /* RootView.swift */; };
+		F9F4D92C3BE3E75457D42462 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E117924E9CE1BA287E5C74AB /* FlowLayout.swift */; };
 		FC22CD6E595355D52F162120 /* AllergenItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DB92545554B577741C8D9A2 /* AllergenItem.swift */; };
 /* End PBXBuildFile section */
 
@@ -90,7 +92,9 @@
 		BD0F5AB1729853FF7B380071 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		CDAA0292A33B42A4AA997B27 /* MeelyzeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeelyzeUITests.swift; sourceTree = "<group>"; };
 		CDC16DFA9AB4BD011E392700 /* ProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRepository.swift; sourceTree = "<group>"; };
+		CEDAD2ABAF0CFF6CF0C01C64 /* 190608123754-5cfb2d92996d5 (1).jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "190608123754-5cfb2d92996d5 (1).jpg"; sourceTree = "<group>"; };
 		D5F4493C56EE8F4086CCD1CB /* SafetyNoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafetyNoticeView.swift; sourceTree = "<group>"; };
+		E117924E9CE1BA287E5C74AB /* FlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		E21ACCAB4671F3910C32CB09 /* DisclaimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerViewModel.swift; sourceTree = "<group>"; };
 		EB51CE3FD41BE5D176A90A04 /* ScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanView.swift; sourceTree = "<group>"; };
 		EBE73A55412CDA5165638B49 /* DisclaimerViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerViewModelTests.swift; sourceTree = "<group>"; };
@@ -100,6 +104,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		11B98615F48270A11ABFB49C /* DebugResources */ = {
+			isa = PBXGroup;
+			children = (
+				9EA137D629074D51C2FE2433 /* SimulatorMenuPhotos */,
+			);
+			path = DebugResources;
+			sourceTree = "<group>";
+		};
 		292409EAB2C417201FDED053 /* MeelyzeTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -145,6 +157,7 @@
 			children = (
 				5F35A56A3C74C07E63A9B61D /* Assets.xcassets */,
 				5BC63067C182B339680BFC98 /* MeelyzeApp.swift */,
+				11B98615F48270A11ABFB49C /* DebugResources */,
 				DADCC8D217B04C879EB2AFB6 /* Models */,
 				2B806EC88A7404D248BB067E /* Preview Content */,
 				C8DC7A2797D4C3F450F719F7 /* Repositories */,
@@ -163,6 +176,14 @@
 				ACADEFC426248E0B568A8238 /* MeelyzeUITests */,
 				F358B9538AD7FEB507375A47 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		9EA137D629074D51C2FE2433 /* SimulatorMenuPhotos */ = {
+			isa = PBXGroup;
+			children = (
+				CEDAD2ABAF0CFF6CF0C01C64 /* 190608123754-5cfb2d92996d5 (1).jpg */,
+			);
+			path = SimulatorMenuPhotos;
 			sourceTree = "<group>";
 		};
 		ACADEFC426248E0B568A8238 /* MeelyzeUITests */ = {
@@ -187,6 +208,7 @@
 			isa = PBXGroup;
 			children = (
 				EFE4CC8AC2215C0E408065CF /* ChoiceChipView.swift */,
+				E117924E9CE1BA287E5C74AB /* FlowLayout.swift */,
 				D5F4493C56EE8F4086CCD1CB /* SafetyNoticeView.swift */,
 			);
 			path = Components;
@@ -355,6 +377,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				568B97920CE72DB4E1D1389A /* 190608123754-5cfb2d92996d5 (1).jpg in Resources */,
 				756BD32782322FA515D6DC6E /* Assets.xcassets in Resources */,
 				D0CB1F35BBC22A60A3E35AD5 /* Preview Assets.xcassets in Resources */,
 			);
@@ -399,6 +422,7 @@
 				7DE5BF06C09ADF308D6FD39A /* DisclaimerView.swift in Sources */,
 				A9959E55F71BCF035A4189B1 /* DisclaimerViewModel.swift in Sources */,
 				433CCB4ADF5D437BD2A2721D /* DisplayLanguage.swift in Sources */,
+				F9F4D92C3BE3E75457D42462 /* FlowLayout.swift in Sources */,
 				47DF2ECEBDCD388E8639F34A /* LanguageSelectionView.swift in Sources */,
 				209D6DFBCE82A8A8CD241D50 /* LanguageSelectionViewModel.swift in Sources */,
 				6C88114F4B1036D6004D9480 /* LocalizedText.swift in Sources */,
