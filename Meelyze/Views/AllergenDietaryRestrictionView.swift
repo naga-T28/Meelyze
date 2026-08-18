@@ -11,8 +11,6 @@ struct AllergenDietaryRestrictionView: View {
     /// 保存に成功した時点で、保存済み`UserProfile`とともに呼び出される。
     var onSave: (UserProfile) -> Void
 
-    private let columns = [GridItem(.adaptive(minimum: 96), spacing: 8, alignment: .leading)]
-
     init(
         hasAgreedToDisclaimer: Bool,
         disclaimerAgreedAt: Date?,
@@ -91,7 +89,7 @@ struct AllergenDietaryRestrictionView: View {
             Text(title)
                 .font(.headline)
 
-            LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
+            FlowLayout(horizontalSpacing: 8, verticalSpacing: 8) {
                 ForEach(items) { item in
                     ChoiceChipView(title: label(item), isSelected: isSelected(item)) {
                         onTap(item)

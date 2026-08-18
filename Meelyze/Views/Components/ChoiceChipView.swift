@@ -13,7 +13,7 @@ struct ChoiceChipView: View {
         Button(action: onTap) {
             Text(title)
                 .font(.subheadline)
-                .lineLimit(1)
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, 14)
                 .padding(.vertical, 8)
                 .background(
