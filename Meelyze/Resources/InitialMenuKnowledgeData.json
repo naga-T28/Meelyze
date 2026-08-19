@@ -1,0 +1,221 @@
+{
+  "schemaVersion": 1,
+  "dataVersion": "2026-08-19-initial-menu-knowledge",
+  "description": "Initial Okinawa menu knowledge data for Issue #12. Ingredient facts are limited to the cited public sources and must be reviewed before production use.",
+  "sources": [
+    {
+      "id": "maff_uchino_rafute",
+      "name": "農林水産省 うちの郷土料理 ラフテー 沖縄県",
+      "url": "https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/search_menu/menu/47_6_okinawa.html",
+      "checkedAt": "2026-08-19",
+      "notes": "主な使用食材と材料欄を参照。"
+    },
+    {
+      "id": "maff_uchino_goya_chanpuru",
+      "name": "農林水産省 うちの郷土料理 ゴーヤーチャンプルー 沖縄県",
+      "url": "https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/search_menu/menu/47_11_okinawa.html",
+      "checkedAt": "2026-08-19",
+      "notes": "主な使用食材と材料欄を参照。"
+    },
+    {
+      "id": "maff_uchino_okinawa_soba",
+      "name": "農林水産省 うちの郷土料理 沖縄そば 沖縄県",
+      "url": "https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/search_menu/menu/47_20_okinawa.html",
+      "checkedAt": "2026-08-19",
+      "notes": "歴史・由来欄、飲食方法、材料欄を参照。"
+    }
+  ],
+  "ingredients": [
+    {
+      "id": "pork",
+      "canonicalName": "豚肉",
+      "aliases": ["豚", "豚三枚肉", "豚バラ肉", "ポーク"],
+      "sourceIds": ["maff_uchino_rafute", "maff_uchino_goya_chanpuru", "maff_uchino_okinawa_soba"]
+    },
+    {
+      "id": "bonito_dashi",
+      "canonicalName": "かつおだし",
+      "aliases": ["鰹だし", "かつお出汁", "かつお節だし"],
+      "sourceIds": ["maff_uchino_rafute", "maff_uchino_okinawa_soba"]
+    },
+    {
+      "id": "awamori",
+      "canonicalName": "泡盛",
+      "aliases": ["あわもり"],
+      "sourceIds": ["maff_uchino_rafute", "maff_uchino_okinawa_soba"]
+    },
+    {
+      "id": "soy_sauce",
+      "canonicalName": "醤油",
+      "aliases": ["しょうゆ"],
+      "sourceIds": ["maff_uchino_rafute", "maff_uchino_okinawa_soba"]
+    },
+    {
+      "id": "goya",
+      "canonicalName": "ゴーヤー",
+      "aliases": ["ゴーヤ", "にがうり", "苦瓜"],
+      "sourceIds": ["maff_uchino_goya_chanpuru"]
+    },
+    {
+      "id": "okinawan_tofu",
+      "canonicalName": "沖縄豆腐",
+      "aliases": ["島豆腐", "豆腐"],
+      "sourceIds": ["maff_uchino_goya_chanpuru"]
+    },
+    {
+      "id": "egg",
+      "canonicalName": "卵",
+      "aliases": ["玉子", "たまご"],
+      "sourceIds": ["maff_uchino_goya_chanpuru"]
+    },
+    {
+      "id": "wheat_noodle",
+      "canonicalName": "小麦麺",
+      "aliases": ["沖縄そば麺", "そば麺"],
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "id": "pork_bone_dashi",
+      "canonicalName": "豚骨だし",
+      "aliases": ["豚骨出汁", "豚だし"],
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    }
+  ],
+  "dishes": [
+    {
+      "id": "rafute",
+      "canonicalName": "ラフテー",
+      "region": "okinawa",
+      "aliases": ["ラフティー", "沖縄風豚角煮"],
+      "sourceIds": ["maff_uchino_rafute"]
+    },
+    {
+      "id": "goya_chanpuru",
+      "canonicalName": "ゴーヤーチャンプルー",
+      "region": "okinawa",
+      "aliases": ["ゴーヤチャンプルー", "ゴーヤーチャンプル", "ゴーヤチャンプル"],
+      "sourceIds": ["maff_uchino_goya_chanpuru"]
+    },
+    {
+      "id": "okinawa_soba",
+      "canonicalName": "沖縄そば",
+      "region": "okinawa",
+      "aliases": ["おきなわそば", "沖縄すば"],
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    }
+  ],
+  "dishIngredients": [
+    {
+      "dishId": "rafute",
+      "ingredientId": "pork",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["maff_uchino_rafute"]
+    },
+    {
+      "dishId": "rafute",
+      "ingredientId": "bonito_dashi",
+      "confidence": "confirmed",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "dashi",
+      "sourceIds": ["maff_uchino_rafute"]
+    },
+    {
+      "dishId": "rafute",
+      "ingredientId": "awamori",
+      "confidence": "confirmed",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "seasoning",
+      "sourceIds": ["maff_uchino_rafute"]
+    },
+    {
+      "dishId": "rafute",
+      "ingredientId": "soy_sauce",
+      "confidence": "confirmed",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "seasoning",
+      "sourceIds": ["maff_uchino_rafute"]
+    },
+    {
+      "dishId": "goya_chanpuru",
+      "ingredientId": "goya",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["maff_uchino_goya_chanpuru"]
+    },
+    {
+      "dishId": "goya_chanpuru",
+      "ingredientId": "okinawan_tofu",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["maff_uchino_goya_chanpuru"]
+    },
+    {
+      "dishId": "goya_chanpuru",
+      "ingredientId": "pork",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["maff_uchino_goya_chanpuru"]
+    },
+    {
+      "dishId": "goya_chanpuru",
+      "ingredientId": "egg",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["maff_uchino_goya_chanpuru"]
+    },
+    {
+      "dishId": "okinawa_soba",
+      "ingredientId": "wheat_noodle",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "dishId": "okinawa_soba",
+      "ingredientId": "pork_bone_dashi",
+      "confidence": "confirmed",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "dashi",
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "dishId": "okinawa_soba",
+      "ingredientId": "bonito_dashi",
+      "confidence": "confirmed",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "dashi",
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "dishId": "okinawa_soba",
+      "ingredientId": "pork",
+      "confidence": "typical",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "dishId": "okinawa_soba",
+      "ingredientId": "awamori",
+      "confidence": "typical",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "seasoning",
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "dishId": "okinawa_soba",
+      "ingredientId": "soy_sauce",
+      "confidence": "typical",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "seasoning",
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    }
+  ]
+}

@@ -19,7 +19,13 @@ struct MeelyzeApp: App {
     /// `launch()`をまたいで状態を再現できるようにする（`MeelyzeUITests/OnboardingFlowUITests.swift`）。
     /// 環境変数が指定されない通常起動では、端末の標準永続ストアを使用する。
     private static func makeModelContainer() -> ModelContainer {
-        let schema = Schema([UserProfile.self])
+        let schema = Schema([
+            UserProfile.self,
+            Dish.self,
+            Ingredient.self,
+            DishIngredient.self,
+            DataImportVersion.self
+        ])
 
         guard let storeIdentifier = ProcessInfo.processInfo.environment["UITEST_STORE_IDENTIFIER"] else {
             return try! ModelContainer(for: schema)

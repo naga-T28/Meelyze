@@ -15,10 +15,13 @@
 		2C7AB085D8D4BEE14FBD4E42 /* MeelyzeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC63067C182B339680BFC98 /* MeelyzeApp.swift */; };
 		3240C866B7C2DCE00E17AFE9 /* AllergenDietaryRestrictionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EB1F18AACFF4D0CC4FE683 /* AllergenDietaryRestrictionViewModelTests.swift */; };
 		433CCB4ADF5D437BD2A2721D /* DisplayLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E5F436D44B72F78A3E135D /* DisplayLanguage.swift */; };
+		45300E39FCD68529BC7187DB /* SwiftDataMenuKnowledgeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FE258C816314D2A285DB511 /* SwiftDataMenuKnowledgeRepository.swift */; };
 		47DF2ECEBDCD388E8639F34A /* LanguageSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C7C27A69BB9BB60DCA4500B /* LanguageSelectionView.swift */; };
 		4D25862F033205EAB70DEE5C /* OnboardingFlowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 562D9B8400F751BC97C33CA0 /* OnboardingFlowViewModel.swift */; };
+		535E5EF880AF55F3F5440E09 /* MenuKnowledgeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ACD5C7507375111DDB9803 /* MenuKnowledgeRepository.swift */; };
 		554DE3DFA0DEBD72D987E873 /* ChoiceChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE4CC8AC2215C0E408065CF /* ChoiceChipView.swift */; };
 		56723CC5B97B7AB371E471AE /* AllergenDietaryRestrictionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7687A10D41A87BA73186324 /* AllergenDietaryRestrictionViewModel.swift */; };
+		5CBB201836FD5A4780F6F2D7 /* SwiftDataMenuKnowledgeRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1366B16A88E17F3DBF7C603C /* SwiftDataMenuKnowledgeRepositoryTests.swift */; };
 		6C88114F4B1036D6004D9480 /* LocalizedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2E62A449F012C3E98BE9B /* LocalizedText.swift */; };
 		756BD32782322FA515D6DC6E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5F35A56A3C74C07E63A9B61D /* Assets.xcassets */; };
 		76ED8352C6DE30CD5249F050 /* AllergenDietaryRestrictionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 613D058FE927E7B101B872AC /* AllergenDietaryRestrictionView.swift */; };
@@ -26,18 +29,26 @@
 		7DE5BF06C09ADF308D6FD39A /* DisclaimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD779C69BAA57BE87AF3BB21 /* DisclaimerView.swift */; };
 		7FD3FE9D98DAA48AA50C8D67 /* OnboardingFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E5C91EE3CB513A71A10363 /* OnboardingFlowView.swift */; };
 		8FD5C8FF81002F9C2EBD91FC /* SwiftDataProfileRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBFA2E920EFBF32275500C8 /* SwiftDataProfileRepositoryTests.swift */; };
+		96B722BB3C78C4EEAB8EBAA3 /* InitialMenuKnowledgeData.json in Resources */ = {isa = PBXBuildFile; fileRef = C2124BB907B91399F4D4F70C /* InitialMenuKnowledgeData.json */; };
 		A490F3D5B42B92F4339B39E7 /* ProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC16DFA9AB4BD011E392700 /* ProfileRepository.swift */; };
 		A9959E55F71BCF035A4189B1 /* DisclaimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E21ACCAB4671F3910C32CB09 /* DisclaimerViewModel.swift */; };
+		AA6E40F513CDD90D936A5996 /* DishIngredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A2F9D56E499432783D14F9 /* DishIngredient.swift */; };
+		AB2DFD5E83915C27A603F34A /* InitialDataImportServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DB1740DF49DECB90099046 /* InitialDataImportServiceTests.swift */; };
+		B4E91D56A21332C6DE8F5C3C /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A816D8FEFDC0586A66A39ABC /* Ingredient.swift */; };
+		B71B420E7E69437A7700EA75 /* InitialDataImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6C1577C5E8826E565ED3996 /* InitialDataImportService.swift */; };
 		D0CB1F35BBC22A60A3E35AD5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3808C478CBD9943B6F26DF6F /* Preview Assets.xcassets */; };
 		D4E720A75823C35AEE6EC016 /* OnboardingFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5EF0535E89A83B73DB6A6E /* OnboardingFlowUITests.swift */; };
 		D57FA4FE077906F86A05132F /* LanguageSelectionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213B89C1110A6074EBE9E49 /* LanguageSelectionViewModelTests.swift */; };
 		D9085693B6512C41A0118673 /* MeelyzeUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A02F0025B6BD711FA7DD7E5E /* MeelyzeUITestsLaunchTests.swift */; };
+		DB888E051928C15CF2C08571 /* DataImportVersion.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC1C0B9F88184A0BE0BA5A85 /* DataImportVersion.swift */; };
 		DD521B43A44B47A9A447B4FC /* MeelyzeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAA0292A33B42A4AA997B27 /* MeelyzeUITests.swift */; };
 		E17D53F89F84E5763ECB51B5 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0F5AB1729853FF7B380071 /* UserProfile.swift */; };
 		E2EDB1EF12F4EF8633D9E539 /* SafetyNoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F4493C56EE8F4086CCD1CB /* SafetyNoticeView.swift */; };
 		E79FDD8A9C9C5A236ACD0D3C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B70D742796B2A4C68785A58 /* ContentView.swift */; };
 		ED88E05A616991276579D494 /* DisclaimerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE73A55412CDA5165638B49 /* DisclaimerViewModelTests.swift */; };
+		EDA6823AF50AEE734BDCCD56 /* MenuKnowledgeModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8098B2E6E628E339BB9B6FB6 /* MenuKnowledgeModelTests.swift */; };
 		F7484F7C1C5FD928FF244064 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59037E9A631860382493E7FD /* RootView.swift */; };
+		FB1E743B9C3B952650DF2CD2 /* Dish.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EEA4D805BA1B4EB93DADCA6 /* Dish.swift */; };
 		FC22CD6E595355D52F162120 /* AllergenItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DB92545554B577741C8D9A2 /* AllergenItem.swift */; };
 /* End PBXBuildFile section */
 
@@ -59,9 +70,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0FE258C816314D2A285DB511 /* SwiftDataMenuKnowledgeRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataMenuKnowledgeRepository.swift; sourceTree = "<group>"; };
 		11ADB29E668A7D70DC9CB020 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		12E5C91EE3CB513A71A10363 /* OnboardingFlowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowView.swift; sourceTree = "<group>"; };
 		12E5F436D44B72F78A3E135D /* DisplayLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayLanguage.swift; sourceTree = "<group>"; };
+		1366B16A88E17F3DBF7C603C /* SwiftDataMenuKnowledgeRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataMenuKnowledgeRepositoryTests.swift; sourceTree = "<group>"; };
 		1BAB82008F0A2A8EB4081292 /* DietaryRestrictionCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DietaryRestrictionCategory.swift; sourceTree = "<group>"; };
 		1DB92545554B577741C8D9A2 /* AllergenItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenItem.swift; sourceTree = "<group>"; };
 		218521C806E7B0ABB02FB2F9 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -71,6 +84,7 @@
 		3EBFA2E920EFBF32275500C8 /* SwiftDataProfileRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataProfileRepositoryTests.swift; sourceTree = "<group>"; };
 		44C4319B950F229F30D4E81C /* Meelyze.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Meelyze.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B70D742796B2A4C68785A58 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		53ACD5C7507375111DDB9803 /* MenuKnowledgeRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuKnowledgeRepository.swift; sourceTree = "<group>"; };
 		541122341A2A5C7CB98163AD /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		562D9B8400F751BC97C33CA0 /* OnboardingFlowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowViewModel.swift; sourceTree = "<group>"; };
 		59037E9A631860382493E7FD /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -78,16 +92,24 @@
 		5C7C27A69BB9BB60DCA4500B /* LanguageSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionView.swift; sourceTree = "<group>"; };
 		5CEFCC19889D5611ECA68CFC /* MeelyzeTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MeelyzeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F35A56A3C74C07E63A9B61D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		60DB1740DF49DECB90099046 /* InitialDataImportServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialDataImportServiceTests.swift; sourceTree = "<group>"; };
 		613D058FE927E7B101B872AC /* AllergenDietaryRestrictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenDietaryRestrictionView.swift; sourceTree = "<group>"; };
 		6AC21E7FF0683EF6B1F0A1E5 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
 		778434AFAC3EB4786763F2C8 /* SwiftDataProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataProfileRepository.swift; sourceTree = "<group>"; };
 		7DB2E62A449F012C3E98BE9B /* LocalizedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedText.swift; sourceTree = "<group>"; };
+		8098B2E6E628E339BB9B6FB6 /* MenuKnowledgeModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuKnowledgeModelTests.swift; sourceTree = "<group>"; };
+		8EEA4D805BA1B4EB93DADCA6 /* Dish.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dish.swift; sourceTree = "<group>"; };
 		9E5EF0535E89A83B73DB6A6E /* OnboardingFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowUITests.swift; sourceTree = "<group>"; };
 		A02F0025B6BD711FA7DD7E5E /* MeelyzeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeelyzeUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		A4A2F9D56E499432783D14F9 /* DishIngredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishIngredient.swift; sourceTree = "<group>"; };
 		A4BAFAB497A658276674E242 /* LanguageSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionViewModel.swift; sourceTree = "<group>"; };
+		A6C1577C5E8826E565ED3996 /* InitialDataImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialDataImportService.swift; sourceTree = "<group>"; };
+		A816D8FEFDC0586A66A39ABC /* Ingredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ingredient.swift; sourceTree = "<group>"; };
 		A9C1E3D430E98001F181F529 /* MeelyzeUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MeelyzeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7EB1F18AACFF4D0CC4FE683 /* AllergenDietaryRestrictionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenDietaryRestrictionViewModelTests.swift; sourceTree = "<group>"; };
+		BC1C0B9F88184A0BE0BA5A85 /* DataImportVersion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataImportVersion.swift; sourceTree = "<group>"; };
 		BD0F5AB1729853FF7B380071 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
+		C2124BB907B91399F4D4F70C /* InitialMenuKnowledgeData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = InitialMenuKnowledgeData.json; sourceTree = "<group>"; };
 		CDAA0292A33B42A4AA997B27 /* MeelyzeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeelyzeUITests.swift; sourceTree = "<group>"; };
 		CDC16DFA9AB4BD011E392700 /* ProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRepository.swift; sourceTree = "<group>"; };
 		D5F4493C56EE8F4086CCD1CB /* SafetyNoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafetyNoticeView.swift; sourceTree = "<group>"; };
@@ -100,10 +122,20 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		26E21141D95926F3D67DF3A4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				8098B2E6E628E339BB9B6FB6 /* MenuKnowledgeModelTests.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		292409EAB2C417201FDED053 /* MeelyzeTests */ = {
 			isa = PBXGroup;
 			children = (
+				26E21141D95926F3D67DF3A4 /* Models */,
 				B362CF1861E85DF2C252D2FB /* Repositories */,
+				6755F56FF800CAD58DD5C4DB /* Services */,
 				93B3637F9EFB7F8856FF2F23 /* ViewModels */,
 			);
 			path = MeelyzeTests;
@@ -129,6 +161,14 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		6755F56FF800CAD58DD5C4DB /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				60DB1740DF49DECB90099046 /* InitialDataImportServiceTests.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		93B3637F9EFB7F8856FF2F23 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
@@ -148,6 +188,7 @@
 				DADCC8D217B04C879EB2AFB6 /* Models */,
 				2B806EC88A7404D248BB067E /* Preview Content */,
 				C8DC7A2797D4C3F450F719F7 /* Repositories */,
+				C7462C14A174D89045421CE9 /* Resources */,
 				D0BFB01C6A49B6ACF9294D04 /* Services */,
 				3A8D1496B87781C97D3E82CB /* ViewModels */,
 				CB3924E02FDC085233A8CF13 /* Views */,
@@ -178,6 +219,7 @@
 		B362CF1861E85DF2C252D2FB /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
+				1366B16A88E17F3DBF7C603C /* SwiftDataMenuKnowledgeRepositoryTests.swift */,
 				3EBFA2E920EFBF32275500C8 /* SwiftDataProfileRepositoryTests.swift */,
 			);
 			path = Repositories;
@@ -192,11 +234,21 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		C7462C14A174D89045421CE9 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				C2124BB907B91399F4D4F70C /* InitialMenuKnowledgeData.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		C8DC7A2797D4C3F450F719F7 /* Repositories */ = {
 			isa = PBXGroup;
 			children = (
+				53ACD5C7507375111DDB9803 /* MenuKnowledgeRepository.swift */,
 				CDC16DFA9AB4BD011E392700 /* ProfileRepository.swift */,
 				541122341A2A5C7CB98163AD /* README.md */,
+				0FE258C816314D2A285DB511 /* SwiftDataMenuKnowledgeRepository.swift */,
 				778434AFAC3EB4786763F2C8 /* SwiftDataProfileRepository.swift */,
 			);
 			path = Repositories;
@@ -220,6 +272,7 @@
 		D0BFB01C6A49B6ACF9294D04 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A6C1577C5E8826E565ED3996 /* InitialDataImportService.swift */,
 				11ADB29E668A7D70DC9CB020 /* README.md */,
 			);
 			path = Services;
@@ -229,8 +282,12 @@
 			isa = PBXGroup;
 			children = (
 				1DB92545554B577741C8D9A2 /* AllergenItem.swift */,
+				BC1C0B9F88184A0BE0BA5A85 /* DataImportVersion.swift */,
 				1BAB82008F0A2A8EB4081292 /* DietaryRestrictionCategory.swift */,
+				8EEA4D805BA1B4EB93DADCA6 /* Dish.swift */,
+				A4A2F9D56E499432783D14F9 /* DishIngredient.swift */,
 				12E5F436D44B72F78A3E135D /* DisplayLanguage.swift */,
+				A816D8FEFDC0586A66A39ABC /* Ingredient.swift */,
 				7DB2E62A449F012C3E98BE9B /* LocalizedText.swift */,
 				218521C806E7B0ABB02FB2F9 /* README.md */,
 				BD0F5AB1729853FF7B380071 /* UserProfile.swift */,
@@ -356,6 +413,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				756BD32782322FA515D6DC6E /* Assets.xcassets in Resources */,
+				96B722BB3C78C4EEAB8EBAA3 /* InitialMenuKnowledgeData.json in Resources */,
 				D0CB1F35BBC22A60A3E35AD5 /* Preview Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -370,7 +428,10 @@
 				3240C866B7C2DCE00E17AFE9 /* AllergenDietaryRestrictionViewModelTests.swift in Sources */,
 				7C2764254E4D6B8487F727E9 /* ContentViewModelTests.swift in Sources */,
 				ED88E05A616991276579D494 /* DisclaimerViewModelTests.swift in Sources */,
+				AB2DFD5E83915C27A603F34A /* InitialDataImportServiceTests.swift in Sources */,
 				D57FA4FE077906F86A05132F /* LanguageSelectionViewModelTests.swift in Sources */,
+				EDA6823AF50AEE734BDCCD56 /* MenuKnowledgeModelTests.swift in Sources */,
+				5CBB201836FD5A4780F6F2D7 /* SwiftDataMenuKnowledgeRepositoryTests.swift in Sources */,
 				8FD5C8FF81002F9C2EBD91FC /* SwiftDataProfileRepositoryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -395,20 +456,27 @@
 				554DE3DFA0DEBD72D987E873 /* ChoiceChipView.swift in Sources */,
 				E79FDD8A9C9C5A236ACD0D3C /* ContentView.swift in Sources */,
 				230793A69095A6AA017D70B6 /* ContentViewModel.swift in Sources */,
+				DB888E051928C15CF2C08571 /* DataImportVersion.swift in Sources */,
 				2395FF597B9F9B960E02D68A /* DietaryRestrictionCategory.swift in Sources */,
 				7DE5BF06C09ADF308D6FD39A /* DisclaimerView.swift in Sources */,
 				A9959E55F71BCF035A4189B1 /* DisclaimerViewModel.swift in Sources */,
+				FB1E743B9C3B952650DF2CD2 /* Dish.swift in Sources */,
+				AA6E40F513CDD90D936A5996 /* DishIngredient.swift in Sources */,
 				433CCB4ADF5D437BD2A2721D /* DisplayLanguage.swift in Sources */,
+				B4E91D56A21332C6DE8F5C3C /* Ingredient.swift in Sources */,
+				B71B420E7E69437A7700EA75 /* InitialDataImportService.swift in Sources */,
 				47DF2ECEBDCD388E8639F34A /* LanguageSelectionView.swift in Sources */,
 				209D6DFBCE82A8A8CD241D50 /* LanguageSelectionViewModel.swift in Sources */,
 				6C88114F4B1036D6004D9480 /* LocalizedText.swift in Sources */,
 				2C7AB085D8D4BEE14FBD4E42 /* MeelyzeApp.swift in Sources */,
+				535E5EF880AF55F3F5440E09 /* MenuKnowledgeRepository.swift in Sources */,
 				7FD3FE9D98DAA48AA50C8D67 /* OnboardingFlowView.swift in Sources */,
 				4D25862F033205EAB70DEE5C /* OnboardingFlowViewModel.swift in Sources */,
 				A490F3D5B42B92F4339B39E7 /* ProfileRepository.swift in Sources */,
 				F7484F7C1C5FD928FF244064 /* RootView.swift in Sources */,
 				E2EDB1EF12F4EF8633D9E539 /* SafetyNoticeView.swift in Sources */,
 				038A8396515D70B91E97B457 /* ScanView.swift in Sources */,
+				45300E39FCD68529BC7187DB /* SwiftDataMenuKnowledgeRepository.swift in Sources */,
 				1ED023492937FA4AD0277227 /* SwiftDataProfileRepository.swift in Sources */,
 				E17D53F89F84E5763ECB51B5 /* UserProfile.swift in Sources */,
 			);
