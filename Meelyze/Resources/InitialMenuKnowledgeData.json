@@ -25,59 +25,122 @@
       "notes": "歴史・由来欄、飲食方法、材料欄を参照。"
     }
   ],
+  "allergens": [
+    {
+      "id": "pork",
+      "japaneseName": "豚肉"
+    },
+    {
+      "id": "egg",
+      "japaneseName": "卵"
+    },
+    {
+      "id": "wheat",
+      "japaneseName": "小麦"
+    },
+    {
+      "id": "soybean",
+      "japaneseName": "大豆"
+    }
+  ],
+  "restrictions": [
+    {
+      "id": "halal_pork",
+      "japaneseName": "豚由来",
+      "category": "halal"
+    },
+    {
+      "id": "halal_alcohol",
+      "japaneseName": "アルコール",
+      "category": "halal"
+    },
+    {
+      "id": "vegetarian_animal_dashi",
+      "japaneseName": "動物性だし",
+      "category": "vegetarian"
+    },
+    {
+      "id": "vegan_animal_product",
+      "japaneseName": "動物性食材",
+      "category": "vegan"
+    },
+    {
+      "id": "non_alcoholic_alcohol",
+      "japaneseName": "アルコール",
+      "category": "nonAlcoholic"
+    }
+  ],
   "ingredients": [
     {
       "id": "pork",
       "canonicalName": "豚肉",
       "aliases": ["豚", "豚三枚肉", "豚バラ肉", "ポーク"],
+      "allergenIds": ["pork"],
+      "restrictionIds": ["halal_pork", "vegan_animal_product"],
       "sourceIds": ["maff_uchino_rafute", "maff_uchino_goya_chanpuru", "maff_uchino_okinawa_soba"]
     },
     {
       "id": "bonito_dashi",
       "canonicalName": "かつおだし",
       "aliases": ["鰹だし", "かつお出汁", "かつお節だし"],
+      "allergenIds": [],
+      "restrictionIds": ["vegetarian_animal_dashi", "vegan_animal_product"],
       "sourceIds": ["maff_uchino_rafute", "maff_uchino_okinawa_soba"]
     },
     {
       "id": "awamori",
       "canonicalName": "泡盛",
       "aliases": ["あわもり"],
+      "allergenIds": [],
+      "restrictionIds": ["halal_alcohol", "non_alcoholic_alcohol"],
       "sourceIds": ["maff_uchino_rafute", "maff_uchino_okinawa_soba"]
     },
     {
       "id": "soy_sauce",
       "canonicalName": "醤油",
       "aliases": ["しょうゆ"],
+      "allergenIds": ["wheat", "soybean"],
+      "restrictionIds": [],
       "sourceIds": ["maff_uchino_rafute", "maff_uchino_okinawa_soba"]
     },
     {
       "id": "goya",
       "canonicalName": "ゴーヤー",
       "aliases": ["ゴーヤ", "にがうり", "苦瓜"],
+      "allergenIds": [],
+      "restrictionIds": [],
       "sourceIds": ["maff_uchino_goya_chanpuru"]
     },
     {
       "id": "okinawan_tofu",
       "canonicalName": "沖縄豆腐",
       "aliases": ["島豆腐", "豆腐"],
+      "allergenIds": ["soybean"],
+      "restrictionIds": [],
       "sourceIds": ["maff_uchino_goya_chanpuru"]
     },
     {
       "id": "egg",
       "canonicalName": "卵",
       "aliases": ["玉子", "たまご"],
+      "allergenIds": ["egg"],
+      "restrictionIds": ["vegan_animal_product"],
       "sourceIds": ["maff_uchino_goya_chanpuru"]
     },
     {
       "id": "wheat_noodle",
       "canonicalName": "小麦麺",
       "aliases": ["沖縄そば麺", "そば麺"],
+      "allergenIds": ["wheat"],
+      "restrictionIds": [],
       "sourceIds": ["maff_uchino_okinawa_soba"]
     },
     {
       "id": "pork_bone_dashi",
       "canonicalName": "豚骨だし",
       "aliases": ["豚骨出汁", "豚だし"],
+      "allergenIds": ["pork"],
+      "restrictionIds": ["halal_pork", "vegetarian_animal_dashi", "vegan_animal_product"],
       "sourceIds": ["maff_uchino_okinawa_soba"]
     }
   ],

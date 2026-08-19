@@ -9,18 +9,32 @@ final class Ingredient {
     @Attribute(.unique) var id: String
     var canonicalName: String
     var aliases: [String]
+    var sourceIds: [String]
+    @Relationship(deleteRule: .cascade, inverse: \IngredientAlias.ingredient)
+    var aliasRecords: [IngredientAlias]
     @Relationship(deleteRule: .cascade, inverse: \DishIngredient.ingredient)
     var dishes: [DishIngredient]
+    @Relationship(deleteRule: .cascade, inverse: \IngredientAllergen.ingredient)
+    var allergens: [IngredientAllergen]
+    @Relationship(deleteRule: .cascade, inverse: \IngredientRestriction.ingredient)
+    var restrictions: [IngredientRestriction]
 
     init(
         id: String,
         canonicalName: String,
         aliases: [String] = [],
-        dishes: [DishIngredient] = []
+        sourceIds: [String] = [],
+        dishes: [DishIngredient] = [],
+        allergens: [IngredientAllergen] = [],
+        restrictions: [IngredientRestriction] = []
     ) {
         self.id = id
         self.canonicalName = canonicalName
         self.aliases = aliases
+        self.sourceIds = sourceIds
+        self.aliasRecords = aliases.map { IngredientAlias(value: $0) }
         self.dishes = dishes
+        self.allergens = allergens
+        self.restrictions = restrictions
     }
 }

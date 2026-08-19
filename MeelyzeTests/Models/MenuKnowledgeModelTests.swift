@@ -12,8 +12,15 @@ struct MenuKnowledgeModelTests {
         let schema = Schema([
             UserProfile.self,
             Dish.self,
+            DishAlias.self,
             Ingredient.self,
+            IngredientAlias.self,
             DishIngredient.self,
+            Allergen.self,
+            Restriction.self,
+            IngredientAllergen.self,
+            IngredientRestriction.self,
+            EvidenceSource.self,
             DataImportVersion.self
         ])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
@@ -27,7 +34,8 @@ struct MenuKnowledgeModelTests {
             id: "goya_chanpuru",
             canonicalName: "ゴーヤーチャンプルー",
             region: "okinawa",
-            aliases: ["ゴーヤチャンプルー", "ゴーヤーチャンプル"]
+            aliases: ["ゴーヤチャンプルー", "ゴーヤーチャンプル"],
+            sourceIds: ["source_1"]
         )
 
         context.insert(dish)
@@ -40,6 +48,8 @@ struct MenuKnowledgeModelTests {
         #expect(fetched.first?.canonicalName == "ゴーヤーチャンプルー")
         #expect(fetched.first?.region == "okinawa")
         #expect(fetched.first?.aliases.contains("ゴーヤチャンプルー") == true)
+        #expect(fetched.first?.aliasRecords.map(\.value).contains("ゴーヤチャンプルー") == true)
+        #expect(fetched.first?.sourceIds == ["source_1"])
     }
 
     @Test func ingredientCanBeSavedAndFetched() throws {
@@ -47,7 +57,8 @@ struct MenuKnowledgeModelTests {
         let ingredient = Ingredient(
             id: "pork",
             canonicalName: "豚肉",
-            aliases: ["ポーク", "ぶた肉", "豚"]
+            aliases: ["ポーク", "ぶた肉", "豚"],
+            sourceIds: ["source_1"]
         )
 
         context.insert(ingredient)
@@ -59,6 +70,8 @@ struct MenuKnowledgeModelTests {
         #expect(fetched.first?.id == "pork")
         #expect(fetched.first?.canonicalName == "豚肉")
         #expect(fetched.first?.aliases.contains("ポーク") == true)
+        #expect(fetched.first?.aliasRecords.map(\.value).contains("ポーク") == true)
+        #expect(fetched.first?.sourceIds == ["source_1"])
     }
 
     @Test func dishIngredientConnectsDishAndIngredient() throws {
@@ -78,7 +91,8 @@ struct MenuKnowledgeModelTests {
             ingredient: ingredient,
             confidence: .typical,
             isHiddenIngredient: true,
-            hiddenIngredientCategory: .dashi
+            hiddenIngredientCategory: .dashi,
+            sourceIds: ["source_1"]
         )
 
         context.insert(dish)
@@ -94,6 +108,47 @@ struct MenuKnowledgeModelTests {
         #expect(fetchedLink.confidence == .typical)
         #expect(fetchedLink.isHiddenIngredient == true)
         #expect(fetchedLink.hiddenIngredientCategory == .dashi)
+        #expect(fetchedLink.sourceIds == ["source_1"])
+    }
+
+    @Test func ingredientConnectsToAllergenAndRestriction() throws {
+        let context = try makeInMemoryContext()
+        let ingredient = Ingredient(id: "pork", canonicalName: "豚肉")
+        let allergen = Allergen(id: "pork", japaneseName: "豚肉")
+        let restriction = Restriction(id: "halal_pork", japaneseName: "豚由来", category: .halal)
+
+        context.insert(ingredient)
+        context.insert(allergen)
+        context.insert(restriction)
+        context.insert(IngredientAllergen(ingredient: ingredient, allergen: allergen, sourceIds: ["source_1"]))
+        context.insert(IngredientRestriction(ingredient: ingredient, restriction: restriction, sourceIds: ["source_1"]))
+        try context.save()
+
+        let fetchedIngredient = try #require(try context.fetch(FetchDescriptor<Ingredient>()).first)
+
+        #expect(fetchedIngredient.allergens.first?.allergen.id == "pork")
+        #expect(fetchedIngredient.allergens.first?.sourceIds == ["source_1"])
+        #expect(fetchedIngredient.restrictions.first?.restriction.id == "halal_pork")
+        #expect(fetchedIngredient.restrictions.first?.restriction.category == .halal)
+    }
+
+    @Test func evidenceSourceCanBeSavedAndFetched() throws {
+        let context = try makeInMemoryContext()
+        let source = EvidenceSource(
+            id: "source_1",
+            name: "Test Source",
+            urlString: "https://example.com",
+            checkedAt: "2026-08-19",
+            notes: "Test notes"
+        )
+
+        context.insert(source)
+        try context.save()
+
+        let fetchedSource = try #require(try context.fetch(FetchDescriptor<EvidenceSource>()).first)
+
+        #expect(fetchedSource.id == "source_1")
+        #expect(fetchedSource.urlString == "https://example.com")
     }
 
     @Test func dataImportVersionCanBeSavedAndFetched() throws {

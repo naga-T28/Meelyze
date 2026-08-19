@@ -26,19 +26,22 @@ final class DishIngredient {
     var confidenceRawValue: String
     var isHiddenIngredient: Bool
     var hiddenIngredientCategoryRawValue: String?
+    var sourceIds: [String]
 
     init(
         dish: Dish,
         ingredient: Ingredient,
         confidence: DishIngredientConfidence = .typical,
         isHiddenIngredient: Bool = false,
-        hiddenIngredientCategory: HiddenIngredientCategory? = nil
+        hiddenIngredientCategory: HiddenIngredientCategory? = nil,
+        sourceIds: [String] = []
     ) {
         self.dish = dish
         self.ingredient = ingredient
         self.confidenceRawValue = confidence.rawValue
         self.isHiddenIngredient = isHiddenIngredient
         self.hiddenIngredientCategoryRawValue = hiddenIngredientCategory?.rawValue
+        self.sourceIds = sourceIds
     }
 
     var confidence: DishIngredientConfidence {

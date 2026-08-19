@@ -30,11 +30,28 @@ final class InitialDataImportService {
             return InitialDataImportSummary(dataVersion: document.dataVersion, didImport: false)
         }
 
-        for ingredient in document.ingredients {
-            try repository.upsertIngredient(Ingredient(
-                id: ingredient.id,
-                canonicalName: ingredient.canonicalName,
-                aliases: ingredient.aliases
+        for source in document.sources {
+            try repository.upsertEvidenceSource(EvidenceSource(
+                id: source.id,
+                name: source.name,
+                urlString: source.url.absoluteString,
+                checkedAt: source.checkedAt,
+                notes: source.notes
+            ))
+        }
+
+        for allergen in document.allergens {
+            try repository.upsertAllergen(Allergen(id: allergen.id, japaneseName: allergen.japaneseName))
+        }
+
+        for restriction in document.restrictions {
+            guard let category = DietaryRestrictionCategory(rawValue: restriction.category) else {
+                throw InitialDataImportServiceError.invalidRestrictionCategory(restriction.category)
+            }
+            try repository.upsertRestriction(Restriction(
+                id: restriction.id,
+                japaneseName: restriction.japaneseName,
+                category: category
             ))
         }
 
@@ -43,8 +60,35 @@ final class InitialDataImportService {
                 id: dish.id,
                 canonicalName: dish.canonicalName,
                 region: dish.region,
-                aliases: dish.aliases
+                aliases: dish.aliases,
+                sourceIds: dish.sourceIds
             ))
+        }
+
+        for ingredient in document.ingredients {
+            try repository.upsertIngredient(Ingredient(
+                id: ingredient.id,
+                canonicalName: ingredient.canonicalName,
+                aliases: ingredient.aliases,
+                sourceIds: ingredient.sourceIds
+            ))
+        }
+
+        for ingredient in document.ingredients {
+            for allergenId in ingredient.allergenIds {
+                try repository.upsertIngredientAllergen(
+                    ingredientId: ingredient.id,
+                    allergenId: allergenId,
+                    sourceIds: ingredient.sourceIds
+                )
+            }
+            for restrictionId in ingredient.restrictionIds {
+                try repository.upsertIngredientRestriction(
+                    ingredientId: ingredient.id,
+                    restrictionId: restrictionId,
+                    sourceIds: ingredient.sourceIds
+                )
+            }
         }
 
         for dishIngredient in document.dishIngredients {
@@ -63,7 +107,8 @@ final class InitialDataImportService {
                 ingredientId: dishIngredient.ingredientId,
                 confidence: confidence,
                 isHiddenIngredient: dishIngredient.isHiddenIngredient,
-                hiddenIngredientCategory: hiddenIngredientCategory
+                hiddenIngredientCategory: hiddenIngredientCategory,
+                sourceIds: dishIngredient.sourceIds
             )
         }
 
@@ -105,6 +150,7 @@ enum InitialDataImportServiceError: Error, Equatable {
     case resourceNotFound(resourceName: String)
     case invalidConfidence(String)
     case invalidHiddenIngredientCategory(String)
+    case invalidRestrictionCategory(String)
 }
 
 private struct InitialMenuKnowledgeDocument: Decodable {
@@ -112,6 +158,8 @@ private struct InitialMenuKnowledgeDocument: Decodable {
     let dataVersion: String
     let description: String
     let sources: [InitialMenuKnowledgeSource]
+    let allergens: [InitialMenuKnowledgeAllergen]
+    let restrictions: [InitialMenuKnowledgeRestriction]
     let ingredients: [InitialMenuKnowledgeIngredient]
     let dishes: [InitialMenuKnowledgeDish]
     let dishIngredients: [InitialMenuKnowledgeDishIngredient]
@@ -125,10 +173,23 @@ private struct InitialMenuKnowledgeSource: Decodable {
     let notes: String
 }
 
+private struct InitialMenuKnowledgeAllergen: Decodable {
+    let id: String
+    let japaneseName: String
+}
+
+private struct InitialMenuKnowledgeRestriction: Decodable {
+    let id: String
+    let japaneseName: String
+    let category: String
+}
+
 private struct InitialMenuKnowledgeIngredient: Decodable {
     let id: String
     let canonicalName: String
     let aliases: [String]
+    let allergenIds: [String]
+    let restrictionIds: [String]
     let sourceIds: [String]
 }
 

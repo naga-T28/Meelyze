@@ -22,8 +22,15 @@ struct MeelyzeApp: App {
         let schema = Schema([
             UserProfile.self,
             Dish.self,
+            DishAlias.self,
             Ingredient.self,
+            IngredientAlias.self,
             DishIngredient.self,
+            Allergen.self,
+            Restriction.self,
+            IngredientAllergen.self,
+            IngredientRestriction.self,
+            EvidenceSource.self,
             DataImportVersion.self
         ])
 

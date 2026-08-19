@@ -9,8 +9,15 @@ struct SwiftDataMenuKnowledgeRepositoryTests {
         let schema = Schema([
             UserProfile.self,
             Dish.self,
+            DishAlias.self,
             Ingredient.self,
+            IngredientAlias.self,
             DishIngredient.self,
+            Allergen.self,
+            Restriction.self,
+            IngredientAllergen.self,
+            IngredientRestriction.self,
+            EvidenceSource.self,
             DataImportVersion.self
         ])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
@@ -24,7 +31,8 @@ struct SwiftDataMenuKnowledgeRepositoryTests {
             id: "rafute",
             canonicalName: "ラフテー",
             region: "okinawa",
-            aliases: ["らふてー", "豚角煮"]
+            aliases: ["らふてー", "豚角煮"],
+            sourceIds: ["source_1"]
         )
 
         try repository.upsertDish(dish)
@@ -33,6 +41,8 @@ struct SwiftDataMenuKnowledgeRepositoryTests {
         #expect(fetched.canonicalName == "ラフテー")
         #expect(fetched.region == "okinawa")
         #expect(fetched.aliases == ["らふてー", "豚角煮"])
+        #expect(fetched.aliasRecords.map(\.value) == ["らふてー", "豚角煮"])
+        #expect(fetched.sourceIds == ["source_1"])
     }
 
     @Test func dishesMatchingNameFindsCanonicalNameAndAlias() throws {
@@ -71,7 +81,8 @@ struct SwiftDataMenuKnowledgeRepositoryTests {
         let ingredient = Ingredient(
             id: "pork",
             canonicalName: "豚肉",
-            aliases: ["ポーク", "豚"]
+            aliases: ["ポーク", "豚"],
+            sourceIds: ["source_1"]
         )
 
         try repository.upsertIngredient(ingredient)
@@ -79,6 +90,8 @@ struct SwiftDataMenuKnowledgeRepositoryTests {
 
         #expect(fetched.canonicalName == "豚肉")
         #expect(fetched.aliases == ["ポーク", "豚"])
+        #expect(fetched.aliasRecords.map(\.value) == ["ポーク", "豚"])
+        #expect(fetched.sourceIds == ["source_1"])
     }
 
     @Test func ingredientsMatchingNameFindsCanonicalNameAndAlias() throws {
@@ -116,7 +129,8 @@ struct SwiftDataMenuKnowledgeRepositoryTests {
             ingredientId: "pork",
             confidence: .confirmed,
             isHiddenIngredient: false,
-            hiddenIngredientCategory: nil
+            hiddenIngredientCategory: nil,
+            sourceIds: ["source_1"]
         )
 
         let fetchedDish = try #require(try repository.dish(id: "rafute"))
@@ -125,6 +139,41 @@ struct SwiftDataMenuKnowledgeRepositoryTests {
         #expect(link.ingredient.id == "pork")
         #expect(link.confidence == .confirmed)
         #expect(link.isHiddenIngredient == false)
+        #expect(link.sourceIds == ["source_1"])
+    }
+
+    @Test func upsertIngredientAllergenAndRestrictionConnectsIngredientToRiskTags() throws {
+        let repository = SwiftDataMenuKnowledgeRepository(modelContext: try makeInMemoryContext())
+        try repository.upsertIngredient(Ingredient(id: "pork", canonicalName: "豚肉"))
+        try repository.upsertAllergen(Allergen(id: "pork", japaneseName: "豚肉"))
+        try repository.upsertRestriction(Restriction(id: "halal_pork", japaneseName: "豚由来", category: .halal))
+
+        try repository.upsertIngredientAllergen(ingredientId: "pork", allergenId: "pork", sourceIds: ["source_1"])
+        try repository.upsertIngredientRestriction(ingredientId: "pork", restrictionId: "halal_pork", sourceIds: ["source_1"])
+
+        let fetchedIngredient = try #require(try repository.ingredient(id: "pork"))
+
+        #expect(fetchedIngredient.allergens.first?.allergen.id == "pork")
+        #expect(fetchedIngredient.allergens.first?.sourceIds == ["source_1"])
+        #expect(fetchedIngredient.restrictions.first?.restriction.id == "halal_pork")
+        #expect(fetchedIngredient.restrictions.first?.restriction.category == .halal)
+    }
+
+    @Test func upsertEvidenceSourcePersistsSourceDetails() throws {
+        let repository = SwiftDataMenuKnowledgeRepository(modelContext: try makeInMemoryContext())
+
+        try repository.upsertEvidenceSource(EvidenceSource(
+            id: "source_1",
+            name: "Test Source",
+            urlString: "https://example.com",
+            checkedAt: "2026-08-19",
+            notes: "Test notes"
+        ))
+
+        let fetchedSource = try #require(try repository.evidenceSource(id: "source_1"))
+
+        #expect(fetchedSource.name == "Test Source")
+        #expect(fetchedSource.urlString == "https://example.com")
     }
 
     @Test func markDataVersionImportedRecordsImportState() throws {
