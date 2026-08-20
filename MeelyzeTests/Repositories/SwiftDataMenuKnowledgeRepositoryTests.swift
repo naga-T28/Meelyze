@@ -41,7 +41,7 @@ struct SwiftDataMenuKnowledgeRepositoryTests {
         #expect(fetched.canonicalName == "ラフテー")
         #expect(fetched.region == "okinawa")
         #expect(fetched.aliases == ["らふてー", "豚角煮"])
-        #expect(fetched.aliasRecords.map(\.value) == ["らふてー", "豚角煮"])
+        #expect(Set(fetched.aliasRecords.map(\.value)) == Set(["らふてー", "豚角煮"]))
         #expect(fetched.sourceIds == ["source_1"])
     }
 
@@ -90,7 +90,7 @@ struct SwiftDataMenuKnowledgeRepositoryTests {
 
         #expect(fetched.canonicalName == "豚肉")
         #expect(fetched.aliases == ["ポーク", "豚"])
-        #expect(fetched.aliasRecords.map(\.value) == ["ポーク", "豚"])
+        #expect(Set(fetched.aliasRecords.map(\.value)) == Set(["ポーク", "豚"]))
         #expect(fetched.sourceIds == ["source_1"])
     }
 

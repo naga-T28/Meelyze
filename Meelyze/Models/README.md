@@ -12,3 +12,9 @@ Dish、Ingredient、Allergenなど、アプリのドメインを表す型を配�
 `AllergenItem` `DietaryRestrictionCategory`は、Dish/Ingredient側の判定ロジック（Rule Engine、#17）が未着手のため、SwiftDataエンティティ化せずenumカタログとして実装している。関連付け対象が具体化した時点でSwiftData化を再検討する（`task/README-issue11.md`「前提となる設計判断」参照）。
 
 Dish、Ingredientなど判定ロジック用のモデルは別Issueで追加する。詳細は `docs/technology-selection.md`「8. Local Database」を参照。
+
+## 現在の内容（Issue #14）
+
+- `RecognizedTextObservation.swift`: OCRが検出した1件のテキスト領域（認識文字列・Confidence・Bounding Box）を表す。
+- `OCRResult.swift`: 1回の撮影・OCR実行結果全体（`[RecognizedTextObservation]`）を表す。空配列は「Visionが文字を1件も抽出できなかった」ことを表す。
+
