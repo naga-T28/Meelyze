@@ -20,12 +20,18 @@ targets:
       - path: Meelyze
         excludes:
           - "**/*.md"
+          - "DebugResources/SimulatorMenuPhotos/**"
       - path: Meelyze/Models/README.md
         buildPhase: none
       - path: Meelyze/Services/README.md
         buildPhase: none
       - path: Meelyze/Repositories/README.md
         buildPhase: none
+      # フォルダ参照（blue folder）。画像を追加・削除しても`xcodegen generate`の再実行は不要
+      # （`Meelyze/DebugResources/SimulatorMenuPhotos/README.md`参照）。Simulator専用の手動OCRテスト用。
+      - path: Meelyze/DebugResources/SimulatorMenuPhotos
+        type: folder
+        buildPhase: resources
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.meelyze.Meelyze
@@ -34,6 +40,7 @@ targets:
         DEVELOPMENT_ASSET_PATHS: "\"Meelyze/Preview Content\""
         ENABLE_PREVIEWS: YES
         INFOPLIST_KEY_CFBundleDisplayName: Meelyze
+        INFOPLIST_KEY_NSCameraUsageDescription: "メニューを撮影してアレルゲン・食事制限を判定するためにカメラを使用します。撮影した画像は端末外へ送信されません。"
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
