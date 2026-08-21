@@ -18,3 +18,10 @@ Dish、Ingredientなど判定ロジック用のモデルは別Issueで追加す�
 - `RecognizedTextObservation.swift`: OCRが検出した1件のテキスト領域（認識文字列・Confidence・Bounding Box）を表す。
 - `OCRResult.swift`: 1回の撮影・OCR実行結果全体（`[RecognizedTextObservation]`）を表す。空配列は「Visionが文字を1件も抽出できなかった」ことを表す。
 
+## 現在の内容（Issue #15）
+
+- `MenuUnderstandingModels.swift`: Menu Understandingへのメニュー全体入力（`MenuUnderstandingRequest`とsource segmentである`MenuUnderstandingSourceSegment`・`MenuUnderstandingSourceID`）、Foundation Models利用可否（`MenuUnderstandingAvailability`）、型付き失敗（`MenuUnderstandingFailureScope` `MenuUnderstandingFailureReason` `MenuUnderstandingRetryability` `MenuUnderstandingFailure`）、解析結果全体（`MenuUnderstandingResult`）を定義する。Foundation Modelsへ依存しない純粋なドメインモデル。
+- `ParsedMenuItem.swift`: LLMが抽出した1料理項目の型安全な構造化結果（`ParsedMenuItem`）と、そのsource対応（`MenuUnderstandingSourceReference` `MenuUnderstandingItemReference`）を定義する。`MenuUnderstandingItemReference.originalText`は参照元sourceのraw fragmentから決定論的に構成し、直接指定するAPIは提供しない。
+
+`MenuUnderstandingRequest.segments`は呼び出し側が渡したOCR observation順をそのまま保持し、読み取り順として並べ替えない。`explicitIngredients`は原文へ明示された食材のみを保持し、料理名から推測した典型・隠れ食材は含まない契約とする。詳細は `docs/technology-selection.md`「6. Local LLM」、`task/TASK-024-menu-understanding-contract-models.md`を参照。
+
