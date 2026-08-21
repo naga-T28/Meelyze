@@ -51,31 +51,90 @@ struct MenuUnderstandingPromptTests {
 
     // MARK: - prompt(for:)
 
-    @Test func promptFormatsASingleSegmentWithItsSourceIDMarker() {
+    @Test func promptEncodesASingleSegmentAsAJSONObjectWithItsSourceID() throws {
         let request = MenuUnderstandingRequest(segments: [
             MenuUnderstandingSourceSegment(id: MenuUnderstandingSourceID("s1"), rawText: "ラフテー", confidence: 0.9, boundingBox: .zero),
         ])
 
-        #expect(MenuUnderstandingPrompt.prompt(for: request) == "[s1] ラフテー")
+        let entries = try decodePromptEntries(MenuUnderstandingPrompt.prompt(for: request))
+
+        #expect(entries.count == 1)
+        #expect(entries[0].sourceID == "s1")
+        #expect(entries[0].rawText == "ラフテー")
+        #expect(entries[0].analysisText == nil)
     }
 
-    @Test func promptPreservesInputOrderAcrossMultipleSegments() {
+    @Test func promptPreservesInputOrderAcrossMultipleSegments() throws {
         let request = MenuUnderstandingRequest(segments: [
             MenuUnderstandingSourceSegment(id: MenuUnderstandingSourceID("c"), rawText: "テビチ", confidence: 0.9, boundingBox: .zero),
             MenuUnderstandingSourceSegment(id: MenuUnderstandingSourceID("a"), rawText: "ラフテー", confidence: 0.9, boundingBox: .zero),
         ])
 
-        #expect(MenuUnderstandingPrompt.prompt(for: request) == "[c] テビチ\n[a] ラフテー")
+        let entries = try decodePromptEntries(MenuUnderstandingPrompt.prompt(for: request))
+
+        #expect(entries.map(\.sourceID) == ["c", "a"])
+        #expect(entries.map(\.rawText) == ["テビチ", "ラフテー"])
     }
 
-    @Test func promptUsesAnalysisTextWhenPresentButFallsBackToRawTextOtherwise() {
-        var withAnalysisText = MenuUnderstandingSourceSegment(id: MenuUnderstandingSourceID("s1"), rawText: "生 テキスト", confidence: 0.9, boundingBox: .zero)
-        withAnalysisText.analysisText = "前処理済みテキスト"
-        let withoutAnalysisText = MenuUnderstandingSourceSegment(id: MenuUnderstandingSourceID("s2"), rawText: "生 テキスト2", confidence: 0.9, boundingBox: .zero)
-        let request = MenuUnderstandingRequest(segments: [withAnalysisText, withoutAnalysisText])
+    // MARK: - prompt(for:): rawText / analysisText role separation (FIX-005)
 
-        let prompt = MenuUnderstandingPrompt.prompt(for: request)
+    @Test func promptCarriesBothRawTextAndAnalysisTextForTheSameSourceInAnEscapableFormatWithDistinctRoles() throws {
+        var segment = MenuUnderstandingSourceSegment(id: MenuUnderstandingSourceID("s1"), rawText: "ゴーヤー・チャンプルー 1,280円", confidence: 0.9, boundingBox: .zero)
+        segment.analysisText = "ゴーヤーチャンプルー"
+        let request = MenuUnderstandingRequest(segments: [segment])
 
-        #expect(prompt == "[s1] 前処理済みテキスト\n[s2] 生 テキスト2")
+        let entries = try decodePromptEntries(MenuUnderstandingPrompt.prompt(for: request))
+
+        #expect(entries.count == 1)
+        #expect(entries[0].sourceID == "s1")
+        #expect(entries[0].rawText == "ゴーヤー・チャンプルー 1,280円")
+        #expect(entries[0].analysisText == "ゴーヤーチャンプルー")
+        // rawTextとanalysisTextが異なる値として、どちらも欠落せずPromptへ含まれること。
+        #expect(entries[0].rawText != entries[0].analysisText)
     }
+
+    @Test func promptTreatsNilAndWhitespaceOnlyAnalysisTextIdenticallyAsAbsent() throws {
+        let nilAnalysisText = MenuUnderstandingSourceSegment(id: MenuUnderstandingSourceID("s1"), rawText: "生 テキスト", confidence: 0.9, boundingBox: .zero)
+        var whitespaceOnlyAnalysisText = MenuUnderstandingSourceSegment(id: MenuUnderstandingSourceID("s2"), rawText: "生 テキスト2", confidence: 0.9, boundingBox: .zero)
+        whitespaceOnlyAnalysisText.analysisText = "   "
+        var emptyAnalysisText = MenuUnderstandingSourceSegment(id: MenuUnderstandingSourceID("s3"), rawText: "生 テキスト3", confidence: 0.9, boundingBox: .zero)
+        emptyAnalysisText.analysisText = ""
+        let request = MenuUnderstandingRequest(segments: [nilAnalysisText, whitespaceOnlyAnalysisText, emptyAnalysisText])
+
+        let entries = try decodePromptEntries(MenuUnderstandingPrompt.prompt(for: request))
+
+        #expect(entries[0].analysisText == nil)
+        #expect(entries[1].analysisText == nil)
+        #expect(entries[2].analysisText == nil)
+    }
+
+    @Test func promptUsesTheActualAnalysisTextWhenItIsNonEmptyAfterTrimming() throws {
+        var segment = MenuUnderstandingSourceSegment(id: MenuUnderstandingSourceID("s1"), rawText: "生 テキスト", confidence: 0.9, boundingBox: .zero)
+        segment.analysisText = "前処理済みテキスト"
+        let request = MenuUnderstandingRequest(segments: [segment])
+
+        let entries = try decodePromptEntries(MenuUnderstandingPrompt.prompt(for: request))
+
+        #expect(entries[0].analysisText == "前処理済みテキスト")
+    }
+}
+
+private struct DecodedPromptEntry: Decodable {
+    let sourceID: String
+    let rawText: String
+    let analysisText: String?
+}
+
+private func decodePromptEntries(_ prompt: String) throws -> [DecodedPromptEntry] {
+    // instructions側の説明文は含めず、JSON配列部分だけをdecodeする。
+    guard let jsonStart = prompt.firstIndex(of: "[") else {
+        throw DecodePromptEntriesError.noJSONArrayFound
+    }
+    let jsonSubstring = prompt[jsonStart...]
+    let data = Data(jsonSubstring.utf8)
+    return try JSONDecoder().decode([DecodedPromptEntry].self, from: data)
+}
+
+private enum DecodePromptEntriesError: Error {
+    case noJSONArrayFound
 }

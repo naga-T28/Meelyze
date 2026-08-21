@@ -146,6 +146,12 @@ enum MenuUnderstandingFailureReason: Equatable, Sendable {
     /// 境界を検証できたitemについて、decode後のフィールド単位バリデーションが失敗した。
     /// 詳細な原因は`MenuUnderstandingItemValidationReason`で表す。
     case itemValidationFailed(MenuUnderstandingItemValidationReason)
+    /// Structured Outputの配列が有限上限へ到達し、完全性（切り詰められていないこと）を保証できなかった
+    /// （FIX-005）。自動分割を尽くしたterminal failureであり、同じ入力への盲目的retryでは解消しない。
+    case outputLimitReached(MenuUnderstandingOutputLimit)
+    /// 同じprovenance identity（source ID・raw range・fragmentの順序付き組）を持つ複数の候補で
+    /// semantic fields（baseDishCandidates等）が競合し、無言でどちらかを採用できなかった（FIX-005）。
+    case duplicateCandidateConflict
 }
 
 /// `LanguageModelSession.GenerationError`および予期しない`Error`をTASK-025が変換した、
@@ -178,6 +184,38 @@ enum MenuUnderstandingGenerationFailureReason: Equatable, Sendable {
     case unknown
 }
 
+/// Menu Understanding Structured Outputの各配列に設けた有限上限。DTO側の`@Guide(.maximumCount(...))`
+/// （`FoundationModelsMenuParser`）とParserの飽和判定が同じ値を参照するための単一の定義（FIX-005）。
+/// 上限値を上げるだけでは飽和時のsilent lossが再発するため、値そのものではなく必ず
+/// `MenuUnderstandingFailureReason.outputLimitReached`と組み合わせて扱うこと。
+enum MenuUnderstandingOutputLimits {
+    static let items = 10
+    static let sourceReferences = 4
+    static let baseDishCandidates = 3
+    static let explicitIngredients = 6
+    static let preparationMethods = 3
+    static let modifiers = 4
+    static let unknownTerms = 4
+}
+
+/// `MenuUnderstandingOutputLimits`のどの配列が上限へ到達したかを識別する。`items`はtop-level
+/// （Structured Output全体の料理項目数）、それ以外は1 item内のフィールドを表す。
+enum MenuUnderstandingOutputLimitField: Equatable, Sendable {
+    case items
+    case sourceReferences
+    case baseDishCandidates
+    case explicitIngredients
+    case preparationMethods
+    case modifiers
+    case unknownTerms
+}
+
+/// 出力上限へ到達し、完全性（切り詰められていないこと）を保証できなかったことを表す。
+struct MenuUnderstandingOutputLimit: Equatable, Sendable {
+    let field: MenuUnderstandingOutputLimitField
+    let limit: Int
+}
+
 /// Structured Outputが返したsource参照を検証した結果、現在のchunk・requestと整合しなかった理由。
 enum MenuUnderstandingSourceMappingFailureReason: Equatable, Sendable {
     /// requestに一度も存在しないsource IDを参照していた（捏造）。
@@ -187,6 +225,15 @@ enum MenuUnderstandingSourceMappingFailureReason: Equatable, Sendable {
     case chunkBoundaryUnresolved
     /// 参照元sourceのraw textに、宣言されたfragmentが（空でない完全一致部分として）含まれていなかった。
     case sourceFragmentMismatch(MenuUnderstandingSourceID)
+    /// `sourceReferences`が空だった。参照元を推測で補わず、境界未解決として扱う。
+    case emptySourceReferences
+    /// 同じsource IDが1つのitem内で複数回参照されていた。
+    case duplicateSourceReference(MenuUnderstandingSourceID)
+    /// `sourceReferences`の順序がrequest全体のsource順と一致しなかった。文字列類似での並べ替えはしない。
+    case sourceReferenceOrderInvalid
+    /// fragmentが参照元sourceのraw textへ複数箇所一致し、どの出現を指すか一意に決定できなかった。
+    /// 同文の複数出現を推測で対応付けない（FIX-005）。
+    case ambiguousFragmentOccurrence(MenuUnderstandingSourceID)
 }
 
 /// 境界を検証できたitemについて、decode後のフィールド単位バリデーションが失敗した理由。

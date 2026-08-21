@@ -3,20 +3,24 @@ import FoundationModels
 
 /// `MenuUnderstandingService`のApple Foundation Models実装。実行時の利用可否判定、
 /// 型安全なStructured Output取得、Foundation Models固有エラーからtyped domain failureへの
-/// 変換、context上限に応じたsource境界chunking、10秒timeout、source/item単位の検証を
-/// このファイル内へ閉じ込める。`FoundationModels`をimportするのはこのファイルのみとし、
-/// `MenuUnderstandingService` Protocol・domain model・ViewModelへは一切露出させない。
+/// 変換、context上限に応じたsource境界chunking、出力配列の有限上限飽和検出、10秒timeout、
+/// source/item単位の検証をこのファイル内へ閉じ込める。`FoundationModels`をimportするのは
+/// このファイルのみとし、`MenuUnderstandingService` Protocol・domain model・ViewModelへは
+/// 一切露出させない。
 ///
-/// Prompt本文は`MenuUnderstandingPrompt`（TASK-026）が抽出規則を確定させる。
+/// Prompt本文は`MenuUnderstandingPrompt`（TASK-026）が抽出規則を確定させる。chunk分割・出力上限
+/// 飽和検出・provenance identityによるglobal reconcileはFIX-005が確定させた契約に従う。
 struct FoundationModelsMenuParser: MenuUnderstandingService {
     /// メニュー原文の対象locale。端末の`Locale.current`やユーザーの表示言語设定に判定を委ねず、
     /// 常にこの値で`supportsLocale(_:)`を確認する。
     static let menuLocale = Locale(identifier: "ja-JP")
 
-    /// chunk境界を分割する際、隣接chunkへ重複させる（overlapさせる）source segment数。
-    /// 境界をまたぐ項目が少なくとも片方のchunkで完全に検証できる可能性を残しつつ、
-    /// 分割のたびに厳密にサイズが縮小することを保証する値として1を採用する。
-    private static let boundaryOverlapSegmentCount = 1
+    /// chunk境界を分割する際、隣接chunkへ重複させる（overlapさせる）source segment数の上限。
+    /// 1つのitemが`MenuUnderstandingOutputLimits.sourceReferences`（4）件のsourceへまたがり得る
+    /// 契約を維持するため、境界item解決に必要になり得る最大3つの隣接sourceを見込む（FIX-005）。
+    /// 実際に付与されるoverlapは、隣接side自身のcore segment数（`- 1`）によっても制約されるため、
+    /// 小さいsplitではこの上限に到達しない。
+    private static let boundaryOverlapSegmentCount = MenuUnderstandingOutputLimits.sourceReferences - 1
 
     private let runner: any FoundationModelsRequestRunning
     private let availabilityProvider: any SystemLanguageModelAvailabilityProviding
@@ -33,6 +37,9 @@ struct FoundationModelsMenuParser: MenuUnderstandingService {
     ///   - maximumResponseTokens: `GenerationOptions.maximumResponseTokens`に渡す上限。既定値800は
     ///     DTOの配列上限（`items`最大10件、1件あたりの各field上限。後述）を根拠に、4,096 tokenの
     ///     context windowのうち出力側へ割り当てる分として選定した（TASK-026作業ログ参照）。
+    ///     FIX-005でPromptへ`rawText`・`analysisText`の両方を含めるようになった分の入力側token増は
+    ///     `contextMeasurer`のtoken preflight（利用可能な環境）とcontext超過の反応的検出の双方で
+    ///     引き続きcontext分割の対象になる。
     ///   - timeoutDuration: 1回のFoundation Models呼び出しに許容する時間。既定10秒
     ///     （`docs/ui-design.md`のLoading方針）。
     init(
@@ -93,36 +100,49 @@ struct FoundationModelsMenuParser: MenuUnderstandingService {
         }
 
         let fullRange = 0...(request.segments.count - 1)
-        var nextOrdinal = 0
         let outcome = await analyzeRange(
             physicalRange: fullRange,
             coreRange: fullRange,
             allSegments: request.segments,
-            sourceSeparator: request.sourceSeparator,
-            nextOrdinal: &nextOrdinal
+            sourceSeparator: request.sourceSeparator
+        )
+        let (items, failures) = Self.reconcile(
+            candidates: outcome.candidates,
+            priorFailures: outcome.failures,
+            allSegments: request.segments,
+            sourceSeparator: request.sourceSeparator
         )
 
-        return MenuUnderstandingResult(request: request, items: outcome.items, availability: availability, failures: outcome.failures)
+        return MenuUnderstandingResult(request: request, items: items, availability: availability, failures: failures)
     }
 
     // MARK: - Chunking (source境界を保ったまま再帰的に分割・実行する)
 
+    /// 1回の`analyzeRange`呼び出しが集めた、まだordinalを持たない検証済み候補と失敗。
+    /// ordinal・item-scoped failureの`MenuUnderstandingItemReference`は、全chunkの候補が出揃った後
+    /// `reconcile(candidates:priorFailures:allSegments:sourceSeparator:)`が一度だけ確定させる
+    /// （FIX-005: decode直後にordinalを付けない）。
     private struct RangeOutcome {
-        var items: [ParsedMenuItem] = []
+        var candidates: [ValidatedCandidate] = []
         var failures: [MenuUnderstandingFailure] = []
     }
 
-    /// `coreRange`はこの呼び出しが最終的な項目所有権を持つsource index範囲、`physicalRange`は
-    /// 実際にモデルへ渡すsource index範囲（`coreRange`に境界overlapを加えたもの）を表す。
-    /// 呼び出しのたびに新しいSessionを使うFoundation Models呼び出しを1回試み、
-    /// `exceededContextWindowSize`または事前のtoken preflightでcontext超過が見込まれる場合は
-    /// `coreRange`をsource境界で2分割し、それぞれを再帰的に処理してmergeする。
+    /// `coreRange`はこの呼び出しが分割の起点とするsource index範囲、`physicalRange`は実際に
+    /// モデルへ渡すsource index範囲（`coreRange`に境界overlapを加えたもの）を表す。呼び出しのたびに
+    /// 新しいSessionを使うFoundation Models呼び出しを1回試み、(1) `exceededContextWindowSize`・
+    /// 事前のtoken preflightがcontext超過を示した場合、または(2) 応答の`items`が
+    /// `MenuUnderstandingOutputLimits.items`へ飽和し、かつ`coreRange`をさらに安全に分割できる場合に、
+    /// `coreRange`をsource境界で2分割し、それぞれを再帰的に処理してcandidateをmergeする
+    /// （FIX-005: 上限飽和を明示的に検出し、silent successにしない）。
+    ///
+    /// このメソッドは、item-levelの所有権判定を一切行わない。overlapにより複数chunkが同じ境界item
+    /// を独立に観測した場合も、両方のcandidateをそのまま返す。重複排除は`reconcile`が
+    /// provenance identity（source ID・raw range・fragmentの順序付き組）に基づいて行う。
     private func analyzeRange(
         physicalRange: ClosedRange<Int>,
         coreRange: ClosedRange<Int>,
         allSegments: [MenuUnderstandingSourceSegment],
-        sourceSeparator: String,
-        nextOrdinal: inout Int
+        sourceSeparator: String
     ) async -> RangeOutcome {
         let physicalSegments = Array(allSegments[physicalRange])
         let instructions = MenuUnderstandingPrompt.instructions()
@@ -144,14 +164,15 @@ struct FoundationModelsMenuParser: MenuUnderstandingService {
             let raceOutcome = await respondWithTimeout(instructions: instructions, prompt: prompt, options: options)
             switch raceOutcome {
             case .content(let content):
-                return decodeAndValidate(
-                    content,
-                    physicalRange: physicalRange,
-                    coreRange: coreRange,
-                    allSegments: allSegments,
-                    sourceSeparator: sourceSeparator,
-                    nextOrdinal: &nextOrdinal
-                )
+                let decoded = decodeAndValidate(content, physicalRange: physicalRange, coreRange: coreRange, allSegments: allSegments)
+                if decoded.itemsSaturated, coreRange.count > 1 {
+                    // `items`が上限どおり返り、かつまだsource境界で分割できる。この応答は
+                    // 「本当に全件」か「切り詰められた結果」か判別できないためprovisionalとして
+                    // 破棄し（candidateもfailureも採用しない）、下のsplit処理へ進む。
+                    needsSplit = true
+                } else {
+                    return RangeOutcome(candidates: decoded.candidates, failures: decoded.failures)
+                }
             case .timedOut:
                 return RangeOutcome(failures: [
                     MenuUnderstandingFailure(
@@ -190,28 +211,35 @@ struct FoundationModelsMenuParser: MenuUnderstandingService {
 
         guard coreRange.count > 1 else {
             // これ以上分割できない単一sourceがcontextへ収まらない。切り捨て・推測をせず
-            // source-scopedな失敗として返す。
+            // source-scopedな失敗として返す（`items`飽和で`coreRange.count == 1`の場合は、上の
+            // `!needsSplit`分岐が`decoded`を直接返しているため、ここへは到達しない）。
             let onlySourceID = allSegments[coreRange.lowerBound].id
             return RangeOutcome(failures: [
                 MenuUnderstandingFailure(scope: .sources([onlySourceID]), reason: .generationFailed(.contextWindowExceeded), retryability: .notRetryable),
             ])
         }
 
+        // `coreRange`を厳密に縮小しながら2分割する。同じ`(physicalRange, coreRange)`を再試行しない
+        // ため、再帰は必ず有限回（高々source数程度の呼び出し）で停止する。
         let mid = (coreRange.lowerBound + coreRange.upperBound) / 2
         let leftCore = coreRange.lowerBound...mid
         let rightCore = (mid + 1)...coreRange.upperBound
+        // overlapは常に隣接side自身のcore segment数（`- 1`）と`boundaryOverlapSegmentCount`の
+        // 小さい方に収める。物理範囲の外側edge（`physicalRange`の境界）はここで再計算せず、
+        // 親から継承した`physicalRange`をそのまま使うことで、多段再帰でも親由来のoverlap
+        // （halo）を失わない（FIX-005: 旧実装は`coreRange`基準で再計算しhaloを失っていた）。
         let rightOverlap = min(Self.boundaryOverlapSegmentCount, rightCore.count - 1)
         let leftOverlap = min(Self.boundaryOverlapSegmentCount, leftCore.count - 1)
-        let leftPhysical = coreRange.lowerBound...(mid + rightOverlap)
-        let rightPhysical = (mid + 1 - leftOverlap)...coreRange.upperBound
+        let leftPhysical = physicalRange.lowerBound...(mid + rightOverlap)
+        let rightPhysical = (mid + 1 - leftOverlap)...physicalRange.upperBound
 
         let leftOutcome = await analyzeRange(
-            physicalRange: leftPhysical, coreRange: leftCore, allSegments: allSegments, sourceSeparator: sourceSeparator, nextOrdinal: &nextOrdinal
+            physicalRange: leftPhysical, coreRange: leftCore, allSegments: allSegments, sourceSeparator: sourceSeparator
         )
         let rightOutcome = await analyzeRange(
-            physicalRange: rightPhysical, coreRange: rightCore, allSegments: allSegments, sourceSeparator: sourceSeparator, nextOrdinal: &nextOrdinal
+            physicalRange: rightPhysical, coreRange: rightCore, allSegments: allSegments, sourceSeparator: sourceSeparator
         )
-        return RangeOutcome(items: leftOutcome.items + rightOutcome.items, failures: leftOutcome.failures + rightOutcome.failures)
+        return RangeOutcome(candidates: leftOutcome.candidates + rightOutcome.candidates, failures: leftOutcome.failures + rightOutcome.failures)
     }
 
     private func sourceIDs(in range: ClosedRange<Int>, of segments: [MenuUnderstandingSourceSegment]) -> [MenuUnderstandingSourceID] {
@@ -317,30 +345,76 @@ struct FoundationModelsMenuParser: MenuUnderstandingService {
         }
     }
 
-    // MARK: - Decode + source/item validation
+    // MARK: - Decode + source/item validation (global reconcile前のcandidate生成)
+
+    /// 1回のFoundation Models応答をdecode・検証した結果。`items`飽和判定はdomain mapping・
+    /// item-scoped failure生成より前に行う（FIX-005: 上限到達を`failures`なしの成功として返さない）。
+    private struct DecodeOutcome {
+        var candidates: [ValidatedCandidate] = []
+        var failures: [MenuUnderstandingFailure] = []
+        /// `dto.items.count`が`MenuUnderstandingOutputLimits.items`へ到達したか。
+        var itemsSaturated = false
+    }
+
+    /// ordinalを持たない内部候補。provenance identity（`provenance`。source ID・raw range・
+    /// fragmentの順序付き組）で境界item・同文別itemを区別する。semantic fieldsはdecode済みの値を
+    /// そのまま保持し、`explicitIngredients`は個別raw fragment単位の検証を経た値にする。
+    /// `itemScopedFailureReasons`は、この候補が最終的にitemとして採用された場合にだけ
+    /// `.item(reference)` scopeへ解決される（FIX-005）。
+    private struct ValidatedCandidate {
+        var provenance: [CandidateSourceReference]
+        var baseDishCandidates: [String]
+        var explicitIngredients: [String]
+        var preparationMethods: [String]
+        var modifiers: [String]
+        var unknownTerms: [String]
+        var itemScopedFailureReasons: [MenuUnderstandingFailureReason]
+    }
+
+    /// provenance identityの1要素。`rawRange`はraw text内でfragmentが一意に出現する位置
+    /// （UTF-16 half-open range）を表し、`(sourceID, rawFragment)`だけでは区別できない同文別item・
+    /// 同一source内の複数出現を識別するために使う（FIX-005）。
+    private struct CandidateSourceReference: Equatable {
+        let sourceID: MenuUnderstandingSourceID
+        let rawRange: RawRange
+        let rawFragment: String
+    }
+
+    /// sourceの`rawText`内での位置を表す、UTF-16 half-open rangeの座標系。
+    private struct RawRange: Equatable, Hashable {
+        let lowerBound: Int
+        let upperBound: Int
+    }
 
     /// Structured Output全体のdecodeに失敗した場合はchunkのsource集合scopeで失敗を返し、項目境界を
-    /// 捏造しない。decodeに成功した各itemについては、(1) 参照source IDが現在のchunkの入力に属すること、
-    /// (2) 参照fragmentが対応するsourceのraw textに含まれる非空の完全一致部分であることを検証し、
-    /// いずれかを満たさない項目はitemを構築せずsource-scopedな失敗として扱う（文字列類似での
-    /// 再結合はしない）。境界を検証できた項目は、`coreRange`（この呼び出しが所有権を持つsource index
-    /// 範囲）内にminimum source indexを持つ場合だけ採用し、overlapにより重複して現れた項目は
-    /// 所有chunk以外では黙って捨てる。採用した項目については、最後に`explicitIngredients`の各要素が
-    /// 参照fragmentへ実際に含まれるかを検証し、含まれない要素を除外したうえでitem-scopedな
-    /// バリデーション失敗を併記する。
+    /// 捏造しない。`items`が上限へ到達し、かつ`coreRange`をさらに分割できる場合は、呼び出し元
+    /// （`analyzeRange`）が再分割できるよう`itemsSaturated`だけを立てて候補・failureを生成しない。
+    ///
+    /// それ以外の場合、decodeに成功した各itemについて (1) 参照source IDが現在のchunkの入力に属し、
+    /// 空・重複・順序逆転がないこと、(2) 参照fragmentが対応するsourceのraw textに含まれる非空・
+    /// 一意な完全一致部分であることを検証し、いずれかを満たさない項目はitemを構築せず
+    /// source-scopedな失敗として扱う（文字列類似での再結合はしない）。`sourceReferences`が
+    /// `MenuUnderstandingOutputLimits.sourceReferences`へ飽和した項目は、参照元が完全か証明できない
+    /// ため通常itemとして受理せず、output-limit failureへする。
+    ///
+    /// 境界を検証できた項目は、所有権判定なしにそのまま候補として返す（overlapにより複数chunkが
+    /// 同じ境界itemを独立に観測しても、ここでは重複排除しない）。重複排除・ordinal付与は
+    /// `reconcile`がglobalに行う。採用した候補については、`explicitIngredients`の各要素が
+    /// 対応する個別raw fragment（複数fragmentを連結した文字列ではない）へ実際に含まれるかを検証し、
+    /// 含まれない要素を除外したうえでitem-scopedなバリデーション失敗を併記する。`baseDishCandidates`・
+    /// `preparationMethods`・`modifiers`・`unknownTerms`が上限へ到達した場合も、候補自体は保持しつつ
+    /// item-scopedなoutput-limit failureを併記する。
     private func decodeAndValidate(
         _ content: GeneratedContent,
         physicalRange: ClosedRange<Int>,
         coreRange: ClosedRange<Int>,
-        allSegments: [MenuUnderstandingSourceSegment],
-        sourceSeparator: String,
-        nextOrdinal: inout Int
-    ) -> RangeOutcome {
+        allSegments: [MenuUnderstandingSourceSegment]
+    ) -> DecodeOutcome {
         let dto: MenuAnalysisDTO
         do {
             dto = try MenuAnalysisDTO(content)
         } catch {
-            return RangeOutcome(failures: [
+            return DecodeOutcome(failures: [
                 MenuUnderstandingFailure(
                     scope: .sources(sourceIDs(in: physicalRange, of: allSegments)),
                     reason: .generationFailed(.decodingFailed),
@@ -349,14 +423,24 @@ struct FoundationModelsMenuParser: MenuUnderstandingService {
             ])
         }
 
+        let itemsSaturated = dto.items.count >= MenuUnderstandingOutputLimits.items
+
+        if itemsSaturated, coreRange.count > 1 {
+            // 「本当に全件」か「切り詰められた結果」か判別できない。呼び出し元が再分割できるよう、
+            // この応答（飽和した親応答）はprovisionalとして破棄し、候補・failureを一切生成しない。
+            return DecodeOutcome(itemsSaturated: true)
+        }
+
         let allSegmentIDs = Set(allSegments.map(\.id))
         let physicalSegmentsByID = Dictionary(uniqueKeysWithValues: allSegments[physicalRange].map { ($0.id, $0) })
         let indexByID = Dictionary(uniqueKeysWithValues: allSegments.enumerated().map { ($0.element.id, $0.offset) })
 
-        var outcome = RangeOutcome()
+        var outcome = DecodeOutcome(itemsSaturated: itemsSaturated)
 
         for dtoItem in dto.items {
-            var sourceReferences: [MenuUnderstandingSourceReference] = []
+            var sourceReferences: [CandidateSourceReference] = []
+            var resolvedIndices: [Int] = []
+            var seenSourceIDsInItem = Set<MenuUnderstandingSourceID>()
             var mappingFailure: MenuUnderstandingSourceMappingFailureReason?
 
             for dtoReference in dtoItem.sourceReferences {
@@ -369,11 +453,29 @@ struct FoundationModelsMenuParser: MenuUnderstandingService {
                     mappingFailure = .chunkBoundaryUnresolved
                     break
                 }
+                guard seenSourceIDsInItem.insert(sourceID).inserted else {
+                    mappingFailure = .duplicateSourceReference(sourceID)
+                    break
+                }
                 guard !dtoReference.fragment.isEmpty, segment.rawText.contains(dtoReference.fragment) else {
                     mappingFailure = .sourceFragmentMismatch(sourceID)
                     break
                 }
-                sourceReferences.append(MenuUnderstandingSourceReference(sourceID: sourceID, rawFragment: dtoReference.fragment))
+                let occurrences = Self.occurrenceRanges(of: dtoReference.fragment, in: segment.rawText)
+                guard occurrences.count == 1 else {
+                    // fragmentが同じsource内に複数回出現し、どちらの出現かを推測で決められない。
+                    mappingFailure = .ambiguousFragmentOccurrence(sourceID)
+                    break
+                }
+                resolvedIndices.append(indexByID[sourceID] ?? Int.max)
+                sourceReferences.append(CandidateSourceReference(sourceID: sourceID, rawRange: occurrences[0], rawFragment: dtoReference.fragment))
+            }
+
+            if mappingFailure == nil, sourceReferences.isEmpty {
+                mappingFailure = .emptySourceReferences
+            }
+            if mappingFailure == nil, resolvedIndices != resolvedIndices.sorted() {
+                mappingFailure = .sourceReferenceOrderInvalid
             }
 
             if let mappingFailure {
@@ -386,45 +488,241 @@ struct FoundationModelsMenuParser: MenuUnderstandingService {
                 )
                 continue
             }
-            guard !sourceReferences.isEmpty else { continue }
 
-            let minSourceIndex = sourceReferences.compactMap { indexByID[$0.sourceID] }.min() ?? Int.max
-            guard coreRange.contains(minSourceIndex) else {
-                // このchunkが所有権を持たない境界overlap上の項目。所有chunk側の出力を信頼し、
-                // ここでは重複させない。
-                continue
-            }
-
-            let reference = MenuUnderstandingItemReference(ordinal: nextOrdinal, sourceReferences: sourceReferences, separator: sourceSeparator)
-            nextOrdinal += 1
-
-            var explicitIngredients = dtoItem.explicitIngredients
-            let referencedText = sourceReferences.map(\.rawFragment).joined()
-            let invalidIngredients = explicitIngredients.filter { !referencedText.contains($0) }
-            if !invalidIngredients.isEmpty {
-                explicitIngredients.removeAll { invalidIngredients.contains($0) }
+            if dtoItem.sourceReferences.count >= MenuUnderstandingOutputLimits.sourceReferences {
+                // provenance-criticalなsourceReferencesが上限へ到達。参照元が完全か証明できないため、
+                // 通常itemとして受理せず、既に検証済みの参照sourceをscopeとするfailureにする。
                 outcome.failures.append(
                     MenuUnderstandingFailure(
-                        scope: .item(reference),
-                        reason: .itemValidationFailed(.explicitIngredientsNotInSource(invalidIngredients)),
+                        scope: .sources(sourceReferences.map(\.sourceID)),
+                        reason: .outputLimitReached(
+                            MenuUnderstandingOutputLimit(field: .sourceReferences, limit: MenuUnderstandingOutputLimits.sourceReferences)
+                        ),
                         retryability: .notRetryable
                     )
                 )
+                continue
             }
 
-            outcome.items.append(
-                ParsedMenuItem(
-                    reference: reference,
+            // explicitIngredientsは、複数sourceのraw fragmentを連結した文字列ではなく、
+            // 各要素が少なくとも1つの個別raw fragment内に完全一致することを確認する（FIX-005）。
+            // source境界をまたいだ偽の一致（例: source A末尾「豚」+ source B先頭「肉」→「豚肉」）を
+            // 受理しない。
+            var explicitIngredients = dtoItem.explicitIngredients
+            let invalidIngredients = explicitIngredients.filter { ingredient in
+                !sourceReferences.contains { $0.rawFragment.contains(ingredient) }
+            }
+            var itemScopedFailureReasons: [MenuUnderstandingFailureReason] = []
+            if !invalidIngredients.isEmpty {
+                explicitIngredients.removeAll { invalidIngredients.contains($0) }
+                itemScopedFailureReasons.append(.itemValidationFailed(.explicitIngredientsNotInSource(invalidIngredients)))
+            }
+
+            Self.appendOutputLimitFailureIfSaturated(dtoItem.baseDishCandidates.count, field: .baseDishCandidates, into: &itemScopedFailureReasons)
+            Self.appendOutputLimitFailureIfSaturated(dtoItem.explicitIngredients.count, field: .explicitIngredients, into: &itemScopedFailureReasons)
+            Self.appendOutputLimitFailureIfSaturated(dtoItem.preparationMethods.count, field: .preparationMethods, into: &itemScopedFailureReasons)
+            Self.appendOutputLimitFailureIfSaturated(dtoItem.modifiers.count, field: .modifiers, into: &itemScopedFailureReasons)
+            Self.appendOutputLimitFailureIfSaturated(dtoItem.unknownTerms.count, field: .unknownTerms, into: &itemScopedFailureReasons)
+
+            outcome.candidates.append(
+                ValidatedCandidate(
+                    provenance: sourceReferences,
                     baseDishCandidates: dtoItem.baseDishCandidates,
                     explicitIngredients: explicitIngredients,
                     preparationMethods: dtoItem.preparationMethods,
                     modifiers: dtoItem.modifiers,
-                    unknownTerms: dtoItem.unknownTerms
+                    unknownTerms: dtoItem.unknownTerms,
+                    itemScopedFailureReasons: itemScopedFailureReasons
+                )
+            )
+        }
+
+        if itemsSaturated {
+            // ここへ到達するのは`coreRange.count == 1`（これ以上source境界で分割できない）場合のみ。
+            // 検証済み候補は部分結果として保持しつつ、完全性を確認できないことを示すfailureを併記する。
+            let scopeSourceID = allSegments[coreRange.lowerBound].id
+            outcome.failures.append(
+                MenuUnderstandingFailure(
+                    scope: .sources([scopeSourceID]),
+                    reason: .outputLimitReached(MenuUnderstandingOutputLimit(field: .items, limit: MenuUnderstandingOutputLimits.items)),
+                    retryability: .notRetryable
                 )
             )
         }
 
         return outcome
+    }
+
+    private static func appendOutputLimitFailureIfSaturated(
+        _ count: Int,
+        field: MenuUnderstandingOutputLimitField,
+        into reasons: inout [MenuUnderstandingFailureReason]
+    ) {
+        let limit: Int
+        switch field {
+        case .items: limit = MenuUnderstandingOutputLimits.items
+        case .sourceReferences: limit = MenuUnderstandingOutputLimits.sourceReferences
+        case .baseDishCandidates: limit = MenuUnderstandingOutputLimits.baseDishCandidates
+        case .explicitIngredients: limit = MenuUnderstandingOutputLimits.explicitIngredients
+        case .preparationMethods: limit = MenuUnderstandingOutputLimits.preparationMethods
+        case .modifiers: limit = MenuUnderstandingOutputLimits.modifiers
+        case .unknownTerms: limit = MenuUnderstandingOutputLimits.unknownTerms
+        }
+        guard count >= limit else { return }
+        reasons.append(.outputLimitReached(MenuUnderstandingOutputLimit(field: field, limit: limit)))
+    }
+
+    /// `text`内で`fragment`が完全一致する（重複しない）出現をすべて返す。空の`fragment`は
+    /// 呼び出し前に弾かれている前提で、`fragment`が非空であることを要求しない代わりに空配列を返す。
+    private static func occurrenceRanges(of fragment: String, in text: String) -> [RawRange] {
+        guard !fragment.isEmpty else { return [] }
+        var ranges: [RawRange] = []
+        var searchStart = text.startIndex
+        while searchStart < text.endIndex, let found = text.range(of: fragment, range: searchStart..<text.endIndex) {
+            let lower = found.lowerBound.utf16Offset(in: text)
+            let upper = found.upperBound.utf16Offset(in: text)
+            ranges.append(RawRange(lowerBound: lower, upperBound: upper))
+            searchStart = found.upperBound
+        }
+        return ranges
+    }
+
+    // MARK: - Global reconcile (candidate → domain item)
+
+    /// 全chunkから集めたordinal未確定のcandidateを、provenance identityでグルーピングして重複排除し、
+    /// 安定sortしてから初めてordinal 0...N-1を確定する（FIX-005）。owner側での採用確認なしに
+    /// non-owner側のcandidateを無言で破棄しない設計であるため、ここに到達する候補はすべて
+    /// 「境界を検証できた」候補であり、あとはprovenance identityが重複するかどうかだけを見る。
+    ///
+    /// - 同じprovenance identityの候補が1件だけならそのまま採用する。
+    /// - 同じprovenance identityの候補が複数あり、semantic fieldsまで完全一致するなら安全な
+    ///   duplicateとして1件へ畳む（overlapにより複数chunkが同じ境界itemを観測したケース）。
+    /// - 同じprovenance identityでもsemantic fieldsが競合する候補が複数あれば、無言でどちらかを
+    ///   選ばず`duplicateCandidateConflict`のtyped failureにし、その識別子ではitemを生成しない。
+    private static func reconcile(
+        candidates: [ValidatedCandidate],
+        priorFailures: [MenuUnderstandingFailure],
+        allSegments: [MenuUnderstandingSourceSegment],
+        sourceSeparator: String
+    ) -> (items: [ParsedMenuItem], failures: [MenuUnderstandingFailure]) {
+        let indexByID = Dictionary(uniqueKeysWithValues: allSegments.enumerated().map { ($0.element.id, $0.offset) })
+
+        var groupIndexByKey: [ProvenanceKey: Int] = [:]
+        var groups: [[ValidatedCandidate]] = []
+        for candidate in candidates {
+            let key = ProvenanceKey(candidate.provenance)
+            if let existingIndex = groupIndexByKey[key] {
+                groups[existingIndex].append(candidate)
+            } else {
+                groupIndexByKey[key] = groups.count
+                groups.append([candidate])
+            }
+        }
+
+        var resolvedCandidates: [ValidatedCandidate] = []
+        var reconcileFailures: [MenuUnderstandingFailure] = []
+
+        for group in groups {
+            guard let first = group.first else { continue }
+            if group.count == 1 {
+                resolvedCandidates.append(first)
+                continue
+            }
+
+            let semanticFieldsAgree = group.dropFirst().allSatisfy { candidate in
+                candidate.baseDishCandidates == first.baseDishCandidates
+                    && candidate.explicitIngredients == first.explicitIngredients
+                    && candidate.preparationMethods == first.preparationMethods
+                    && candidate.modifiers == first.modifiers
+                    && candidate.unknownTerms == first.unknownTerms
+            }
+
+            if semanticFieldsAgree {
+                var mergedReasons: [MenuUnderstandingFailureReason] = []
+                for candidate in group {
+                    for reason in candidate.itemScopedFailureReasons where !mergedReasons.contains(reason) {
+                        mergedReasons.append(reason)
+                    }
+                }
+                var merged = first
+                merged.itemScopedFailureReasons = mergedReasons
+                resolvedCandidates.append(merged)
+            } else {
+                reconcileFailures.append(
+                    MenuUnderstandingFailure(
+                        scope: .sources(orderedUniqueSourceIDs(in: group, indexByID: indexByID)),
+                        reason: .duplicateCandidateConflict,
+                        retryability: .notRetryable
+                    )
+                )
+            }
+        }
+
+        // 入力source順で安定sort: 先頭source referenceのglobal indexを主キー、そのraw rangeの
+        // 開始位置を副キーにする。同じsourceに複数itemがある場合も、原文内の出現順を保つ。
+        let sorted = resolvedCandidates.sorted { lhs, rhs in
+            let lhsIndex = indexByID[lhs.provenance[0].sourceID] ?? Int.max
+            let rhsIndex = indexByID[rhs.provenance[0].sourceID] ?? Int.max
+            if lhsIndex != rhsIndex { return lhsIndex < rhsIndex }
+            return lhs.provenance[0].rawRange.lowerBound < rhs.provenance[0].rawRange.lowerBound
+        }
+
+        var items: [ParsedMenuItem] = []
+        var itemScopedFailures: [MenuUnderstandingFailure] = []
+        for (ordinal, candidate) in sorted.enumerated() {
+            let reference = MenuUnderstandingItemReference(
+                ordinal: ordinal,
+                sourceReferences: candidate.provenance.map {
+                    MenuUnderstandingSourceReference(sourceID: $0.sourceID, rawFragment: $0.rawFragment)
+                },
+                separator: sourceSeparator
+            )
+            items.append(
+                ParsedMenuItem(
+                    reference: reference,
+                    baseDishCandidates: candidate.baseDishCandidates,
+                    explicitIngredients: candidate.explicitIngredients,
+                    preparationMethods: candidate.preparationMethods,
+                    modifiers: candidate.modifiers,
+                    unknownTerms: candidate.unknownTerms
+                )
+            )
+            for reason in candidate.itemScopedFailureReasons {
+                itemScopedFailures.append(MenuUnderstandingFailure(scope: .item(reference), reason: reason, retryability: .notRetryable))
+            }
+        }
+
+        return (items, priorFailures + reconcileFailures + itemScopedFailures)
+    }
+
+    /// `group`内の全候補が参照するsource IDを、global source順で重複なく列挙する。
+    private static func orderedUniqueSourceIDs(
+        in group: [ValidatedCandidate],
+        indexByID: [MenuUnderstandingSourceID: Int]
+    ) -> [MenuUnderstandingSourceID] {
+        var seen = Set<MenuUnderstandingSourceID>()
+        var ids: [MenuUnderstandingSourceID] = []
+        for candidate in group {
+            for reference in candidate.provenance where seen.insert(reference.sourceID).inserted {
+                ids.append(reference.sourceID)
+            }
+        }
+        return ids.sorted { (indexByID[$0] ?? Int.max) < (indexByID[$1] ?? Int.max) }
+    }
+
+    /// candidateの重複排除に使う、順序付きprovenance identity。`(sourceID, rawFragment)`だけでは
+    /// 同じsource内の同文別itemや複数出現を区別できないため、検証済みraw rangeを含める（FIX-005）。
+    private struct ProvenanceKey: Hashable {
+        struct Entry: Hashable {
+            let sourceID: MenuUnderstandingSourceID
+            let lowerBound: Int
+            let upperBound: Int
+        }
+        let entries: [Entry]
+
+        init(_ provenance: [CandidateSourceReference]) {
+            entries = provenance.map { Entry(sourceID: $0.sourceID, lowerBound: $0.rawRange.lowerBound, upperBound: $0.rawRange.upperBound) }
+        }
     }
 }
 
@@ -564,36 +862,37 @@ actor TimeoutRaceGate {
 
 // MARK: - Structured Output DTO (private: ドメインモデルへ変換後は外部へ露出しない)
 //
-// 各配列に`.maximumCount`の有限上限を設け、`FoundationModelsMenuParser.init`の
-// `maximumResponseTokens`（既定800）と整合する出力budgetにする。上限は代表ケース
-// （`RepresentativeMenuFixtures`、いずれも数品程度）を十分に超える一方、無制限出力を
-// 許さない値として選定した。1リクエストで上限を超える大きなメニューは`analyzeRange`が
-// source境界でchunkへ分割し、超過分を黙って欠落させない。
+// 各配列の上限は`MenuUnderstandingOutputLimits`（`Meelyze/Models/MenuUnderstandingModels.swift`）
+// を単一のsource of truthとして参照する。schema側の値とParserの飽和判定がずれないようにするためで、
+// 上限値を上げるだけでは飽和時のsilent lossが再発する（FIX-005）。上限は代表ケース
+// （`RepresentativeMenuFixtures`、いずれも数品程度）を十分に超える一方、無制限出力を許さない値として
+// 選定した。1リクエストで上限を超える大きなメニューは`analyzeRange`がsource境界でchunkへ分割し、
+// 上限へ飽和した応答はprovisionalとして扱う。
 
 @Generable
 private struct MenuAnalysisDTO {
-    @Guide(description: "メニュー原文から分割した料理項目。入力source順に沿って並べる。", .maximumCount(10))
+    @Guide(description: "メニュー原文から分割した料理項目。入力source順に沿って並べる。", .maximumCount(MenuUnderstandingOutputLimits.items))
     var items: [MenuItemDTO]
 }
 
 @Generable
 private struct MenuItemDTO {
-    @Guide(description: "この項目の根拠となる入力source。入力に存在するsource IDのみを参照する。", .maximumCount(4))
+    @Guide(description: "この項目の根拠となる入力source。入力に存在するsource IDのみを参照する。", .maximumCount(MenuUnderstandingOutputLimits.sourceReferences))
     var sourceReferences: [MenuItemSourceReferenceDTO]
 
-    @Guide(description: "入力から読み取れるベース料理名候補。確度の高い候補を先頭にする。", .maximumCount(3))
+    @Guide(description: "入力から読み取れるベース料理名候補。確度の高い候補を先頭にする。", .maximumCount(MenuUnderstandingOutputLimits.baseDishCandidates))
     var baseDishCandidates: [String]
 
-    @Guide(description: "原文に文字として明示されている食材のみ。料理名から推測した食材は含めない。", .maximumCount(6))
+    @Guide(description: "原文に文字として明示されている食材のみ。料理名から推測した食材は含めない。", .maximumCount(MenuUnderstandingOutputLimits.explicitIngredients))
     var explicitIngredients: [String]
 
-    @Guide(description: "原文に現れる調理方法。", .maximumCount(3))
+    @Guide(description: "原文に現れる調理方法。", .maximumCount(MenuUnderstandingOutputLimits.preparationMethods))
     var preparationMethods: [String]
 
-    @Guide(description: "量・味・地域性・追加/除外等の修飾表現。", .maximumCount(4))
+    @Guide(description: "量・味・地域性・追加/除外等の修飾表現。", .maximumCount(MenuUnderstandingOutputLimits.modifiers))
     var modifiers: [String]
 
-    @Guide(description: "意味を十分に解決できない語・未解決要素。", .maximumCount(4))
+    @Guide(description: "意味を十分に解決できない語・未解決要素。", .maximumCount(MenuUnderstandingOutputLimits.unknownTerms))
     var unknownTerms: [String]
 }
 
