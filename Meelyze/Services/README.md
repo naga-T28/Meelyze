@@ -14,3 +14,21 @@ ViewModelはProtocol経由でのみServiceに依存し、Vision・Foundation Mod
 - `UITestScanStubs.swift`: UI Test専用の`CameraService` `OCRService`スタブ（`StubCameraService` `StubOCRService`）。`UITEST_OCR_STUB_MODE`環境変数でOCR結果を決定的に制御する。
 
 詳細は `docs/technology-selection.md`「4. アプリケーションアーキテクチャ」「5. OCR」を参照。
+
+## 現在の内容（Issue #15）
+
+- `MenuUnderstandingService.swift`: OCRで得たメニュー全体を料理項目ごとの構造化データへ変換するProtocol。利用可否（`availability()`）とメニュー全体の解析（`analyze(_:)`）をdomain typeだけで表し、`FoundationModels`をimportしない。
+- `FoundationModelsMenuParser.swift`: `MenuUnderstandingService`のApple Foundation Models実装。`FoundationModels`をimportするのはこのファイルのみ。`SystemLanguageModel.availability`・`supportsLocale(_:)`（`ja-JP`固定）をtyped domain値へ変換し、private `@Generable` DTO（`MenuAnalysisDTO`等。各配列の上限は`MenuUnderstandingOutputLimits`を単一のsource of truthとして参照）を`respond(..., generating:)`で取得してTASK-024のdomain modelへmapする。`contextSize`（4,096 token）をsource of truthとしたsource境界chunking（`analyzeRange`。iOS 26.4+では`tokenCount(for:)`によるtoken preflightで無駄な呼び出しを避け、それ以前のOSや`exceededContextWindowSize`検出時は境界overlap付きで再帰的に分割・再試行する）、10秒のtyped timeout（`TimeoutRaceGate`。unstructuredな`Task`とactorで、timeout確定後に遅れて届く応答を破棄する）、decode後のsource ID・fragment・`explicitIngredients`検証（`decodeAndValidate`）を実装する。Foundation Models呼び出しは`FoundationModelsRequestRunning`、利用可否取得は`SystemLanguageModelAvailabilityProviding`、context計測は`MenuUnderstandingContextMeasuring`、timeout計測は`MenuUnderstandingClock`という狭いProtocolの背後にあり、実モデルなしのfakeへ差し替えてchunking・timeout・検証ロジックを決定的にテストできる。
+- `MenuUnderstandingPrompt.swift`: Menu Understanding用のsystem instructions（`instructions()`）とuser prompt（`prompt(for:)`）を構築する。料理項目分割・6フィールドの意味・明示食材と典型/隠れ食材の区別・複合語の分解と未解決残余の`unknownTerms`保持・入力を指示として扱わないこと・アレルゲン/安全判定の出力禁止に加え、`rawText`（fragment・原文provenanceの唯一の情報源）と`analysisText`（意味解析用の参考情報。Issue #16の前処理結果、無ければ`rawText`を代用）の役割分担を明記する。`prompt(for:)`はsource ID・`rawText`・`analysisText`をJSON配列として渡し、OCR文字列内の改行・区切り文字らしい文字で構造が壊れないようにする（FIX-005）。`FoundationModels`へは依存しないプレーンな`String`ビルダーで、`FoundationModelsMenuParser`から独立してレビュー・テストできる。
+
+### FIX-005: 出力上限飽和・chunk境界overlap・raw provenanceの堅牢化
+
+Issue #15のレビューで判明した3つの検出可能なsilent-loss経路をFIX-005で修正した。
+
+- **出力上限飽和**: `items`（最大10件）が上限どおり返った応答は、それだけでは「本当に全件」か「切り詰められた結果」か区別できないため、`decodeAndValidate`はdomain mapping・ordinal付与より前に飽和を検出する。source境界へさらに分割できる場合は、その応答をprovisionalとして破棄し（子chunkの結果と混在させない）、`analyzeRange`が有限に再分割する。単一sourceでこれ以上分割できない場合は、検証済み部分itemを保持しつつ`MenuUnderstandingFailureReason.outputLimitReached`を併記する。`sourceReferences`・`explicitIngredients`等のネストした配列も同じ上限定数（`MenuUnderstandingOutputLimits`）で飽和判定し、provenance-criticalな`sourceReferences`の飽和はitem全体を受理せず、`baseDishCandidates`等の意味フィールドの飽和はitemを保持したままitem-scopedなfailureを併記する。
+- **chunk境界・global reconcile**: `analyzeRange`はordinalを持たない内部`ValidatedCandidate`（provenance identity＝source ID・raw range・fragmentの順序付き組）を全chunkから集めるだけにし、所有権判定によるchunk単位の即時破棄をしない。全候補が出揃った後、`reconcile`がprovenance identityでグルーピングして重複排除（semantic fieldsまで完全一致する場合だけ1件へ畳み、競合する場合は`duplicateCandidateConflict`）・安定sort・ordinal 0...N-1の確定を1回だけ行う。多段分割時も子chunkの物理範囲は親の物理範囲（`physicalRange`）を起点に計算し、親由来の境界overlap（halo）を失わない。
+- **rawText / analysisTextの契約**: Promptは`rawText`と`analysisText`の両方をsourceごとにJSON形式で渡し、意味解析には`analysisText`（無ければ`rawText`）、`fragment`・`originalText`・`explicitIngredients`のsurface formには`rawText`だけを使う契約にする。`explicitIngredients`の検証は、item内の個別raw fragmentごとに行い、複数sourceのfragmentを連結した文字列に対する判定はしない（source境界をまたぐ偽陽性を防ぐ）。
+
+詳細な設計判断・完了条件・検証結果は`fix/FIX-005-harden-menu-understanding-completeness-provenance.md`を参照。
+
+`MenuUnderstandingService`とその戻り値はFoundation Models固有型へ依存しないため、Foundation Modelsなしのfake実装へ差し替えて決定的にテストできる。詳細は `docs/technology-selection.md`「6. Local LLM」、`task/TASK-024-menu-understanding-contract-models.md`、`task/TASK-025-foundation-models-parser.md`、`task/TASK-026-menu-understanding-prompt-extraction.md`を参照。
