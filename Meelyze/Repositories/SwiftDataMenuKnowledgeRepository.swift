@@ -6,6 +6,7 @@ import SwiftData
 /// 名前検索は、正規化済み文字列が`canonicalName`または`aliases`に完全一致する前提で扱う。
 final class SwiftDataMenuKnowledgeRepository: MenuKnowledgeRepository {
     private let modelContext: ModelContext
+    private let nameNormalizer = MenuNameNormalizer()
 
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
@@ -22,7 +23,9 @@ final class SwiftDataMenuKnowledgeRepository: MenuKnowledgeRepository {
     func dishes(matchingName name: String) throws -> [Dish] {
         let dishes = try modelContext.fetch(FetchDescriptor<Dish>())
         return dishes.filter { dish in
-            dish.canonicalName == name || dish.aliases.contains(name) || dish.aliasRecords.contains { $0.value == name }
+            matchesName(dish.canonicalName, query: name)
+                || dish.aliases.contains { matchesName($0, query: name) }
+                || dish.aliasRecords.contains { matchesName($0.value, query: name) }
         }
     }
 
@@ -61,7 +64,9 @@ final class SwiftDataMenuKnowledgeRepository: MenuKnowledgeRepository {
     func ingredients(matchingName name: String) throws -> [Ingredient] {
         let ingredients = try modelContext.fetch(FetchDescriptor<Ingredient>())
         return ingredients.filter { ingredient in
-            ingredient.canonicalName == name || ingredient.aliases.contains(name) || ingredient.aliasRecords.contains { $0.value == name }
+            matchesName(ingredient.canonicalName, query: name)
+                || ingredient.aliases.contains { matchesName($0, query: name) }
+                || ingredient.aliasRecords.contains { matchesName($0.value, query: name) }
         }
     }
 
@@ -212,6 +217,10 @@ final class SwiftDataMenuKnowledgeRepository: MenuKnowledgeRepository {
         )
         descriptor.fetchLimit = 1
         return try modelContext.fetch(descriptor).first
+    }
+
+    private func matchesName(_ storedName: String, query: String) -> Bool {
+        storedName == query || nameNormalizer.normalize(storedName).normalizedText == query
     }
 
     private func replaceDishAliases(for dish: Dish, aliases: [String]) {
