@@ -5,14 +5,62 @@ import XCTest
 @MainActor
 func completeOnboarding(in app: XCUIApplication) {
     XCTAssertTrue(app.staticTexts["Disclaimer"].waitForExistence(timeout: 5))
-    XCTAssertTrue(app.buttons["DisclaimerAgreeToggle"].waitForExistence(timeout: 5))
-    app.buttons["DisclaimerAgreeToggle"].tap()
-    app.buttons["DisclaimerContinueButton"].tap()
+    let agreeToggle = app.buttons["DisclaimerAgreeToggle"]
+    let disclaimerContinueButton = app.buttons["DisclaimerContinueButton"]
+    let languageRow = app.buttons["LanguageRow_english"]
+    XCTAssertTrue(agreeToggle.waitForExistence(timeout: 5))
+    for _ in 0..<3 where !languageRow.exists && !disclaimerContinueButton.isEnabled {
+        agreeToggle.tap()
+        _ = waitUntil(timeout: 1) {
+            languageRow.exists || disclaimerContinueButton.isEnabled
+        }
+    }
 
-    XCTAssertTrue(app.buttons["LanguageRow_english"].waitForExistence(timeout: 5))
+    XCTAssertTrue(waitUntil(timeout: 5) {
+        languageRow.exists || disclaimerContinueButton.exists
+    })
+    if !languageRow.exists {
+        XCTAssertTrue(disclaimerContinueButton.waitForEnabled(timeout: 5))
+        if disclaimerContinueButton.exists {
+            disclaimerContinueButton.tap()
+        }
+    }
+
+    XCTAssertTrue(languageRow.waitForExistence(timeout: 5))
     app.buttons["LanguageRow_english"].tap()
-    app.buttons["LanguageSelectionContinueButton"].tap()
 
-    XCTAssertTrue(app.buttons["AllergenDietaryRestrictionSaveButton"].waitForExistence(timeout: 5))
+    let saveButton = app.buttons["AllergenDietaryRestrictionSaveButton"]
+    let languageContinueButton = app.buttons["LanguageSelectionContinueButton"]
+    XCTAssertTrue(waitUntil(timeout: 5) {
+        saveButton.exists || languageContinueButton.exists
+    })
+    if !saveButton.exists {
+        XCTAssertTrue(languageContinueButton.waitForEnabled(timeout: 5))
+        if languageContinueButton.exists {
+            languageContinueButton.tap()
+        }
+    }
+
+    XCTAssertTrue(saveButton.waitForExistence(timeout: 5))
     app.buttons["AllergenDietaryRestrictionSaveButton"].tap()
+}
+
+private extension XCUIElement {
+    func waitForEnabled(timeout: TimeInterval) -> Bool {
+        let predicate = NSPredicate(format: "isEnabled == true")
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: self)
+        return XCTWaiter.wait(for: [expectation], timeout: timeout) == .completed
+    }
+}
+
+@MainActor
+private func waitUntil(timeout: TimeInterval, condition: () -> Bool) -> Bool {
+    let deadline = Date().addingTimeInterval(timeout)
+    while Date() < deadline {
+        if condition() {
+            return true
+        }
+        RunLoop.current.run(until: Date().addingTimeInterval(0.1))
+    }
+    return condition()
 }
