@@ -1,5 +1,6 @@
 import Testing
 import Foundation
+import SwiftData
 @testable import Meelyze
 
 struct MenuAliasResolverTests {
@@ -69,6 +70,108 @@ struct MenuAliasResolverTests {
         #expect(evidence.sourceEvidence.map(\.sourceID) == [sourceID])
         #expect(evidence.baseDishCandidateResolutions.map(\.status) == [.resolved])
         #expect(evidence.explicitIngredientResolutions.map(\.status) == [.resolved])
+    }
+
+    @Test func resolveInitialMenuKnowledgeDishCanonicalNamesAndAliasesWithSwiftDataRepository() throws {
+        let resolver = try makeResolverWithInitialMenuKnowledge()
+
+        let expectations: [(input: String, expectedID: String)] = [
+            ("ラフテー", "rafute"),
+            ("ラフティー", "rafute"),
+            ("沖縄風豚角煮", "rafute"),
+            ("ラフテ一", "rafute"),
+            ("ゴーヤーチャンプルー", "goya_chanpuru"),
+            ("ゴーヤー・チャンプルー", "goya_chanpuru"),
+            ("ゴーヤチャンプル", "goya_chanpuru"),
+            ("沖縄そば", "okinawa_soba"),
+            ("おきなわそば", "okinawa_soba"),
+            ("沖縄すば", "okinawa_soba"),
+        ]
+
+        for expectation in expectations {
+            let evidence = try resolver.resolveDishCandidate(expectation.input)
+            #expect(evidence.status == .resolved)
+            #expect(evidence.matches.map(\.id) == [expectation.expectedID])
+        }
+    }
+
+    @Test func resolveInitialMenuKnowledgeIngredientCanonicalNamesAndAliasesWithSwiftDataRepository() throws {
+        let resolver = try makeResolverWithInitialMenuKnowledge()
+
+        let expectations: [(input: String, expectedID: String)] = [
+            ("豚肉", "pork"),
+            ("豚バラ肉", "pork"),
+            ("ポーク", "pork"),
+            ("かつおだし", "bonito_dashi"),
+            ("鰹だし", "bonito_dashi"),
+            ("かつお出汁", "bonito_dashi"),
+            ("泡盛", "awamori"),
+            ("あわもり", "awamori"),
+            ("醤油", "soy_sauce"),
+            ("しょうゆ", "soy_sauce"),
+            ("ゴーヤー", "goya"),
+            ("にがうり", "goya"),
+            ("沖縄豆腐", "okinawan_tofu"),
+            ("島豆腐", "okinawan_tofu"),
+            ("卵", "egg"),
+            ("たまご", "egg"),
+            ("小麦麺", "wheat_noodle"),
+            ("沖縄そば麺", "wheat_noodle"),
+            ("豚骨だし", "pork_bone_dashi"),
+            ("豚骨出汁", "pork_bone_dashi"),
+        ]
+
+        for expectation in expectations {
+            let evidence = try resolver.resolveIngredientCandidate(expectation.input)
+            #expect(evidence.status == .resolved)
+            #expect(evidence.matches.map(\.id) == [expectation.expectedID])
+        }
+    }
+
+    @Test func resolveInitialMenuKnowledgeKeepsUnknownCandidateUnresolved() throws {
+        let resolver = try makeResolverWithInitialMenuKnowledge()
+
+        let evidence = try resolver.resolveDishCandidate("未登録メニュー")
+
+        #expect(evidence.status == .unresolved)
+        #expect(evidence.matches.isEmpty)
+    }
+
+    private func makeResolverWithInitialMenuKnowledge() throws -> MenuAliasResolver {
+        let context = try makeInMemoryContext()
+        let repository = SwiftDataMenuKnowledgeRepository(modelContext: context)
+        let service = InitialDataImportService(repository: repository)
+        let data = try Data(contentsOf: initialMenuKnowledgeDataURL())
+        _ = try service.importInitialDataIfNeeded(from: data)
+        return MenuAliasResolver(repository: repository)
+    }
+
+    private func makeInMemoryContext() throws -> ModelContext {
+        let schema = Schema([
+            UserProfile.self,
+            Dish.self,
+            DishAlias.self,
+            Ingredient.self,
+            IngredientAlias.self,
+            DishIngredient.self,
+            Allergen.self,
+            Restriction.self,
+            IngredientAllergen.self,
+            IngredientRestriction.self,
+            EvidenceSource.self,
+            DataImportVersion.self
+        ])
+        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: schema, configurations: [configuration])
+        return ModelContext(container)
+    }
+
+    private func initialMenuKnowledgeDataURL() -> URL {
+        URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("Meelyze/Resources/InitialMenuKnowledgeData.json")
     }
 }
 

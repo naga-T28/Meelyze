@@ -24,6 +24,12 @@ struct MenuNameNormalizer {
             changes.append(.hiraganaConvertedToKatakana)
         }
 
+        let longSoundNormalized = Self.normalizeOCRLongSoundMarks(normalized)
+        if longSoundNormalized != normalized {
+            normalized = longSoundNormalized
+            changes.append(.ocrLongSoundNormalized)
+        }
+
         let withoutSeparators = normalized
             .replacingOccurrences(of: " ", with: "")
             .replacingOccurrences(of: "　", with: "")
@@ -45,5 +51,23 @@ struct MenuNameNormalizer {
             }
             return scalar
         }))
+    }
+
+    private static func normalizeOCRLongSoundMarks(_ text: String) -> String {
+        var scalars = Array(text.unicodeScalars)
+        for index in scalars.indices where scalars[index].value == 0x4E00 {
+            let hasKanaBefore = index > scalars.startIndex && isKanaOrLongSound(scalars[scalars.index(before: index)])
+            let hasKanaAfter = scalars.index(after: index) < scalars.endIndex && isKanaOrLongSound(scalars[scalars.index(after: index)])
+            if hasKanaBefore || hasKanaAfter {
+                scalars[index] = "ー"
+            }
+        }
+        return String(String.UnicodeScalarView(scalars))
+    }
+
+    private static func isKanaOrLongSound(_ scalar: UnicodeScalar) -> Bool {
+        (0x3041...0x3096).contains(scalar.value)
+            || (0x30A1...0x30FA).contains(scalar.value)
+            || scalar.value == 0x30FC
     }
 }

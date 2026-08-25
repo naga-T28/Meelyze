@@ -25,6 +25,24 @@ struct MenuTextPreprocessorTests {
         #expect(result.evidence[0].changes == [.priceRemoved, .whitespaceNormalized])
     }
 
+    @Test func preprocessRemovesFourDigitYenPricesMenuNumbersAndNoiseSymbols() {
+        let preprocessor = MenuTextPreprocessor()
+        let segment = MenuUnderstandingSourceSegment(
+            id: MenuUnderstandingSourceID("s1"),
+            rawText: "No.12 ＊ ラフテー ￥1280",
+            confidence: 0.88,
+            boundingBox: .zero
+        )
+
+        let result = preprocessor.preprocess([segment])
+
+        #expect(result.segments[0].rawText == "No.12 ＊ ラフテー ￥1280")
+        #expect(result.segments[0].analysisText == "ラフテー")
+        #expect(result.evidence[0].changes.contains(.priceRemoved))
+        #expect(result.evidence[0].changes.contains(.menuNumberRemoved))
+        #expect(result.evidence[0].changes.contains(.noiseSymbolRemoved))
+    }
+
     @Test func preprocessLeavesAnalysisTextNilWhenNoChangeIsNeeded() {
         let preprocessor = MenuTextPreprocessor()
         let segment = MenuUnderstandingSourceSegment(

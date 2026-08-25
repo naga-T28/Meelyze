@@ -32,12 +32,32 @@ struct MenuTextPreprocessor {
 
         let withoutPrices = Self.replacingMatches(
             in: text,
-            pattern: #"(?:[¥￥]\s*\d{1,3}(?:,\d{3})*|[¥￥]\s*\d+|\d{1,3}(?:,\d{3})*\s*(?:円|yen)|\d+\s*(?:円|yen))"#,
+            pattern: #"(?:[¥￥]\s*\d+(?:,\d{3})*|\d{1,3}(?:,\d{3})+\s*(?:円|yen)|\d{2,6}\s*(?:円|yen))"#,
             with: ""
         )
         if withoutPrices != text {
             text = withoutPrices
             changes.append(.priceRemoved)
+        }
+
+        let withoutMenuNumbers = Self.replacingMatches(
+            in: text,
+            pattern: #"(?i)(?:^|\s)(?:No\.?\s*|#)\d{1,3}(?=\s|[.)．、:：-]|$)|^\s*\d{1,3}\s*[.)．、:：-]\s*"#,
+            with: " "
+        )
+        if withoutMenuNumbers != text {
+            text = withoutMenuNumbers
+            changes.append(.menuNumberRemoved)
+        }
+
+        let withoutNoiseSymbols = Self.replacingMatches(
+            in: text,
+            pattern: #"^[\s　]*(?:[\-‐‑–—=＊*・･.．、:：/／|｜【】\[\]（）()]+[\s　]*)+|(?:[\s　]*[\-‐‑–—=＊*・･.．、:：/／|｜【】\[\]（）()]+)+[\s　]*$"#,
+            with: ""
+        )
+        if withoutNoiseSymbols != text {
+            text = withoutNoiseSymbols
+            changes.append(.noiseSymbolRemoved)
         }
 
         let normalizedWhitespace = Self.replacingMatches(in: text, pattern: #"\s+"#, with: " ")

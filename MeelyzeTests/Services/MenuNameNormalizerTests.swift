@@ -22,6 +22,15 @@ struct MenuNameNormalizerTests {
         #expect(evidence.changes.contains(.hiraganaConvertedToKatakana))
     }
 
+    @Test func normalizeCorrectsRepresentativeOCRLongSoundConfusion() {
+        let normalizer = MenuNameNormalizer()
+
+        let evidence = normalizer.normalize("ラフテ一")
+
+        #expect(evidence.normalizedText == "ラフテー")
+        #expect(evidence.changes.contains(.ocrLongSoundNormalized))
+    }
+
     @Test func normalizeFoldsFullWidthLatinAndCaseWithoutResolvingToDatabaseIDs() {
         let normalizer = MenuNameNormalizer()
 

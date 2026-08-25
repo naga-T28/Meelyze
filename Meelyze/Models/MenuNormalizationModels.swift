@@ -3,6 +3,8 @@ import Foundation
 /// OCR原文からLLM意味解析用の補助文字列を作る際に適用した前処理。
 enum MenuTextPreprocessingChange: Equatable, Sendable {
     case priceRemoved
+    case menuNumberRemoved
+    case noiseSymbolRemoved
     case whitespaceNormalized
 }
 
@@ -27,6 +29,7 @@ enum MenuNameNormalizationChange: Equatable, Sendable {
     case trimmed
     case widthAndCaseFolded
     case hiraganaConvertedToKatakana
+    case ocrLongSoundNormalized
     case separatorsRemoved
 }
 
