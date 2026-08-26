@@ -36,6 +36,7 @@ struct RootView: View {
         }
         .task {
             if destination == nil {
+                importInitialMenuKnowledgeDataIfNeeded()
                 determineInitialDestination()
             }
         }
@@ -45,6 +46,10 @@ struct RootView: View {
         SwiftDataProfileRepository(modelContext: modelContext)
     }
 
+    private var menuKnowledgeRepository: MenuKnowledgeRepository {
+        SwiftDataMenuKnowledgeRepository(modelContext: modelContext)
+    }
+
     private func determineInitialDestination() {
         let profile = try? profileRepository.currentProfile()
         if let profile, profile.isInitialSetupCompleted {
@@ -52,6 +57,14 @@ struct RootView: View {
         } else {
             destination = .onboarding
         }
+    }
+
+    /// 起動時に同梱済み初期料理DB（`Meelyze/Resources/InitialMenuKnowledgeData.json`）をSwiftDataへ
+    /// 投入する。`dataVersion`ガード（`InitialDataImportService`）により2回目以降の起動では何もしない。
+    /// Import失敗時もアプリ起動を止めず、DB照合が0件のまま安全側（判定不可）へ縮退させる
+    /// （`docs/requirements.md` NFR-3.2）。
+    private func importInitialMenuKnowledgeDataIfNeeded() {
+        _ = try? InitialDataImportService(repository: menuKnowledgeRepository).importBundledInitialDataIfNeeded()
     }
 
     /// UI Testからの実カメラ依存排除。`UITEST_OCR_STUB_MODE`環境変数が指定された場合は

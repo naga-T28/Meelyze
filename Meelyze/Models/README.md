@@ -31,3 +31,9 @@ Dish、Ingredientなど判定ロジック用のモデルは別Issueで追加す�
 
 判定ロジック本体（Rule Engine）・DB Fact構築・Service結線は別タスクで追加する。詳細は `docs/technology-selection.md`「9. Risk Aggregation / Evidence」「10. 最終判定」、`task/README-issue17.md`「前提となる設計判断」を参照。
 
+## 現在の内容（Issue #19）
+
+- `MenuAnalysisResult.swift`: `MenuAnalysisService`（`Meelyze/Services/`）の結果モデル。OCRが意味のあるテキストを検出できなかった場合を表す`MenuAnalysisResult.noRecognizableText`と、解析が完了した場合の`MenuAnalysisResult.completed(MenuAnalysisSummary)`の二値。`MenuAnalysisSummary`は料理ごとの判定結果（`MenuAnalysisItemResult`）と、項目境界が判明しなかった失敗（`RiskEvaluationFailure`）を保持する。`MenuAnalysisItemResult`はIssue #17の`MenuItemRiskEvaluation`をそのまま保持し、Issue #19が新たに追加するBounding Boxとの対応関係（`boundingBoxes: [CGRect]`）だけを付加する（既存の三値集約ロジックを重複実装しない）。
+
+詳細は`task/TASK-038-menu-analysis-service.md`を参照。
+
