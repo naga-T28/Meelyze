@@ -59,6 +59,19 @@ struct SwiftDataMenuKnowledgeRepositoryTests {
         #expect(try repository.dishes(matchingName: "沖縄そば").isEmpty)
     }
 
+    @Test func dishesMatchingNameReturnsStableOrderWhenMultipleDishesMatch() throws {
+        let repository = SwiftDataMenuKnowledgeRepository(modelContext: try makeInMemoryContext())
+        // idの降順で登録し、格納順ではなくidの安定ソートで返っていることを検証する。
+        try repository.upsertDish(Dish(id: "z_dish", canonicalName: "ゾンビ料理", region: "okinawa", aliases: ["キョウツウメイ"]))
+        try repository.upsertDish(Dish(id: "a_dish", canonicalName: "アイテム料理", region: "okinawa", aliases: ["キョウツウメイ"]))
+
+        let firstCall = try repository.dishes(matchingName: "キョウツウメイ").map(\.id)
+        let secondCall = try repository.dishes(matchingName: "キョウツウメイ").map(\.id)
+
+        #expect(firstCall == ["a_dish", "z_dish"])
+        #expect(secondCall == ["a_dish", "z_dish"])
+    }
+
     @Test func upsertDishUpdatesExistingRecord() throws {
         let context = try makeInMemoryContext()
         let repository = SwiftDataMenuKnowledgeRepository(modelContext: context)
@@ -105,6 +118,19 @@ struct SwiftDataMenuKnowledgeRepositoryTests {
         #expect(try repository.ingredients(matchingName: "かつおだし").map(\.id) == ["bonito_dashi"])
         #expect(try repository.ingredients(matchingName: "鰹だし").map(\.id) == ["bonito_dashi"])
         #expect(try repository.ingredients(matchingName: "卵").isEmpty)
+    }
+
+    @Test func ingredientsMatchingNameReturnsStableOrderWhenMultipleIngredientsMatch() throws {
+        let repository = SwiftDataMenuKnowledgeRepository(modelContext: try makeInMemoryContext())
+        // idの降順で登録し、格納順ではなくidの安定ソートで返っていることを検証する。
+        try repository.upsertIngredient(Ingredient(id: "z_ingredient", canonicalName: "謎食材Z", aliases: ["キョウツウメイ"]))
+        try repository.upsertIngredient(Ingredient(id: "a_ingredient", canonicalName: "謎食材A", aliases: ["キョウツウメイ"]))
+
+        let firstCall = try repository.ingredients(matchingName: "キョウツウメイ").map(\.id)
+        let secondCall = try repository.ingredients(matchingName: "キョウツウメイ").map(\.id)
+
+        #expect(firstCall == ["a_ingredient", "z_ingredient"])
+        #expect(secondCall == ["a_ingredient", "z_ingredient"])
     }
 
     @Test func upsertIngredientUpdatesExistingRecord() throws {

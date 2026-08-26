@@ -25,3 +25,9 @@ Dish、Ingredientなど判定ロジック用のモデルは別Issueで追加す�
 
 `MenuUnderstandingRequest.segments`は呼び出し側が渡したOCR observation順をそのまま保持し、読み取り順として並べ替えない。`explicitIngredients`は原文へ明示された食材のみを保持し、料理名から推測した典型・隠れ食材は含まない契約とする。詳細は `docs/technology-selection.md`「6. Local LLM」、`task/TASK-024-menu-understanding-contract-models.md`を参照。
 
+## 現在の内容（Issue #17）
+
+- `RiskEvaluationModels.swift`: 決定論的Risk Engineの契約モデル。三値`RiskDetermination`（`likelyContains` / `noRecordedMatch` / `undetermined`、Boolへ縮退させない）、判定対象`RiskTarget`（`AllergenItem` / `DietaryRestrictionCategory`をID/raw valueで保持）、Evidence種別`RiskEvidenceKind`（既存のSwiftDataモデル`EvidenceSource`とは別名にして衝突を避ける）、Evidence本体`RiskEvidence`（SwiftData model instanceを保持しない値型）、Rule Engine出力`RiskEvaluationResult`を定義する。あわせて、TASK-031が構築するFactの型（`RiskFact` `RiskFactResolution` `RiskFactDatabaseMatch`）と、TASK-032のRule Engineが受け取るLLM由来補助シグナルの型（`RiskLLMSignal` `RiskLLMSignalPolarity`）も、後続タスクが依存する共通契約としてここで確定する。
+
+判定ロジック本体（Rule Engine）・DB Fact構築・Service結線は別タスクで追加する。詳細は `docs/technology-selection.md`「9. Risk Aggregation / Evidence」「10. 最終判定」、`task/README-issue17.md`「前提となる設計判断」を参照。
+
