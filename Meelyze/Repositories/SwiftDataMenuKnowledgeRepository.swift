@@ -22,11 +22,13 @@ final class SwiftDataMenuKnowledgeRepository: MenuKnowledgeRepository {
 
     func dishes(matchingName name: String) throws -> [Dish] {
         let dishes = try modelContext.fetch(FetchDescriptor<Dish>())
-        return dishes.filter { dish in
-            matchesName(dish.canonicalName, query: name)
-                || dish.aliases.contains { matchesName($0, query: name) }
-                || dish.aliasRecords.contains { matchesName($0.value, query: name) }
-        }
+        return dishes
+            .filter { dish in
+                matchesName(dish.canonicalName, query: name)
+                    || dish.aliases.contains { matchesName($0, query: name) }
+                    || dish.aliasRecords.contains { matchesName($0.value, query: name) }
+            }
+            .sorted { $0.id < $1.id }
     }
 
     func ingredient(id: String) throws -> Ingredient? {
@@ -63,11 +65,13 @@ final class SwiftDataMenuKnowledgeRepository: MenuKnowledgeRepository {
 
     func ingredients(matchingName name: String) throws -> [Ingredient] {
         let ingredients = try modelContext.fetch(FetchDescriptor<Ingredient>())
-        return ingredients.filter { ingredient in
-            matchesName(ingredient.canonicalName, query: name)
-                || ingredient.aliases.contains { matchesName($0, query: name) }
-                || ingredient.aliasRecords.contains { matchesName($0.value, query: name) }
-        }
+        return ingredients
+            .filter { ingredient in
+                matchesName(ingredient.canonicalName, query: name)
+                    || ingredient.aliases.contains { matchesName($0, query: name) }
+                    || ingredient.aliasRecords.contains { matchesName($0.value, query: name) }
+            }
+            .sorted { $0.id < $1.id }
     }
 
     func upsertDish(_ dish: Dish) throws {

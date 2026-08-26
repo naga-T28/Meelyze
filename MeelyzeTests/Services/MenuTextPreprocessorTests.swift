@@ -59,6 +59,83 @@ struct MenuTextPreprocessorTests {
         #expect(result.evidence[0].changes.isEmpty)
     }
 
+    @Test func preprocessRemovesLeadingAndTrailingDecorativeStars() {
+        let preprocessor = MenuTextPreprocessor()
+        let segment = MenuUnderstandingSourceSegment(
+            id: MenuUnderstandingSourceID("s1"),
+            rawText: "★本日のおすすめ☆",
+            confidence: 0.9,
+            boundingBox: .zero
+        )
+
+        let result = preprocessor.preprocess([segment])
+
+        #expect(result.segments[0].analysisText == "本日のおすすめ")
+        #expect(result.evidence[0].changes.contains(.noiseSymbolRemoved))
+    }
+
+    @Test func preprocessKeepsStarsThatAreMeaningfulInsideTheDishName() {
+        let preprocessor = MenuTextPreprocessor()
+        let segment = MenuUnderstandingSourceSegment(
+            id: MenuUnderstandingSourceID("s1"),
+            rawText: "牛肉★炙り",
+            confidence: 0.9,
+            boundingBox: .zero
+        )
+
+        let result = preprocessor.preprocess([segment])
+
+        #expect(result.segments[0].analysisText == nil)
+        #expect(result.evidence[0].changes.isEmpty)
+    }
+
+    @Test func preprocessRemovesRepresentativePriceFormatsIncludingUppercaseYen() {
+        let preprocessor = MenuTextPreprocessor()
+        // 代表的な価格表現のテスト表。対応外通貨は別テストで非対応を明示する。
+        let supportedPrices: [(rawText: String, expectedAnalysisText: String)] = [
+            ("ラフテー ¥980", "ラフテー"),
+            ("ラフテー ￥980", "ラフテー"),
+            ("ラフテー 980円", "ラフテー"),
+            ("ラフテー 1,280円", "ラフテー"),
+            ("ラフテー 980yen", "ラフテー"),
+            ("ラフテー 980YEN", "ラフテー")
+        ]
+
+        for testCase in supportedPrices {
+            let segment = MenuUnderstandingSourceSegment(
+                id: MenuUnderstandingSourceID("s1"),
+                rawText: testCase.rawText,
+                confidence: 0.9,
+                boundingBox: .zero
+            )
+
+            let result = preprocessor.preprocess([segment])
+
+            #expect(result.segments[0].analysisText == testCase.expectedAnalysisText, "\(testCase.rawText)")
+            #expect(result.evidence[0].changes.contains(.priceRemoved), "\(testCase.rawText)")
+        }
+    }
+
+    @Test func preprocessDoesNotTreatUnsupportedCurrenciesAsRemoved() {
+        let preprocessor = MenuTextPreprocessor()
+        // $やUSD等の対応外通貨表記を、暗黙に「対応済み」として扱わないことを明示する回帰テスト。
+        let unsupportedPrices = ["ラフテー $9.80", "ラフテー 9.80USD"]
+
+        for rawText in unsupportedPrices {
+            let segment = MenuUnderstandingSourceSegment(
+                id: MenuUnderstandingSourceID("s1"),
+                rawText: rawText,
+                confidence: 0.9,
+                boundingBox: .zero
+            )
+
+            let result = preprocessor.preprocess([segment])
+
+            #expect(!result.evidence[0].changes.contains(.priceRemoved), "\(rawText)")
+            #expect(result.segments[0].analysisText == nil, "\(rawText)")
+        }
+    }
+
     @Test func preprocessDoesNotRemoveBareMenuNumbersThatAreNotPrices() {
         let preprocessor = MenuTextPreprocessor()
         let segment = MenuUnderstandingSourceSegment(

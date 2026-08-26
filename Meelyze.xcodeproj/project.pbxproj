@@ -9,7 +9,9 @@
 /* Begin PBXBuildFile section */
 		038A8396515D70B91E97B457 /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB51CE3FD41BE5D176A90A04 /* ScanView.swift */; };
 		08E9248A75FBF3970E7A9781 /* VisionOCRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C5BD0FA5722FAC40D364644 /* VisionOCRService.swift */; };
+		0C91D59527AE07CBAD2D5828 /* RiskEvaluationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BABDA2B8802E538E0DFBD12 /* RiskEvaluationService.swift */; };
 		0ED139D34EAEE3CB48448FE2 /* ScanViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 948CECD5B2BFCABBFEEEE154 /* ScanViewModel.swift */; };
+		1366600013E03D4BF1DD27CA /* RiskEvaluationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609F8B5CDE8270B0E45C896C /* RiskEvaluationServiceTests.swift */; };
 		14B34A07A0F8570351537080 /* MenuUnderstandingPromptTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF65A2E41AEFF5E8A1F2B5A /* MenuUnderstandingPromptTests.swift */; };
 		16F75CC5450CE0D3FA1290D7 /* DishAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0099C99522E199DEDC1D024 /* DishAlias.swift */; };
 		1AF62AE22772C703903E81CA /* Restriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5715DDF1A78F2474352ED336 /* Restriction.swift */; };
@@ -23,6 +25,7 @@
 		2FA422D19CB281689047E36B /* MenuAliasResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3392F4480F801B376D3A86F /* MenuAliasResolver.swift */; };
 		30A0132D61E0024D3AC16FAC /* ParsedMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6021D5FC13BA4F80E463E473 /* ParsedMenuItem.swift */; };
 		3240C866B7C2DCE00E17AFE9 /* AllergenDietaryRestrictionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7EB1F18AACFF4D0CC4FE683 /* AllergenDietaryRestrictionViewModelTests.swift */; };
+		334EA049683CAA7D043EA80B /* RiskEvaluationModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28EB47428471293927A7A59 /* RiskEvaluationModelsTests.swift */; };
 		3D63AD4D53CBD93D7F39B634 /* IngredientRestriction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D98D235214657C0F6AE7A75 /* IngredientRestriction.swift */; };
 		433CCB4ADF5D437BD2A2721D /* DisplayLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12E5F436D44B72F78A3E135D /* DisplayLanguage.swift */; };
 		45300E39FCD68529BC7187DB /* SwiftDataMenuKnowledgeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FE258C816314D2A285DB511 /* SwiftDataMenuKnowledgeRepository.swift */; };
@@ -32,11 +35,13 @@
 		4D2C1880EE212130D142CEAA /* MenuNameNormalizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD764E7C94AFA006B44AC61 /* MenuNameNormalizer.swift */; };
 		4F2E6FF80226C2C80B348BA8 /* Allergen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DBC9D074DCF188BFC494F19 /* Allergen.swift */; };
 		535E5EF880AF55F3F5440E09 /* MenuKnowledgeRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53ACD5C7507375111DDB9803 /* MenuKnowledgeRepository.swift */; };
+		54154D1004C1A4B3E6F15A87 /* RiskRuleEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A297506F8F49E47F82748C77 /* RiskRuleEngineTests.swift */; };
 		554DE3DFA0DEBD72D987E873 /* ChoiceChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE4CC8AC2215C0E408065CF /* ChoiceChipView.swift */; };
 		56723CC5B97B7AB371E471AE /* AllergenDietaryRestrictionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7687A10D41A87BA73186324 /* AllergenDietaryRestrictionViewModel.swift */; };
 		5CBB201836FD5A4780F6F2D7 /* SwiftDataMenuKnowledgeRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1366B16A88E17F3DBF7C603C /* SwiftDataMenuKnowledgeRepositoryTests.swift */; };
 		5D90C7095BD43DBEEBC6F9BE /* MenuUnderstandingModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E52D917E05EC04A5E0F665 /* MenuUnderstandingModels.swift */; };
 		5E69333FC69D36548EBF9D75 /* AVFoundationCameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6D4EF6870F94AC39B224757 /* AVFoundationCameraService.swift */; };
+		62AFAFDDDDF6286AC1EB60EC /* RiskLLMSignalExtractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06625BBCFB6784935266A530 /* RiskLLMSignalExtractorTests.swift */; };
 		678A51F22B93BB866464E920 /* MenuTextPreprocessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BA499FE180C8AFBEDD052 /* MenuTextPreprocessorTests.swift */; };
 		6C88114F4B1036D6004D9480 /* LocalizedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2E62A449F012C3E98BE9B /* LocalizedText.swift */; };
 		6DBEF4EE9675E49420C6A741 /* CameraGuideOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7963A306E3AE6837FC2A8D95 /* CameraGuideOverlayView.swift */; };
@@ -58,10 +63,14 @@
 		9E419E516412E13F688AE11C /* RepresentativeMenuFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF664B5689D58B3B2808394 /* RepresentativeMenuFixtures.swift */; };
 		A0C3E5FBAEBE0278275C1D67 /* MenuUnderstandingModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC57C73921D70487E8E48D24 /* MenuUnderstandingModelsTests.swift */; };
 		A490F3D5B42B92F4339B39E7 /* ProfileRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC16DFA9AB4BD011E392700 /* ProfileRepository.swift */; };
+		A63AC5133DA3BF81F224524E /* RiskEvaluationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54B2427F55D1AD7F41F73F8 /* RiskEvaluationModels.swift */; };
+		A8B2D97BE193D2D84B0BB304 /* RiskFactBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FEFF1F87E05258E280A76B /* RiskFactBuilderTests.swift */; };
 		A9959E55F71BCF035A4189B1 /* DisclaimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E21ACCAB4671F3910C32CB09 /* DisclaimerViewModel.swift */; };
 		AA6E40F513CDD90D936A5996 /* DishIngredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4A2F9D56E499432783D14F9 /* DishIngredient.swift */; };
 		AB2DFD5E83915C27A603F34A /* InitialDataImportServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DB1740DF49DECB90099046 /* InitialDataImportServiceTests.swift */; };
 		AD0ADD3FD62A68344A631B74 /* MenuUnderstandingServiceContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8522ECE96CA1F66FD7339BB /* MenuUnderstandingServiceContractTests.swift */; };
+		B1C3282C42BE105AEBE37E3B /* RiskFactBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7AC8504BA2008A8F4156AFF /* RiskFactBuilder.swift */; };
+		B2F40A6796C837E27D093088 /* RiskLLMSignalExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37713CB8D101C5A7A24E1DDE /* RiskLLMSignalExtractor.swift */; };
 		B3D37CBFC2AFB03F8E54BDD8 /* MenuUnderstandingPrompt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F27D646860985637456DBB0 /* MenuUnderstandingPrompt.swift */; };
 		B4E91D56A21332C6DE8F5C3C /* Ingredient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A816D8FEFDC0586A66A39ABC /* Ingredient.swift */; };
 		B6C99BC354CB52C3F60D7C5B /* FoundationModelsMenuParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B568585A2729AEBCD672F984 /* FoundationModelsMenuParser.swift */; };
@@ -70,6 +79,7 @@
 		BFF9D8751DA1550E82AD21AC /* MenuNameNormalizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B78A81C23E3D6B490E8499 /* MenuNameNormalizerTests.swift */; };
 		C59B3228ADF0D183049EF6F1 /* ScanViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1CF00FF2CD3D8B8D02B841 /* ScanViewModelTests.swift */; };
 		C68D5D9A0A7BE64149C57374 /* UITestScanStubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 056B842C2CBF23446B18D76F /* UITestScanStubs.swift */; };
+		C9714AFBA5C46E16B8AD7319 /* RiskRuleEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C871B04C80247338F597209 /* RiskRuleEngine.swift */; };
 		D0CB1F35BBC22A60A3E35AD5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3808C478CBD9943B6F26DF6F /* Preview Assets.xcassets */; };
 		D4E720A75823C35AEE6EC016 /* OnboardingFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E5EF0535E89A83B73DB6A6E /* OnboardingFlowUITests.swift */; };
 		D57FA4FE077906F86A05132F /* LanguageSelectionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213B89C1110A6074EBE9E49 /* LanguageSelectionViewModelTests.swift */; };
@@ -81,6 +91,7 @@
 		E17D53F89F84E5763ECB51B5 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0F5AB1729853FF7B380071 /* UserProfile.swift */; };
 		E2EDB1EF12F4EF8633D9E539 /* SafetyNoticeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5F4493C56EE8F4086CCD1CB /* SafetyNoticeView.swift */; };
 		E3A7B580EB7702311968E883 /* OCRResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BA6CF2960D1A63C122781C /* OCRResult.swift */; };
+		E6A184D7864194ABCA0E750F /* RiskEvaluationServiceIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F579E6CF1730F67255A8227A /* RiskEvaluationServiceIntegrationTests.swift */; };
 		E79FDD8A9C9C5A236ACD0D3C /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B70D742796B2A4C68785A58 /* ContentView.swift */; };
 		ED33D56632B9AE1884E4F7CF /* RecognizedTextObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7B484E49E6DC43421215F4 /* RecognizedTextObservation.swift */; };
 		ED88E05A616991276579D494 /* DisclaimerViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE73A55412CDA5165638B49 /* DisclaimerViewModelTests.swift */; };
@@ -116,6 +127,7 @@
 		056B842C2CBF23446B18D76F /* UITestScanStubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestScanStubs.swift; sourceTree = "<group>"; };
 		05B78A81C23E3D6B490E8499 /* MenuNameNormalizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuNameNormalizerTests.swift; sourceTree = "<group>"; };
 		0643384A56BE3EDE3BE711A5 /* ShutterButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShutterButtonView.swift; sourceTree = "<group>"; };
+		06625BBCFB6784935266A530 /* RiskLLMSignalExtractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskLLMSignalExtractorTests.swift; sourceTree = "<group>"; };
 		0BC2A70753AC85307AF26452 /* IngredientAlias.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientAlias.swift; sourceTree = "<group>"; };
 		0DBC9D074DCF188BFC494F19 /* Allergen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Allergen.swift; sourceTree = "<group>"; };
 		0FE258C816314D2A285DB511 /* SwiftDataMenuKnowledgeRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataMenuKnowledgeRepository.swift; sourceTree = "<group>"; };
@@ -132,7 +144,9 @@
 		2213B89C1110A6074EBE9E49 /* LanguageSelectionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionViewModelTests.swift; sourceTree = "<group>"; };
 		35DCE70149A7A3D349696FD7 /* ContentViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModelTests.swift; sourceTree = "<group>"; };
 		372E43E5B28CED4F1228ECF4 /* MenuAliasResolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuAliasResolverTests.swift; sourceTree = "<group>"; };
+		37713CB8D101C5A7A24E1DDE /* RiskLLMSignalExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskLLMSignalExtractor.swift; sourceTree = "<group>"; };
 		3808C478CBD9943B6F26DF6F /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		3BABDA2B8802E538E0DFBD12 /* RiskEvaluationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskEvaluationService.swift; sourceTree = "<group>"; };
 		3EBFA2E920EFBF32275500C8 /* SwiftDataProfileRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataProfileRepositoryTests.swift; sourceTree = "<group>"; };
 		407578B39F2E8396549A8123 /* IngredientAllergen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientAllergen.swift; sourceTree = "<group>"; };
 		44C4319B950F229F30D4E81C /* Meelyze.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Meelyze.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -150,6 +164,7 @@
 		5DF65A2E41AEFF5E8A1F2B5A /* MenuUnderstandingPromptTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuUnderstandingPromptTests.swift; sourceTree = "<group>"; };
 		5F35A56A3C74C07E63A9B61D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6021D5FC13BA4F80E463E473 /* ParsedMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParsedMenuItem.swift; sourceTree = "<group>"; };
+		609F8B5CDE8270B0E45C896C /* RiskEvaluationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskEvaluationServiceTests.swift; sourceTree = "<group>"; };
 		60DB1740DF49DECB90099046 /* InitialDataImportServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialDataImportServiceTests.swift; sourceTree = "<group>"; };
 		613D058FE927E7B101B872AC /* AllergenDietaryRestrictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenDietaryRestrictionView.swift; sourceTree = "<group>"; };
 		631ED3C5F084B027B88DC072 /* ScanOCRFailureUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanOCRFailureUITests.swift; sourceTree = "<group>"; };
@@ -161,15 +176,18 @@
 		7B7B484E49E6DC43421215F4 /* RecognizedTextObservation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecognizedTextObservation.swift; sourceTree = "<group>"; };
 		7B8BA499FE180C8AFBEDD052 /* MenuTextPreprocessorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTextPreprocessorTests.swift; sourceTree = "<group>"; };
 		7BD764E7C94AFA006B44AC61 /* MenuNameNormalizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuNameNormalizer.swift; sourceTree = "<group>"; };
+		7C871B04C80247338F597209 /* RiskRuleEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskRuleEngine.swift; sourceTree = "<group>"; };
 		7D98D235214657C0F6AE7A75 /* IngredientRestriction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientRestriction.swift; sourceTree = "<group>"; };
 		7DB2E62A449F012C3E98BE9B /* LocalizedText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedText.swift; sourceTree = "<group>"; };
 		8098B2E6E628E339BB9B6FB6 /* MenuKnowledgeModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuKnowledgeModelTests.swift; sourceTree = "<group>"; };
 		81E464E2B50CB8A2DE3E4EDF /* UITestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestHelpers.swift; sourceTree = "<group>"; };
 		8EEA4D805BA1B4EB93DADCA6 /* Dish.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dish.swift; sourceTree = "<group>"; };
 		948CECD5B2BFCABBFEEEE154 /* ScanViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanViewModel.swift; sourceTree = "<group>"; };
+		95FEFF1F87E05258E280A76B /* RiskFactBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskFactBuilderTests.swift; sourceTree = "<group>"; };
 		9E5EF0535E89A83B73DB6A6E /* OnboardingFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlowUITests.swift; sourceTree = "<group>"; };
 		A02F0025B6BD711FA7DD7E5E /* MeelyzeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeelyzeUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		A1710CDEFA0C8935DDAB5D89 /* SimulatorCameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatorCameraService.swift; sourceTree = "<group>"; };
+		A297506F8F49E47F82748C77 /* RiskRuleEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskRuleEngineTests.swift; sourceTree = "<group>"; };
 		A4A2F9D56E499432783D14F9 /* DishIngredient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishIngredient.swift; sourceTree = "<group>"; };
 		A4BAFAB497A658276674E242 /* LanguageSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionViewModel.swift; sourceTree = "<group>"; };
 		A6C1577C5E8826E565ED3996 /* InitialDataImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialDataImportService.swift; sourceTree = "<group>"; };
@@ -185,10 +203,12 @@
 		BD0F5AB1729853FF7B380071 /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		C2124BB907B91399F4D4F70C /* InitialMenuKnowledgeData.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = InitialMenuKnowledgeData.json; sourceTree = "<group>"; };
 		C22E288D81C73DC0E7F55018 /* FoundationModelsMenuParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationModelsMenuParserTests.swift; sourceTree = "<group>"; };
+		C54B2427F55D1AD7F41F73F8 /* RiskEvaluationModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskEvaluationModels.swift; sourceTree = "<group>"; };
 		C6D4EF6870F94AC39B224757 /* AVFoundationCameraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVFoundationCameraService.swift; sourceTree = "<group>"; };
 		CC57C73921D70487E8E48D24 /* MenuUnderstandingModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuUnderstandingModelsTests.swift; sourceTree = "<group>"; };
 		CDAA0292A33B42A4AA997B27 /* MeelyzeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeelyzeUITests.swift; sourceTree = "<group>"; };
 		CDC16DFA9AB4BD011E392700 /* ProfileRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileRepository.swift; sourceTree = "<group>"; };
+		D28EB47428471293927A7A59 /* RiskEvaluationModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskEvaluationModelsTests.swift; sourceTree = "<group>"; };
 		D5F4493C56EE8F4086CCD1CB /* SafetyNoticeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafetyNoticeView.swift; sourceTree = "<group>"; };
 		DB1CF00FF2CD3D8B8D02B841 /* ScanViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanViewModelTests.swift; sourceTree = "<group>"; };
 		DC3E11AF29762731792DE256 /* OCRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRService.swift; sourceTree = "<group>"; };
@@ -202,7 +222,9 @@
 		EFE4CC8AC2215C0E408065CF /* ChoiceChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChoiceChipView.swift; sourceTree = "<group>"; };
 		F3392F4480F801B376D3A86F /* MenuAliasResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuAliasResolver.swift; sourceTree = "<group>"; };
 		F4E52D917E05EC04A5E0F665 /* MenuUnderstandingModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuUnderstandingModels.swift; sourceTree = "<group>"; };
+		F579E6CF1730F67255A8227A /* RiskEvaluationServiceIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskEvaluationServiceIntegrationTests.swift; sourceTree = "<group>"; };
 		F7687A10D41A87BA73186324 /* AllergenDietaryRestrictionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenDietaryRestrictionViewModel.swift; sourceTree = "<group>"; };
+		F7AC8504BA2008A8F4156AFF /* RiskFactBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskFactBuilder.swift; sourceTree = "<group>"; };
 		FCD5C0672FB7C02301917308 /* SimulatorMenuPhotos */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SimulatorMenuPhotos; path = Meelyze/DebugResources/SimulatorMenuPhotos; sourceTree = SOURCE_ROOT; };
 		FD779C69BAA57BE87AF3BB21 /* DisclaimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclaimerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -222,6 +244,7 @@
 				8098B2E6E628E339BB9B6FB6 /* MenuKnowledgeModelTests.swift */,
 				CC57C73921D70487E8E48D24 /* MenuUnderstandingModelsTests.swift */,
 				1ED5FCB568B68A4838C4F470 /* OCRResultTests.swift */,
+				D28EB47428471293927A7A59 /* RiskEvaluationModelsTests.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -278,6 +301,11 @@
 				7B8BA499FE180C8AFBEDD052 /* MenuTextPreprocessorTests.swift */,
 				5DF65A2E41AEFF5E8A1F2B5A /* MenuUnderstandingPromptTests.swift */,
 				A8522ECE96CA1F66FD7339BB /* MenuUnderstandingServiceContractTests.swift */,
+				F579E6CF1730F67255A8227A /* RiskEvaluationServiceIntegrationTests.swift */,
+				609F8B5CDE8270B0E45C896C /* RiskEvaluationServiceTests.swift */,
+				95FEFF1F87E05258E280A76B /* RiskFactBuilderTests.swift */,
+				06625BBCFB6784935266A530 /* RiskLLMSignalExtractorTests.swift */,
+				A297506F8F49E47F82748C77 /* RiskRuleEngineTests.swift */,
 				57BF632551CB89C0AF1B1C9F /* VisionOCRServiceTests.swift */,
 			);
 			path = Services;
@@ -404,6 +432,10 @@
 				AFD3CA331F956E66CAE4DF29 /* MenuUnderstandingService.swift */,
 				DC3E11AF29762731792DE256 /* OCRService.swift */,
 				11ADB29E668A7D70DC9CB020 /* README.md */,
+				3BABDA2B8802E538E0DFBD12 /* RiskEvaluationService.swift */,
+				F7AC8504BA2008A8F4156AFF /* RiskFactBuilder.swift */,
+				37713CB8D101C5A7A24E1DDE /* RiskLLMSignalExtractor.swift */,
+				7C871B04C80247338F597209 /* RiskRuleEngine.swift */,
 				A1710CDEFA0C8935DDAB5D89 /* SimulatorCameraService.swift */,
 				056B842C2CBF23446B18D76F /* UITestScanStubs.swift */,
 				6C5BD0FA5722FAC40D364644 /* VisionOCRService.swift */,
@@ -435,6 +467,7 @@
 				218521C806E7B0ABB02FB2F9 /* README.md */,
 				7B7B484E49E6DC43421215F4 /* RecognizedTextObservation.swift */,
 				5715DDF1A78F2474352ED336 /* Restriction.swift */,
+				C54B2427F55D1AD7F41F73F8 /* RiskEvaluationModels.swift */,
 				BD0F5AB1729853FF7B380071 /* UserProfile.swift */,
 			);
 			path = Models;
@@ -587,6 +620,12 @@
 				AD0ADD3FD62A68344A631B74 /* MenuUnderstandingServiceContractTests.swift in Sources */,
 				8E4ED6D9A8F15A36828C1877 /* OCRResultTests.swift in Sources */,
 				9E419E516412E13F688AE11C /* RepresentativeMenuFixtures.swift in Sources */,
+				334EA049683CAA7D043EA80B /* RiskEvaluationModelsTests.swift in Sources */,
+				E6A184D7864194ABCA0E750F /* RiskEvaluationServiceIntegrationTests.swift in Sources */,
+				1366600013E03D4BF1DD27CA /* RiskEvaluationServiceTests.swift in Sources */,
+				A8B2D97BE193D2D84B0BB304 /* RiskFactBuilderTests.swift in Sources */,
+				62AFAFDDDDF6286AC1EB60EC /* RiskLLMSignalExtractorTests.swift in Sources */,
+				54154D1004C1A4B3E6F15A87 /* RiskRuleEngineTests.swift in Sources */,
 				C59B3228ADF0D183049EF6F1 /* ScanViewModelTests.swift in Sources */,
 				5CBB201836FD5A4780F6F2D7 /* SwiftDataMenuKnowledgeRepositoryTests.swift in Sources */,
 				8FD5C8FF81002F9C2EBD91FC /* SwiftDataProfileRepositoryTests.swift in Sources */,
@@ -656,6 +695,11 @@
 				A490F3D5B42B92F4339B39E7 /* ProfileRepository.swift in Sources */,
 				ED33D56632B9AE1884E4F7CF /* RecognizedTextObservation.swift in Sources */,
 				1AF62AE22772C703903E81CA /* Restriction.swift in Sources */,
+				A63AC5133DA3BF81F224524E /* RiskEvaluationModels.swift in Sources */,
+				0C91D59527AE07CBAD2D5828 /* RiskEvaluationService.swift in Sources */,
+				B1C3282C42BE105AEBE37E3B /* RiskFactBuilder.swift in Sources */,
+				B2F40A6796C837E27D093088 /* RiskLLMSignalExtractor.swift in Sources */,
+				C9714AFBA5C46E16B8AD7319 /* RiskRuleEngine.swift in Sources */,
 				F7484F7C1C5FD928FF244064 /* RootView.swift in Sources */,
 				E2EDB1EF12F4EF8633D9E539 /* SafetyNoticeView.swift in Sources */,
 				038A8396515D70B91E97B457 /* ScanView.swift in Sources */,

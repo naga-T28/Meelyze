@@ -53,21 +53,17 @@ struct MenuNameNormalizer {
         }))
     }
 
-    private static func normalizeOCRLongSoundMarks(_ text: String) -> String {
-        var scalars = Array(text.unicodeScalars)
-        for index in scalars.indices where scalars[index].value == 0x4E00 {
-            let hasKanaBefore = index > scalars.startIndex && isKanaOrLongSound(scalars[scalars.index(before: index)])
-            let hasKanaAfter = scalars.index(after: index) < scalars.endIndex && isKanaOrLongSound(scalars[scalars.index(after: index)])
-            if hasKanaBefore || hasKanaAfter {
-                scalars[index] = "ー"
-            }
-        }
-        return String(String.UnicodeScalarView(scalars))
-    }
+    /// 漢数字「一」(U+4E00)がOCRによる長音記号「ー」の誤認識である、確認済みの語だけを補正する。
+    ///
+    /// 文字位置（直前・直後の文字種）による推測は行わない。過去に位置推測（直前がカタカナ、
+    /// 直後がひらがな/漢字でない場合のみ変換）を採用していたが、「メニュー一」（直前が長音記号、
+    /// 末尾で「直後」チェックが働かない）を「メニューー」へ誤変換する反例があり、位置推測そのものを
+    /// 廃止した。ここに掲げる有限辞書のキーだけを対象に部分文字列置換する。
+    private static let knownOCRLongSoundCorrections: [String: String] = [
+        "ラフテ一": "ラフテー"
+    ]
 
-    private static func isKanaOrLongSound(_ scalar: UnicodeScalar) -> Bool {
-        (0x3041...0x3096).contains(scalar.value)
-            || (0x30A1...0x30FA).contains(scalar.value)
-            || scalar.value == 0x30FC
+    private static func normalizeOCRLongSoundMarks(_ text: String) -> String {
+        knownOCRLongSoundCorrections.reduce(text) { $0.replacingOccurrences(of: $1.key, with: $1.value) }
     }
 }

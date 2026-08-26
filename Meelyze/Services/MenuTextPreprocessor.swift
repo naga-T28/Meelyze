@@ -32,7 +32,7 @@ struct MenuTextPreprocessor {
 
         let withoutPrices = Self.replacingMatches(
             in: text,
-            pattern: #"(?:[¥￥]\s*\d+(?:,\d{3})*|\d{1,3}(?:,\d{3})+\s*(?:円|yen)|\d{2,6}\s*(?:円|yen))"#,
+            pattern: #"(?i)(?:[¥￥]\s*\d+(?:,\d{3})*|\d{1,3}(?:,\d{3})+\s*(?:円|yen)|\d{2,6}\s*(?:円|yen))"#,
             with: ""
         )
         if withoutPrices != text {
@@ -50,9 +50,10 @@ struct MenuTextPreprocessor {
             changes.append(.menuNumberRemoved)
         }
 
+        // ★☆等の装飾記号は行頭・行末の連続にのみ適用し、料理名内部（例: サイズ・辛さの記号的表記）は対象外にする。
         let withoutNoiseSymbols = Self.replacingMatches(
             in: text,
-            pattern: #"^[\s　]*(?:[\-‐‑–—=＊*・･.．、:：/／|｜【】\[\]（）()]+[\s　]*)+|(?:[\s　]*[\-‐‑–—=＊*・･.．、:：/／|｜【】\[\]（）()]+)+[\s　]*$"#,
+            pattern: #"^[\s　]*(?:[\-‐‑–—=＊*・･.．、:：/／|｜【】\[\]（）()★☆]+[\s　]*)+|(?:[\s　]*[\-‐‑–—=＊*・･.．、:：/／|｜【】\[\]（）()★☆]+)+[\s　]*$"#,
             with: ""
         )
         if withoutNoiseSymbols != text {
