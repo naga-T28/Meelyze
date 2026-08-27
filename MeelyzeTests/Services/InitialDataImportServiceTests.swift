@@ -73,6 +73,24 @@ struct InitialDataImportServiceTests {
         }
     }
 
+    /// `MeelyzeTests`はアプリ本体にhostされたUnit Testバンドルのため、`Bundle.main`は
+    /// テストバンドルではなくアプリ本体（`Meelyze`）のバンドルを指す。TASK-036で`RootView`が
+    /// 起動時に呼ぶ`importBundledInitialDataIfNeeded()`のデフォルト引数と同じ経路
+    /// （実際に同梱されたJSONファイル）が壊れていないことを確認する。
+    @Test func importsBundledInitialDataFromAppBundle() throws {
+        let repository = SwiftDataMenuKnowledgeRepository(modelContext: try makeInMemoryContext())
+        let service = InitialDataImportService(repository: repository)
+
+        let summary = try service.importBundledInitialDataIfNeeded()
+
+        #expect(summary.didImport == true)
+        #expect(summary.dataVersion == "2026-08-19-initial-menu-knowledge")
+        #expect(summary.dishCount > 0)
+        #expect(summary.ingredientCount > 0)
+        #expect(summary.dishIngredientCount > 0)
+        #expect(try repository.hasImportedDataVersion("2026-08-19-initial-menu-knowledge") == true)
+    }
+
     private var sampleInitialData: Data {
         """
         {

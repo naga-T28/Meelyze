@@ -32,3 +32,8 @@ Issue #15のレビューで判明した3つの検出可能なsilent-loss経路�
 詳細な設計判断・完了条件・検証結果は`fix/FIX-005-harden-menu-understanding-completeness-provenance.md`を参照。
 
 `MenuUnderstandingService`とその戻り値はFoundation Models固有型へ依存しないため、Foundation Modelsなしのfake実装へ差し替えて決定的にテストできる。詳細は `docs/technology-selection.md`「6. Local LLM」、`task/TASK-024-menu-understanding-contract-models.md`、`task/TASK-025-foundation-models-parser.md`、`task/TASK-026-menu-understanding-prompt-extraction.md`を参照。
+
+## 現在の内容（Issue #19）
+
+- `MenuUnderstandingRequestBuilder.swift`: `OCRService`が返す`OCRResult`（`RecognizedTextObservation`の配列）を`MenuUnderstandingRequest`へ変換する。`build(from:)`は、配列インデックスに基づく安定した`MenuUnderstandingSourceID`を発行しつつ、そのIDから元の`RecognizedTextObservation`（rawText・confidence・Bounding Box）を引ける`sourceMap`を同時に返す。空白のみのobservationは解析対象になり得ないため除外する。撮影〜OCRからRule Engineまでの統合（`MenuAnalysisService`）における、Bounding Box対応関係の起点となる変換コンポーネント。詳細は`task/TASK-037-ocr-to-understanding-request.md`を参照。
+- `MenuAnalysisService.swift`: `OCRResult`＋`UserProfile`から`MenuAnalysisResult`（`Meelyze/Models/`）を返す、撮影1回分の解析Serviceの唯一の入口。`MenuUnderstandingRequestBuilder`で組み立てたrequestを`RiskEvaluationService`（Issue #17）へ渡し、その結果を元のBounding Boxと結び付ける。Issue #17が「境界不明の失敗から架空の料理・Bounding Boxを生成しない」という原則を守ったまま`.item`スコープの失敗を捨てていることに対し、本Serviceは実item境界が判明している`.item`スコープ失敗だけを対象target全件`undetermined`の結果へ復元する。また、Foundation Models利用不可（request scopeの`modelUnavailable`）によって実itemが1件も得られなかった場合に限り、料理としてのグルーピングを一切推測せずOCRセグメント単位の`undetermined`フォールバックを行う（Menu Understandingが実際に動作して単に0件だった場合には適用しない）。詳細は`task/TASK-038-menu-analysis-service.md`を参照。
