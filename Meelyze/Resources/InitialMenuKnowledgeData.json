@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "dataVersion": "2026-08-19-initial-menu-knowledge",
-  "description": "Initial Okinawa menu knowledge data for Issue #12. Ingredient facts are limited to the cited public sources and must be reviewed before production use.",
+  "dataVersion": "2026-08-27-demo-dish-expansion",
+  "description": "Initial Okinawa menu knowledge data for Issue #12, expanded in fix/FIX-012 to cover additional common Okinawan menu items. Ingredient facts are limited to the cited public sources and must be reviewed before production use.",
   "sources": [
     {
       "id": "maff_uchino_rafute",
@@ -22,7 +22,42 @@
       "name": "農林水産省 うちの郷土料理 沖縄そば 沖縄県",
       "url": "https://www.maff.go.jp/j/keikaku/syokubunka/k_ryouri/search_menu/menu/47_20_okinawa.html",
       "checkedAt": "2026-08-19",
-      "notes": "歴史・由来欄、飲食方法、材料欄を参照。"
+      "notes": "歴史・由来欄、飲食方法、材料欄を参照。同ページはソーキそば（軟骨ソーキそば等）も沖縄そばの代表的な具の一種として言及している。"
+    },
+    {
+      "id": "wikipedia_ja_taco_rice",
+      "name": "タコライス - Wikipedia",
+      "url": "https://ja.wikipedia.org/wiki/%E3%82%BF%E3%82%B3%E3%83%A9%E3%82%A4%E3%82%B9",
+      "checkedAt": "2026-08-27",
+      "notes": "材料・具材欄を参照（牛ひき肉のタコミート、チーズ、レタス・トマト等）。FIX-012。"
+    },
+    {
+      "id": "okinawa_eiyoushikai_mimigaa",
+      "name": "公益社団法人 沖縄県栄養士会 うちなーレシピ「ミミガーさしみ（豚耳の和え物）」",
+      "url": "https://okinawa-eiyo.or.jp/uchina-recipe/%E3%83%9F%E3%83%9F%E3%82%AC%E3%83%BC%E3%81%95%E3%81%97%E3%81%BF-%EF%BC%88%E8%B1%9A%E8%80%B3%E3%81%AE%E5%92%8C%E3%81%88%E7%89%A9%EF%BC%89/",
+      "checkedAt": "2026-08-27",
+      "notes": "材料欄を参照（豚耳、ピーナッツバター、白味噌等）。FIX-012。"
+    },
+    {
+      "id": "pride_fish_okinawa_umibudou",
+      "name": "プライドフィッシュ 沖縄海ぶどう（クビレズタ）沖縄県",
+      "url": "https://www.pride-fish.jp/JPF/pref/detail.php?pk=1522751118",
+      "checkedAt": "2026-08-27",
+      "notes": "食べ方・調味料欄を参照（酢醤油・酢味噌・三杯酢を別添えで食べる旨）。FIX-012。"
+    },
+    {
+      "id": "sirogohan_tempura_koromo",
+      "name": "白ごはん.com 天ぷら衣の作り方",
+      "url": "https://www.sirogohan.com/recipe/tenpurakoromo/",
+      "checkedAt": "2026-08-27",
+      "notes": "天ぷら衣の基本材料欄を参照（薄力粉・卵・冷水）。FIX-012。"
+    },
+    {
+      "id": "orion_beer_official_lineup",
+      "name": "オリオンビール株式会社 商品ラインナップ",
+      "url": "https://www.orionbeer.co.jp/brand/",
+      "checkedAt": "2026-08-27",
+      "notes": "オリオン生ビール（ザ・ドラフト）が同社のビール製品であることを参照。FIX-012。"
     }
   ],
   "allergens": [
@@ -41,6 +76,18 @@
     {
       "id": "soybean",
       "japaneseName": "大豆"
+    },
+    {
+      "id": "beef",
+      "japaneseName": "牛肉"
+    },
+    {
+      "id": "milk",
+      "japaneseName": "乳"
+    },
+    {
+      "id": "peanut",
+      "japaneseName": "落花生（ピーナッツ）"
     }
   ],
   "restrictions": [
@@ -74,10 +121,10 @@
     {
       "id": "pork",
       "canonicalName": "豚肉",
-      "aliases": ["豚", "豚三枚肉", "豚バラ肉", "ポーク"],
+      "aliases": ["豚", "豚三枚肉", "豚バラ肉", "ポーク", "ソーキ", "豚耳"],
       "allergenIds": ["pork"],
       "restrictionIds": ["halal_pork", "vegan_animal_product"],
-      "sourceIds": ["maff_uchino_rafute", "maff_uchino_goya_chanpuru", "maff_uchino_okinawa_soba"]
+      "sourceIds": ["maff_uchino_rafute", "maff_uchino_goya_chanpuru", "maff_uchino_okinawa_soba", "okinawa_eiyoushikai_mimigaa"]
     },
     {
       "id": "bonito_dashi",
@@ -142,6 +189,70 @@
       "allergenIds": ["pork"],
       "restrictionIds": ["halal_pork", "vegetarian_animal_dashi", "vegan_animal_product"],
       "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "id": "beef",
+      "canonicalName": "牛肉",
+      "aliases": ["牛ひき肉", "タコミート"],
+      "allergenIds": ["beef"],
+      "restrictionIds": ["vegan_animal_product"],
+      "sourceIds": ["wikipedia_ja_taco_rice"]
+    },
+    {
+      "id": "cheese",
+      "canonicalName": "チーズ",
+      "aliases": [],
+      "allergenIds": ["milk"],
+      "restrictionIds": ["vegan_animal_product"],
+      "sourceIds": ["wikipedia_ja_taco_rice"]
+    },
+    {
+      "id": "peanut",
+      "canonicalName": "ピーナッツ",
+      "aliases": ["ピーナツ", "ピーナッツバター", "落花生"],
+      "allergenIds": ["peanut"],
+      "restrictionIds": [],
+      "sourceIds": ["okinawa_eiyoushikai_mimigaa"]
+    },
+    {
+      "id": "white_miso",
+      "canonicalName": "白味噌",
+      "aliases": ["白みそ"],
+      "allergenIds": ["soybean"],
+      "restrictionIds": [],
+      "sourceIds": ["okinawa_eiyoushikai_mimigaa"]
+    },
+    {
+      "id": "umi_budou_seaweed",
+      "canonicalName": "海ぶどう",
+      "aliases": ["クビレズタ"],
+      "allergenIds": [],
+      "restrictionIds": [],
+      "sourceIds": ["pride_fish_okinawa_umibudou"]
+    },
+    {
+      "id": "shima_rakkyo",
+      "canonicalName": "島らっきょう",
+      "aliases": ["島ラッキョウ"],
+      "allergenIds": [],
+      "restrictionIds": [],
+      "sourceIds": ["sirogohan_tempura_koromo"]
+    },
+    {
+      "id": "tempura_batter",
+      "canonicalName": "天ぷら衣",
+      "aliases": ["衣"],
+      "allergenIds": ["wheat"],
+      "restrictionIds": [],
+      "sourceIds": ["sirogohan_tempura_koromo"]
+    },
+    {
+      "id": "beer",
+      "canonicalName": "ビール",
+      "aliases": ["生ビール"],
+      "allergenIds": [],
+      "restrictionIds": ["halal_alcohol", "non_alcoholic_alcohol"],
+      "sourceIds": ["orion_beer_official_lineup"]
     }
   ],
   "dishes": [
@@ -165,6 +276,62 @@
       "region": "okinawa",
       "aliases": ["おきなわそば", "沖縄すば"],
       "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "id": "soki_soba",
+      "canonicalName": "ソーキそば",
+      "region": "okinawa",
+      "aliases": ["軟骨ソーキそば"],
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "id": "taco_rice",
+      "canonicalName": "タコライス",
+      "region": "okinawa",
+      "aliases": [],
+      "sourceIds": ["wikipedia_ja_taco_rice"]
+    },
+    {
+      "id": "umi_budou_dish",
+      "canonicalName": "海ぶどう",
+      "region": "okinawa",
+      "aliases": ["うみぶどう"],
+      "sourceIds": ["pride_fish_okinawa_umibudou"]
+    },
+    {
+      "id": "mimigaa",
+      "canonicalName": "ミミガー",
+      "region": "okinawa",
+      "aliases": ["みみがー"],
+      "sourceIds": ["okinawa_eiyoushikai_mimigaa"]
+    },
+    {
+      "id": "shima_rakkyo_tempura",
+      "canonicalName": "島らっきょう天ぷら",
+      "region": "okinawa",
+      "aliases": ["島らっきょうの天ぷら"],
+      "sourceIds": ["sirogohan_tempura_koromo"]
+    },
+    {
+      "id": "awamori_drink",
+      "canonicalName": "泡盛",
+      "region": "okinawa",
+      "aliases": ["あわもり"],
+      "sourceIds": ["maff_uchino_rafute", "maff_uchino_okinawa_soba"]
+    },
+    {
+      "id": "orion_draft_beer",
+      "canonicalName": "オリオン生ビール",
+      "region": "okinawa",
+      "aliases": ["オリオンビール", "オリオンドラフト"],
+      "sourceIds": ["orion_beer_official_lineup"]
+    },
+    {
+      "id": "draft_beer_generic",
+      "canonicalName": "生ビール",
+      "region": "okinawa",
+      "aliases": ["ドラフトビール"],
+      "sourceIds": ["orion_beer_official_lineup"]
     }
   ],
   "dishIngredients": [
@@ -279,6 +446,158 @@
       "isHiddenIngredient": true,
       "hiddenIngredientCategory": "seasoning",
       "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "dishId": "soki_soba",
+      "ingredientId": "wheat_noodle",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "dishId": "soki_soba",
+      "ingredientId": "pork",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "dishId": "soki_soba",
+      "ingredientId": "pork_bone_dashi",
+      "confidence": "confirmed",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "dashi",
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "dishId": "soki_soba",
+      "ingredientId": "bonito_dashi",
+      "confidence": "confirmed",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "dashi",
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "dishId": "soki_soba",
+      "ingredientId": "awamori",
+      "confidence": "typical",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "seasoning",
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "dishId": "soki_soba",
+      "ingredientId": "soy_sauce",
+      "confidence": "typical",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "seasoning",
+      "sourceIds": ["maff_uchino_okinawa_soba"]
+    },
+    {
+      "dishId": "taco_rice",
+      "ingredientId": "beef",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["wikipedia_ja_taco_rice"]
+    },
+    {
+      "dishId": "taco_rice",
+      "ingredientId": "cheese",
+      "confidence": "typical",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["wikipedia_ja_taco_rice"]
+    },
+    {
+      "dishId": "umi_budou_dish",
+      "ingredientId": "umi_budou_seaweed",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["pride_fish_okinawa_umibudou"]
+    },
+    {
+      "dishId": "umi_budou_dish",
+      "ingredientId": "soy_sauce",
+      "confidence": "variesByStore",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "seasoning",
+      "sourceIds": ["pride_fish_okinawa_umibudou"]
+    },
+    {
+      "dishId": "mimigaa",
+      "ingredientId": "pork",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["okinawa_eiyoushikai_mimigaa"]
+    },
+    {
+      "dishId": "mimigaa",
+      "ingredientId": "peanut",
+      "confidence": "typical",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "seasoning",
+      "sourceIds": ["okinawa_eiyoushikai_mimigaa"]
+    },
+    {
+      "dishId": "mimigaa",
+      "ingredientId": "white_miso",
+      "confidence": "typical",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "seasoning",
+      "sourceIds": ["okinawa_eiyoushikai_mimigaa"]
+    },
+    {
+      "dishId": "shima_rakkyo_tempura",
+      "ingredientId": "shima_rakkyo",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["sirogohan_tempura_koromo"]
+    },
+    {
+      "dishId": "shima_rakkyo_tempura",
+      "ingredientId": "tempura_batter",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["sirogohan_tempura_koromo"]
+    },
+    {
+      "dishId": "shima_rakkyo_tempura",
+      "ingredientId": "egg",
+      "confidence": "typical",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["sirogohan_tempura_koromo"]
+    },
+    {
+      "dishId": "awamori_drink",
+      "ingredientId": "awamori",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["maff_uchino_rafute", "maff_uchino_okinawa_soba"]
+    },
+    {
+      "dishId": "orion_draft_beer",
+      "ingredientId": "beer",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["orion_beer_official_lineup"]
+    },
+    {
+      "dishId": "draft_beer_generic",
+      "ingredientId": "beer",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["orion_beer_official_lineup"]
     }
   ]
 }

@@ -18,10 +18,15 @@ struct MenuUnderstandingRequestBuilder {
 
     /// `OCRResult.observations`から`MenuUnderstandingRequest`を構築する。
     ///
-    /// - `MenuUnderstandingSourceID`は配列インデックスに基づいて採番する。`VisionOCRService`はreading
-    ///   orderを保証せず同一テキストが複数箇所に出現しうるため、内容ハッシュではなくインデックスを使う
-    ///   ことで、同一入力内での衝突を避ける（`MenuUnderstandingRequest`のIDはrequestが有効な間だけ
-    ///   一意であればよく、実行間の安定性は不要）。
+    /// - `MenuUnderstandingSourceID`は配列インデックスに基づいて採番する。インデックスは
+    ///   `OCRReadingOrderSorter`で読み取り順に並べ替えた後の順序に対して振るため、内容ハッシュを
+    ///   使わずとも同一入力内での衝突を避けられる（`MenuUnderstandingRequest`のIDはrequestが有効な
+    ///   間だけ一意であればよく、実行間の安定性は不要）。
+    /// - `VisionOCRService`はreading orderを保証せず、複数列レイアウトのメニューでは列が交互に
+    ///   混ざった順序で観測を返すことがある（`fix/FIX-010-ocr-reading-order-for-multi-column-menus.md`）。
+    ///   `MenuUnderstandingPrompt`はBounding Box情報を渡さないため、この並べ替えをここで行わないと
+    ///   LLMが列位置のヒントなしに価格と料理名の対応を推測することになる。`OCRReadingOrderSorter`で
+    ///   列単位に並べ替えてからsegmentを構築する。
     /// - 前後の空白のみで構成される（意味のある文字を含まない）observationは、Menu Understandingの
     ///   解析対象になり得ないため`segments`・`sourceMap`の両方から除外する。
     /// - `ocrResult.isEmpty`（または全observationが空白のみ）の場合は`segments`が空の`request`を返す。
@@ -31,7 +36,8 @@ struct MenuUnderstandingRequestBuilder {
         var segments: [MenuUnderstandingSourceSegment] = []
         var sourceMap: [MenuUnderstandingSourceID: RecognizedTextObservation] = [:]
 
-        for (index, observation) in ocrResult.observations.enumerated() {
+        let orderedObservations = OCRReadingOrderSorter.sorted(ocrResult.observations)
+        for (index, observation) in orderedObservations.enumerated() {
             guard !observation.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
                 continue
             }

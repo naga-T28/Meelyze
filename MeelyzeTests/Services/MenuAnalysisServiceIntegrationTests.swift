@@ -54,8 +54,10 @@ struct MenuAnalysisServiceIntegrationTests {
     }
 
     @Test func analyzeFallsBackToPerSegmentUndeterminedWhenFoundationModelsIsUnavailableThroughTheFullPipeline() async throws {
-        let firstBox = CGRect(x: 0, y: 0, width: 0.2, height: 0.1)
-        let secondBox = CGRect(x: 0, y: 0.2, width: 0.2, height: 0.1)
+        // `firstBox`は`secondBox`より上（y値が大きい。Visionの座標系は原点左下）に置き、読み取り順
+        // （`OCRReadingOrderSorter`、FIX-010）でもocr-source-0（`firstBox`）が先になるようにする。
+        let firstBox = CGRect(x: 0, y: 0.2, width: 0.2, height: 0.1)
+        let secondBox = CGRect(x: 0, y: 0, width: 0.2, height: 0.1)
         let service = try makeMenuAnalysisService(result: MenuUnderstandingResult(
             request: MenuUnderstandingRequest(segments: []),
             items: [],
@@ -83,8 +85,9 @@ struct MenuAnalysisServiceIntegrationTests {
     }
 
     @Test func analyzeKeepsSuccessfulDishWhenAnotherDishFailsItemValidationThroughTheFullPipeline() async throws {
-        let successBox = CGRect(x: 0, y: 0, width: 0.2, height: 0.1)
-        let failedBox = CGRect(x: 0, y: 0.2, width: 0.2, height: 0.1)
+        // `successBox`を`failedBox`より上に置く理由は上記テストと同じ（読み取り順でocr-source-0が先）。
+        let successBox = CGRect(x: 0, y: 0.2, width: 0.2, height: 0.1)
+        let failedBox = CGRect(x: 0, y: 0, width: 0.2, height: 0.1)
         let successID = MenuUnderstandingSourceID("ocr-source-0")
         let failedID = MenuUnderstandingSourceID("ocr-source-1")
         let successItem = makeParsedItem(sourceID: successID, rawFragment: "ラフテー", ordinal: 0, baseDishCandidates: ["ラフテー"])

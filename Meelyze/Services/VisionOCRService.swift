@@ -54,15 +54,32 @@ struct VisionOCRService: OCRService {
             throw OCRError.invalidImageData
         }
 
+        let orientation = VisionOCRService.cgImagePropertyOrientation(from: imageSource)
+
         let request = VNRecognizeTextRequest()
         request.recognitionLanguages = ["ja-JP"]
         request.recognitionLevel = .accurate
         request.usesLanguageCorrection = true
 
-        let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
+        let handler = VNImageRequestHandler(cgImage: cgImage, orientation: orientation, options: [:])
         try handler.perform([request])
 
         return VisionOCRService.map(request.results ?? [])
+    }
+
+    /// EXIFの`Orientation`タグ（`kCGImagePropertyOrientation`）を読み取る。`CGImage`自体はEXIF
+    /// Orientationを自動適用しないため（ピクセルデータをそのまま返すだけ）、Visionへ正しい向きで
+    /// 文字検出させるには明示的にこの値を渡す必要がある（`fix/FIX-011-vision-ocr-image-orientation-handling.md`）。
+    /// タグが存在しない、または不正な値の場合は`.up`（回転なし）へ安全にフォールバックする。
+    static func cgImagePropertyOrientation(from imageSource: CGImageSource) -> CGImagePropertyOrientation {
+        guard
+            let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [CFString: Any],
+            let rawValue = properties[kCGImagePropertyOrientation] as? UInt32,
+            let orientation = CGImagePropertyOrientation(rawValue: rawValue)
+        else {
+            return .up
+        }
+        return orientation
     }
 
     /// `VNRecognizedTextObservation`（またはテスト用スタブ）を`RecognizedTextObservation`へ変換する。

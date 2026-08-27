@@ -27,7 +27,9 @@ struct RiskFactBuilderTests {
         #expect(match.confidence == .confirmed)
         #expect(match.isHiddenIngredient == false)
         #expect(match.hiddenIngredientCategory == nil)
-        #expect(Set(match.sourceIDs) == Set(["maff_uchino_rafute", "maff_uchino_goya_chanpuru", "maff_uchino_okinawa_soba"]))
+        // FIX-012で"pork"のaliasesへ"ソーキ"/"豚耳"を追加した際、根拠として
+        // "okinawa_eiyoushikai_mimigaa"をsourceIdsへ加えた。
+        #expect(Set(match.sourceIDs) == Set(["maff_uchino_rafute", "maff_uchino_goya_chanpuru", "maff_uchino_okinawa_soba", "okinawa_eiyoushikai_mimigaa"]))
     }
 
     @Test func buildFactsMatchesUserSelectedDietaryRestrictionAgainstHiddenIngredient() throws {
@@ -116,8 +118,9 @@ struct RiskFactBuilderTests {
     }
 
     @Test func buildFactsPreservesVariesByStoreConfidenceDistinctFromConfirmedMatch() throws {
-        // InitialMenuKnowledgeData.jsonの実データにvariesByStore例がないため、この観点専用の
-        // 最小fixtureをRepository経由で直接構築する（実データを改変してテスト用に捏造しない）。
+        // 実データ（`InitialMenuKnowledgeData.json`）にもFIX-012以降variesByStore例（海ぶどうの
+        // 薬味等）があるが、このテストは`RiskFactBuilder`自体の変換ロジックの単一観点に絞った
+        // 最小fixtureをRepository経由で直接構築する（実データの変化に左右されないようにするため）。
         let context = try makeInMemoryContext()
         let repository = SwiftDataMenuKnowledgeRepository(modelContext: context)
         try repository.upsertDish(Dish(id: "curry_rice", canonicalName: "カレーライス", region: "unknown"))

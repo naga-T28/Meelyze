@@ -99,8 +99,10 @@ struct MenuAnalysisServiceTests {
     }
 
     @Test func analyzeKeepsSuccessfulItemAlongsideRestoredItemScopedFailureInOrdinalOrder() async throws {
-        let firstBox = CGRect(x: 0, y: 0, width: 0.2, height: 0.2)
-        let secondBox = CGRect(x: 0, y: 0.3, width: 0.2, height: 0.2)
+        // `firstBox`は`secondBox`より上（y値が大きい。Visionの座標系は原点左下）に置き、読み取り順
+        // （`OCRReadingOrderSorter`、FIX-010）でもocr-source-0（`firstBox`）が先になるようにする。
+        let firstBox = CGRect(x: 0, y: 0.3, width: 0.2, height: 0.2)
+        let secondBox = CGRect(x: 0, y: 0, width: 0.2, height: 0.2)
         let successID = MenuUnderstandingSourceID("ocr-source-0")
         let failedID = MenuUnderstandingSourceID("ocr-source-1")
 
@@ -133,8 +135,10 @@ struct MenuAnalysisServiceTests {
     }
 
     @Test func analyzeFallsBackToPerSegmentUndeterminedWhenModelUnavailableAndNoItemsAtAll() async throws {
-        let firstBox = CGRect(x: 0, y: 0, width: 0.2, height: 0.2)
-        let secondBox = CGRect(x: 0, y: 0.3, width: 0.2, height: 0.2)
+        // `firstBox`を`secondBox`より上に置く理由は
+        // `analyzeKeepsSuccessfulItemAlongsideRestoredItemScopedFailureInOrdinalOrder`と同じ。
+        let firstBox = CGRect(x: 0, y: 0.3, width: 0.2, height: 0.2)
+        let secondBox = CGRect(x: 0, y: 0, width: 0.2, height: 0.2)
         let failure = RiskEvaluationFailure(
             scope: .request,
             reason: .menuUnderstanding(.modelUnavailable(.appleIntelligenceNotEnabled)),

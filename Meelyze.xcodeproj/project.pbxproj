@@ -49,6 +49,7 @@
 		5CBB201836FD5A4780F6F2D7 /* SwiftDataMenuKnowledgeRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1366B16A88E17F3DBF7C603C /* SwiftDataMenuKnowledgeRepositoryTests.swift */; };
 		5D90C7095BD43DBEEBC6F9BE /* MenuUnderstandingModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E52D917E05EC04A5E0F665 /* MenuUnderstandingModels.swift */; };
 		5E69333FC69D36548EBF9D75 /* AVFoundationCameraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6D4EF6870F94AC39B224757 /* AVFoundationCameraService.swift */; };
+		5FC4E8E8CE2A56E09243A13F /* OCRReadingOrderSorter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478141DC1992F13737ED94D1 /* OCRReadingOrderSorter.swift */; };
 		615C522CBFB3EB71075EF071 /* AppleDishNameTranslationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3D9C614348AD5D37F316D8 /* AppleDishNameTranslationService.swift */; };
 		62AFAFDDDDF6286AC1EB60EC /* RiskLLMSignalExtractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06625BBCFB6784935266A530 /* RiskLLMSignalExtractorTests.swift */; };
 		678A51F22B93BB866464E920 /* MenuTextPreprocessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BA499FE180C8AFBEDD052 /* MenuTextPreprocessorTests.swift */; };
@@ -72,6 +73,7 @@
 		8C39DF750365356C689113EE /* EvidenceSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCEB2FE9DF4DD995CAD3304B /* EvidenceSource.swift */; };
 		8E4ED6D9A8F15A36828C1877 /* OCRResultTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED5FCB568B68A4838C4F470 /* OCRResultTests.swift */; };
 		8FD5C8FF81002F9C2EBD91FC /* SwiftDataProfileRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBFA2E920EFBF32275500C8 /* SwiftDataProfileRepositoryTests.swift */; };
+		9353AD4C330DEACCFA2056ED /* OCRReadingOrderSorterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61B374FD6D3A94F721082AB1 /* OCRReadingOrderSorterTests.swift */; };
 		93A743B873325135631A1E36 /* ShutterButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0643384A56BE3EDE3BE711A5 /* ShutterButtonView.swift */; };
 		96B722BB3C78C4EEAB8EBAA3 /* InitialMenuKnowledgeData.json in Resources */ = {isa = PBXBuildFile; fileRef = C2124BB907B91399F4D4F70C /* InitialMenuKnowledgeData.json */; };
 		9AEC4A84D322BD929996EF05 /* MenuNormalizationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E78BF5E06DB8B85208D313 /* MenuNormalizationModels.swift */; };
@@ -187,6 +189,7 @@
 		407578B39F2E8396549A8123 /* IngredientAllergen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientAllergen.swift; sourceTree = "<group>"; };
 		44C4319B950F229F30D4E81C /* Meelyze.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Meelyze.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		467A14158007AB7CD392229C /* MenuTextPreprocessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTextPreprocessor.swift; sourceTree = "<group>"; };
+		478141DC1992F13737ED94D1 /* OCRReadingOrderSorter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRReadingOrderSorter.swift; sourceTree = "<group>"; };
 		4AE5480485D13445E4995FDA /* DishNameTranslationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishNameTranslationService.swift; sourceTree = "<group>"; };
 		4B70D742796B2A4C68785A58 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		511865A2AD76EAAD6901F494 /* AnalysisPipelineWiringUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalysisPipelineWiringUITests.swift; sourceTree = "<group>"; };
@@ -206,6 +209,7 @@
 		609F8B5CDE8270B0E45C896C /* RiskEvaluationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskEvaluationServiceTests.swift; sourceTree = "<group>"; };
 		60DB1740DF49DECB90099046 /* InitialDataImportServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialDataImportServiceTests.swift; sourceTree = "<group>"; };
 		613D058FE927E7B101B872AC /* AllergenDietaryRestrictionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenDietaryRestrictionView.swift; sourceTree = "<group>"; };
+		61B374FD6D3A94F721082AB1 /* OCRReadingOrderSorterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRReadingOrderSorterTests.swift; sourceTree = "<group>"; };
 		631ED3C5F084B027B88DC072 /* ScanOCRFailureUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanOCRFailureUITests.swift; sourceTree = "<group>"; };
 		63BECAB457A0F4EE495FC3F5 /* BoundingBoxConverterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxConverterTests.swift; sourceTree = "<group>"; };
 		66BA6CF2960D1A63C122781C /* OCRResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRResult.swift; sourceTree = "<group>"; };
@@ -375,6 +379,7 @@
 				5DF65A2E41AEFF5E8A1F2B5A /* MenuUnderstandingPromptTests.swift */,
 				27BF1C925772FA1D6E875CDC /* MenuUnderstandingRequestBuilderTests.swift */,
 				A8522ECE96CA1F66FD7339BB /* MenuUnderstandingServiceContractTests.swift */,
+				61B374FD6D3A94F721082AB1 /* OCRReadingOrderSorterTests.swift */,
 				F579E6CF1730F67255A8227A /* RiskEvaluationServiceIntegrationTests.swift */,
 				609F8B5CDE8270B0E45C896C /* RiskEvaluationServiceTests.swift */,
 				95FEFF1F87E05258E280A76B /* RiskFactBuilderTests.swift */,
@@ -520,6 +525,7 @@
 				1F27D646860985637456DBB0 /* MenuUnderstandingPrompt.swift */,
 				0ABA043D1ED7170B9D8BD310 /* MenuUnderstandingRequestBuilder.swift */,
 				AFD3CA331F956E66CAE4DF29 /* MenuUnderstandingService.swift */,
+				478141DC1992F13737ED94D1 /* OCRReadingOrderSorter.swift */,
 				DC3E11AF29762731792DE256 /* OCRService.swift */,
 				11ADB29E668A7D70DC9CB020 /* README.md */,
 				3BABDA2B8802E538E0DFBD12 /* RiskEvaluationService.swift */,
@@ -726,6 +732,7 @@
 				14B34A07A0F8570351537080 /* MenuUnderstandingPromptTests.swift in Sources */,
 				55648AB1FEAD1F483CFB700C /* MenuUnderstandingRequestBuilderTests.swift in Sources */,
 				AD0ADD3FD62A68344A631B74 /* MenuUnderstandingServiceContractTests.swift in Sources */,
+				9353AD4C330DEACCFA2056ED /* OCRReadingOrderSorterTests.swift in Sources */,
 				8E4ED6D9A8F15A36828C1877 /* OCRResultTests.swift in Sources */,
 				9E419E516412E13F688AE11C /* RepresentativeMenuFixtures.swift in Sources */,
 				B7C568620D74CCB23F5D8AC6 /* RiskBadgeViewTests.swift in Sources */,
@@ -811,6 +818,7 @@
 				4EC7AFA7EBA67AD413C4DEDA /* MenuUnderstandingRequestBuilder.swift in Sources */,
 				8A40A061A2F46E1CBCAC7D45 /* MenuUnderstandingService.swift in Sources */,
 				F213393341BFF7547389A898 /* OCRFailureView.swift in Sources */,
+				5FC4E8E8CE2A56E09243A13F /* OCRReadingOrderSorter.swift in Sources */,
 				E3A7B580EB7702311968E883 /* OCRResult.swift in Sources */,
 				BB8EAB5A39B7A6111F592E59 /* OCRService.swift in Sources */,
 				7FD3FE9D98DAA48AA50C8D67 /* OnboardingFlowView.swift in Sources */,

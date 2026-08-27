@@ -3,7 +3,11 @@ import Foundation
 @testable import Meelyze
 
 struct MenuUnderstandingRequestBuilderTests {
-    @Test func buildsSegmentsPreservingOrderTextConfidenceAndBoundingBox() {
+    @Test func buildsSegmentsInReadingOrderPreservingTextConfidenceAndBoundingBox() {
+        // `firstBox`は`secondBox`より下（y値が小さい。Visionの座標系は原点左下）に位置するため、
+        // 読み取り順（上→下）では`secondBox`（ラフテー）が先になる。FIX-010: `build(from:)`は
+        // Vision観測順ではなく`OCRReadingOrderSorter`による読み取り順でsegmentを構築するため、
+        // 入力順（沖縄そばが先）とsegment順は一致しない。
         let builder = MenuUnderstandingRequestBuilder()
         let firstBox = CGRect(x: 0.1, y: 0.2, width: 0.3, height: 0.1)
         let secondBox = CGRect(x: 0.1, y: 0.4, width: 0.3, height: 0.1)
@@ -15,13 +19,13 @@ struct MenuUnderstandingRequestBuilderTests {
         let output = builder.build(from: ocrResult)
 
         #expect(output.request.segments.count == 2)
-        #expect(output.request.segments[0].rawText == "沖縄そば")
-        #expect(output.request.segments[0].confidence == 0.9)
-        #expect(output.request.segments[0].boundingBox == firstBox)
+        #expect(output.request.segments[0].rawText == "ラフテー")
+        #expect(output.request.segments[0].confidence == 0.8)
+        #expect(output.request.segments[0].boundingBox == secondBox)
         #expect(output.request.segments[0].analysisText == nil)
-        #expect(output.request.segments[1].rawText == "ラフテー")
-        #expect(output.request.segments[1].confidence == 0.8)
-        #expect(output.request.segments[1].boundingBox == secondBox)
+        #expect(output.request.segments[1].rawText == "沖縄そば")
+        #expect(output.request.segments[1].confidence == 0.9)
+        #expect(output.request.segments[1].boundingBox == firstBox)
     }
 
     @Test func generatesUniqueNonEmptySourceIDsThatPassValidation() {

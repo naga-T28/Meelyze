@@ -1,5 +1,7 @@
 import Testing
 import Foundation
+import CoreGraphics
+import ImageIO
 @testable import Meelyze
 
 struct VisionOCRServiceTests {
@@ -81,6 +83,68 @@ struct VisionOCRServiceTests {
         let mapped = VisionOCRService.map([noCandidate])
 
         #expect(mapped.isEmpty)
+    }
+
+    // MARK: - FIX-011: EXIF orientation handling
+
+    @Test func cgImagePropertyOrientationDefaultsToUpWhenTagIsAbsent() throws {
+        let imageSource = try Self.makeImageSource(orientation: nil)
+
+        let orientation = VisionOCRService.cgImagePropertyOrientation(from: imageSource)
+
+        #expect(orientation == .up)
+    }
+
+    @Test func cgImagePropertyOrientationReadsExplicitExifOrientationTag() throws {
+        // EXIF値6は`.right`に対応する（`CGImagePropertyOrientation`のrawValueはEXIF Orientation
+        // タグの値と直接一致する）。実機カメラで縦向きに撮影した写真によく現れる値。
+        let imageSource = try Self.makeImageSource(orientation: 6)
+
+        let orientation = VisionOCRService.cgImagePropertyOrientation(from: imageSource)
+
+        #expect(orientation == .right)
+    }
+
+    @Test func cgImagePropertyOrientationDefaultsToUpForInvalidRawValue() throws {
+        // EXIF Orientationの有効値は1〜8。範囲外の値はVisionへ壊れた向きを渡さないよう安全側`.up`。
+        let imageSource = try Self.makeImageSource(orientation: 99)
+
+        let orientation = VisionOCRService.cgImagePropertyOrientation(from: imageSource)
+
+        #expect(orientation == .up)
+    }
+
+    /// 1x1ピクセルのJPEGを実際にエンコードし、`orientation`をEXIF Orientationタグとして埋め込んだ
+    /// `CGImageSource`を作る。`orientation`が`nil`ならタグ自体を付与しない。
+    private static func makeImageSource(orientation: UInt32?) throws -> CGImageSource {
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let context = try #require(
+            CGContext(
+                data: nil,
+                width: 1,
+                height: 1,
+                bitsPerComponent: 8,
+                bytesPerRow: 0,
+                space: colorSpace,
+                bitmapInfo: CGImageAlphaInfo.noneSkipLast.rawValue
+            )
+        )
+        context.setFillColor(CGColor(red: 1, green: 1, blue: 1, alpha: 1))
+        context.fill(CGRect(x: 0, y: 0, width: 1, height: 1))
+        let cgImage = try #require(context.makeImage())
+
+        let data = NSMutableData()
+        let destination = try #require(
+            CGImageDestinationCreateWithData(data, "public.jpeg" as CFString, 1, nil)
+        )
+        var properties: [CFString: Any] = [:]
+        if let orientation {
+            properties[kCGImagePropertyOrientation] = orientation
+        }
+        CGImageDestinationAddImage(destination, cgImage, properties as CFDictionary)
+        #expect(CGImageDestinationFinalize(destination))
+
+        return try #require(CGImageSourceCreateWithData(data, nil))
     }
 
     @Test func mapPreservesOneToOneOrderingAcrossMultipleObservations() {
