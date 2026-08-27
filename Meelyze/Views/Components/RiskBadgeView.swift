@@ -89,32 +89,63 @@ private enum RiskDeterminationText {
 /// 再判定しない。料理名・判明済み対象食材・常時注意文を含めた完全なアクセシビリティ体験は、本Viewを
 /// 組み込む`RiskResultCardView`（TASK-046）が`.accessibilityElement(children: .combine)`で
 /// 結合する形で完成させる（本Viewの`accessibilityLabel`は状態そのものの完全な説明に留める）。
+///
+/// `showsLabel: false`（FIX-015、S08の画像上タグ用）はアイコンのみを表示し、本View独自の
+/// `accessibilityLabel`・`accessibilityIdentifier`は持たない（`icon`自身の
+/// `.accessibilityHidden(true)`のまま単なる装飾として扱う）。状態の完全な説明は、本Viewを
+/// 組み込む側（`RiskResultCardView.compactOverlayBody`の`accessibilityLabelText`）が
+/// 単独で提供する。ラベル文字列を持たせたまま視覚上だけ省略すると、対応する文字がどこにも
+/// 描画されていない要素になり、`XCTest.performAccessibilityAudit()`のコントラスト判定が混乱して
+/// 隣接する別要素を誤って参照することを確認したため（FIX-015作業ログ参照）、意図的にこの設計にした。
+/// 「色またはアイコンだけで状態を表さない」原則は、アイコン＋文字ラベルを常時両方表示する
+/// `.detailed`（S09）側で満たし続ける。
 struct RiskBadgeView: View {
     let determination: RiskDetermination
     let displayLanguage: DisplayLanguage
+    var showsLabel: Bool = true
 
     var body: some View {
-        Label {
-            Text(determination.displayLabel(for: displayLanguage))
-                .font(.subheadline.bold())
-        } icon: {
-            Image(systemName: determination.sfSymbolName)
-                .accessibilityHidden(true)
+        Group {
+            if showsLabel {
+                Label {
+                    Text(determination.displayLabel(for: displayLanguage))
+                        .font(.subheadline.bold())
+                } icon: {
+                    icon
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .fill(determination.backgroundColor)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .strokeBorder(determination.borderColor, lineWidth: 1.5)
+                )
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(determination.displayLabel(for: displayLanguage))
+                .accessibilityIdentifier("RiskBadgeView_\(identifierSuffix)")
+            } else {
+                // FIX-015で判明: `showsLabel == false`でも本Viewが独自の`accessibilityLabel`
+                // （完全な状態ラベル文字列）を持つと、そのラベルに対応する文字が実際にはどこにも
+                // 描画されていない（アイコンのみ）状態になり、`XCTest.performAccessibilityAudit()`の
+                // コントラスト判定が混乱し隣接する別要素（`RiskResultCardView`内の料理名テキスト）を
+                // 誤って参照する非決定的な"Contrast failed"を引き起こすことを確認した
+                // （`RiskResultCardView_compact`単体・単独実行でも再現）。`showsLabel == false`では
+                // 独自のアクセシビリティ要素・ラベル・識別子を一切持たせず、`icon`自身の
+                // `.accessibilityHidden(true)`のまま単なる装飾として扱う。状態の完全な説明は
+                // 呼び出し側（`RiskResultCardView.compactOverlayBody`を包む
+                // `accessibilityLabelText`）が単独で提供する。
+                icon
+            }
         }
         .foregroundStyle(determination.foregroundColor)
-        .padding(.horizontal, 10)
-        .padding(.vertical, 6)
-        .background(
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .fill(determination.backgroundColor)
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                .strokeBorder(determination.borderColor, lineWidth: 1.5)
-        )
-        .accessibilityElement(children: .combine)
-        .accessibilityLabel(determination.displayLabel(for: displayLanguage))
-        .accessibilityIdentifier("RiskBadgeView_\(identifierSuffix)")
+    }
+
+    private var icon: some View {
+        Image(systemName: determination.sfSymbolName)
+            .accessibilityHidden(true)
     }
 
     private var identifierSuffix: String {

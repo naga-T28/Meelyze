@@ -165,6 +165,35 @@ struct MenuAnalysisServiceTests {
         #expect(summary.failures.first?.reason == .menuUnderstanding(.modelUnavailable(.appleIntelligenceNotEnabled)))
     }
 
+    @Test func analyzeFallbackExcludesPriceOnlySegmentButKeepsDishSegment() async throws {
+        // FIX-013: `500円`のような価格のみのOCRセグメントは、料理ではないためフォールバックの
+        // 判定対象itemにしない。`dishBox`は`priceBox`より上に置き、読み取り順で先になるようにする
+        // （他のフォールバックテストと同じ理由、FIX-010）。
+        let dishBox = CGRect(x: 0, y: 0.3, width: 0.2, height: 0.2)
+        let priceBox = CGRect(x: 0.3, y: 0.3, width: 0.1, height: 0.2)
+        let failure = RiskEvaluationFailure(
+            scope: .request,
+            reason: .menuUnderstanding(.modelUnavailable(.appleIntelligenceNotEnabled)),
+            retryability: .notRetryable
+        )
+        let riskEvaluationService = FakeRiskEvaluationService(
+            result: MenuRiskEvaluationResult(items: [], failures: [failure])
+        )
+        let service = DefaultMenuAnalysisService(riskEvaluationService: riskEvaluationService)
+        let ocrResult = OCRResult(observations: [
+            RecognizedTextObservation(text: "ラフテー", confidence: 0.9, boundingBox: dishBox),
+            RecognizedTextObservation(text: "500円", confidence: 0.9, boundingBox: priceBox)
+        ])
+
+        let result = await service.analyze(ocrResult, profile: profile(withAllergens: [.pork]))
+
+        let summary = try #require(completedSummary(from: result))
+        #expect(summary.items.count == 1)
+        #expect(summary.items.first?.boundingBoxes == [dishBox])
+        #expect(summary.items.first?.reference.originalText == "ラフテー")
+        #expect(summary.items.first?.overallDetermination == .undetermined)
+    }
+
     @Test func analyzeDoesNotFabricateItemsWhenZeroItemsAreAGenuineResultWithoutFailures() async throws {
         let riskEvaluationService = FakeRiskEvaluationService(result: MenuRiskEvaluationResult(items: [], failures: []))
         let service = DefaultMenuAnalysisService(riskEvaluationService: riskEvaluationService)

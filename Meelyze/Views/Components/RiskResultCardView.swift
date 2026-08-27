@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// `RiskTarget`（Issue #17）の表示名。既存の`AllergenItem.localizedName(for:)` /
 /// `DietaryRestrictionCategory.localizedName(for:)`（S04/S05のアレルゲン・食事制限選択画面が
@@ -39,6 +40,11 @@ struct RiskResultCardView: View {
     /// 判定不可の理由（E02/E03、`UndeterminedReason.message(for:)`が提供）。`nil`なら表示しない。
     let reasonText: String?
     let displayLanguage: DisplayLanguage
+    /// `.compactOverlay`の文字サイズ（`ResultOverlayView`の`OverlayTagFontMetrics`が対象料理の
+    /// OCR文字の高さから計算する）。`.detailed`では使わない。`.scaleEffect`によるtransformではなく
+    /// 実際のフォントサイズとして渡すことで、`XCTest.performAccessibilityAudit()`のコントラスト判定が
+    /// 参照するアクセシビリティフレームと実描画のずれを避ける（FIX-015）。
+    var compactFontSize: CGFloat = 15
     /// `.compactOverlay`でタップ時にS09へ遷移させる場合に指定する。`.detailed`では通常nil。
     var onSelectDetail: (() -> Void)?
 
@@ -50,6 +56,7 @@ struct RiskResultCardView: View {
         matchedTargetNames: [String] = [],
         reasonText: String? = nil,
         displayLanguage: DisplayLanguage,
+        compactFontSize: CGFloat = 15,
         onSelectDetail: (() -> Void)? = nil
     ) {
         self.style = style
@@ -59,6 +66,7 @@ struct RiskResultCardView: View {
         self.matchedTargetNames = matchedTargetNames
         self.reasonText = reasonText
         self.displayLanguage = displayLanguage
+        self.compactFontSize = compactFontSize
         self.onSelectDetail = onSelectDetail
     }
 
@@ -76,22 +84,70 @@ struct RiskResultCardView: View {
         .accessibilityIdentifier("RiskResultCardView_\(identifierSuffix)")
     }
 
+    @ViewBuilder
     private var cardBody: some View {
+        switch style {
+        case .compactOverlay: compactOverlayBody
+        case .detailed: detailedBody
+        }
+    }
+
+    /// S08（Google翻訳のカメラ翻訳のような、原文の上に直接載せる最小限のタグ）。FIX-015で
+    /// 日本語原文・完全な状態ラベル文字列・判明済み対象食材・判定不可理由をすべて省略し、
+    /// 翻訳済み料理名（翻訳不可時は日本語原文、`displayDishName`）とアイコンだけを表示する。
+    /// これらの詳細情報自体は失われず、タップ後のS09（`.detailed`）と`accessibilityLabelText`
+    /// （VoiceOver）には引き続きすべて含まれる。
+    ///
+    /// 「色またはアイコンだけで状態を表さない」（`docs/ui-design.md`「三値判定表示ルール」）は、
+    /// アイコン（`RiskBadgeView(showsLabel: false)`）を色と同時に必ず表示することで満たす。
+    /// 完全な状態ラベル文字列の省略は、タップ一つでS09へ到達できることを前提にした本Fixの
+    /// 意図的な仕様変更であり、`docs/ui-design.md`側にも同時に反映済み。
+    private var compactOverlayBody: some View {
+        HStack(spacing: 4) {
+            RiskBadgeView(determination: determination, displayLanguage: displayLanguage, showsLabel: false)
+            Text(displayDishName)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        // `compactFontSize`をHStack単位で適用し、アイコン（`RiskBadgeView`のSF Symbols）と文字の
+        // 両方へ実際のフォントサイズとして伝播させる（`.scaleEffect`のtransformは使わない。上記
+        // `compactFontSize`のコメント参照）。`UIFontMetrics`でDynamic Typeの設定値に応じて
+        // 追加でスケールさせる（固定`.system(size:)`のままだと`XCTest.performAccessibilityAudit()`
+        // が"Dynamic Type font sizes are unsupported"を報告する。FIX-015作業ログ参照）。
+        .font(.system(size: UIFontMetrics.default.scaledValue(for: compactFontSize), weight: .bold))
+        // `determination.foregroundColor`は`determination.backgroundColor`との組み合わせでのみ
+        // コントラスト検証済み（`RiskBadgeView`と同一トークン）。`.primary`等の適応色は使わない。
+        .foregroundStyle(determination.foregroundColor)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 6)
+        .background(
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(determination.backgroundColor)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .strokeBorder(determination.borderColor, lineWidth: 1)
+        )
+    }
+
+    /// 翻訳済み料理名。翻訳不可時は日本語原文を表示し、S08をブロックしない
+    /// （`docs/ui-design.md`FR-4.4/AC-3.3の原則を踏襲、TASK-048と同じ判断）。
+    private var displayDishName: String {
+        guard let translatedDishName, !translatedDishName.isEmpty else { return japaneseDishName }
+        return translatedDishName
+    }
+
+    /// S09（料理詳細画面の見出し）。日本語原文・翻訳・完全な三値バッジ・判明済み対象食材・
+    /// 判定不可理由を余白広く表示する、変更前と同じ内容。
+    private var detailedBody: some View {
         VStack(alignment: .leading, spacing: 6) {
             dishNameView
             RiskBadgeView(determination: determination, displayLanguage: displayLanguage)
             if !matchedTargetNames.isEmpty {
-                // `determination.foregroundColor`は`RiskBadgeView`が使う`determination.backgroundColor`
-                // との組み合わせでのみコントラストが検証された固定色であり、ダークモードでは
-                // `Color(.systemBackground)`（ここでの実際の背景）と組み合わせるとコントラストが
-                // 不足する（TASK-053で発見）。三値の色分けは`RiskBadgeView`（自身の固定背景と対で使う）
-                // が担うため、この補助テキストは背景に関わらず安全な色を使う。
-                //
-                // 当初`.secondary`にしていたが、`.font(.caption)`という小さいサイズとの組み合わせで
-                // Appleの自動アクセシビリティ監査が断続的に"Contrast failed"を報告することが判明した
-                // （`.secondary`は「主要文字より控えめ」という意図的なデザインであり、`.primary`ほど
-                // 強くコントラストを保証しない）。`Color(.systemBackground)`との組み合わせで確実に
-                // 監査を通すため、本Viewの補助テキストはすべて`.primary`を使う。
+                // `.secondary`は`.font(.caption)`という小さいサイズとの組み合わせでAppleの自動
+                // アクセシビリティ監査が断続的に"Contrast failed"を報告することが判明した
+                // （TASK-053。「主要文字より控えめ」という意図的なデザインであり、`.primary`ほど
+                // 強くコントラストを保証しないため）。`Color(.systemBackground)`との組み合わせで
+                // 確実に監査を通すため、本Viewの補助テキストはすべて`.primary`を使う。
                 Text(matchedTargetNames.joined(separator: "\u{3001}"))
                     .font(.caption)
                     .foregroundStyle(.primary)
@@ -104,15 +160,15 @@ struct RiskResultCardView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
         }
-        .padding(style == .compactOverlay ? 8 : 12)
+        .padding(12)
         .background(
             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(cardBackground)
+                .fill(Color(.systemBackground))
         )
         .overlay(
             RoundedRectangle(cornerRadius: 10, style: .continuous)
                 // `determination.borderColor`（TASK-045）は`RiskBadgeView`自身の固定`backgroundColor`
-                // との組み合わせでのみコントラストが検証された色であり、`cardBackground`
+                // との組み合わせでのみコントラストが検証された色であり、`Color(.systemBackground)`
                 // （システム標準の適応的背景）に対してはダークモードでコントラスト不足になりうる
                 // （TASK-053で発見した"Pork"文字色の問題と同じ根本原因）。色・アイコン・完全ラベルの
                 // 3要素はカード内の`RiskBadgeView`が単体で満たしているため、カード外枠は状態色を
@@ -132,15 +188,6 @@ struct RiskResultCardView: View {
                     .foregroundStyle(.primary)
             }
         }
-    }
-
-    /// `.compactOverlay`は写真の上に直接乗るため、完全に不透明なカード面を介してコントラスト比を
-    /// 維持する（`docs/ui-design.md`「コントラスト基準」: 写真上へ直接文字を置かない）。TASK-053で、
-    /// 半透明背景（`SafetyNoticeView`の`Color.orange.opacity(0.12)`）が黒背景と重なった際に
-    /// アクセシビリティ監査の"Contrast failed"を断続的に引き起こすことを発見して以来、本Viewでも
-    /// 半透明（`.opacity(0.96)`）ではなく完全な不透明色に統一する。
-    private var cardBackground: Color {
-        Color(.systemBackground)
     }
 
     private var identifierSuffix: String {

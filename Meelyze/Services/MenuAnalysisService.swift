@@ -127,6 +127,11 @@ struct DefaultMenuAnalysisService: MenuAnalysisService {
     /// Foundation Models利用不可によって実Itemが1件も得られなかった場合の、OCRセグメント単位の
     /// 最も保守的なフォールバック。料理としてのグルーピングは一切推測せず、OCRが検出した領域を
     /// そのまま1項目・`undetermined`として表示する。
+    ///
+    /// 価格・メニュー番号・装飾記号のみのセグメント（例: `500円`単独のBounding Box）は、それ自体が
+    /// 料理ではないため判定対象itemにしない（FIX-013）。通常経路（Foundation Models利用可能時）では
+    /// `MenuTextPreprocessor`の前処理結果を踏まえてLLMがこれらをitem化しないが、本フォールバックは
+    /// 前処理を経由しないため、ここで同じ判定基準（`hasNoAnalyzableContent`）を明示的に適用する。
     private static func fallbackItemResults(
         segments: [MenuUnderstandingSourceSegment],
         reasons: [MenuUnderstandingFailureReason],
@@ -135,8 +140,10 @@ struct DefaultMenuAnalysisService: MenuAnalysisService {
     ) -> [MenuAnalysisItemResult] {
         let evidence = RiskEvidence(kind: .unknown, inferredOrigin: .itemUnderstandingIncomplete(reasons))
         let results = targets.map { RiskEvaluationResult(target: $0, determination: .undetermined, evidence: [evidence]) }
+        let preprocessor = MenuTextPreprocessor()
+        let analyzableSegments = segments.filter { !preprocessor.hasNoAnalyzableContent($0.rawText) }
 
-        return segments.enumerated().map { index, segment in
+        return analyzableSegments.enumerated().map { index, segment in
             let sourceReference = MenuUnderstandingSourceReference(sourceID: segment.id, rawFragment: segment.rawText)
             let reference = MenuUnderstandingItemReference(ordinal: index, sourceReferences: [sourceReference], separator: "\n")
             return MenuAnalysisItemResult(

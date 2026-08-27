@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "dataVersion": "2026-08-27-demo-dish-expansion",
-  "description": "Initial Okinawa menu knowledge data for Issue #12, expanded in fix/FIX-012 to cover additional common Okinawan menu items. Ingredient facts are limited to the cited public sources and must be reviewed before production use.",
+  "dataVersion": "2026-08-27-demo-dish-expansion-2",
+  "description": "Initial Okinawa menu knowledge data for Issue #12, expanded in fix/FIX-012 and fix/FIX-016 to cover additional common Okinawan menu items. Ingredient facts are limited to the cited public sources and must be reviewed before production use.",
   "sources": [
     {
       "id": "maff_uchino_rafute",
@@ -58,6 +58,34 @@
       "url": "https://www.orionbeer.co.jp/brand/",
       "checkedAt": "2026-08-27",
       "notes": "オリオン生ビール（ザ・ドラフト）が同社のビール製品であることを参照。FIX-012。"
+    },
+    {
+      "id": "wikipedia_ja_poke_tamago",
+      "name": "ポーク玉子 - Wikipedia",
+      "url": "https://ja.wikipedia.org/wiki/%E3%83%9D%E3%83%BC%E3%82%AF%E7%8E%89%E5%AD%90",
+      "checkedAt": "2026-08-27",
+      "notes": "材料欄を参照（缶詰のポークランチョンミートと鶏卵）。沖縄の大衆食堂の定食メニューであることも言及。FIX-016。"
+    },
+    {
+      "id": "kurashiru_shima_rakkyo_shiozuke",
+      "name": "クラシル「島らっきょうの塩浅漬け」",
+      "url": "https://www.kurashiru.com/recipes/907695e6-8a82-4625-986b-5ee91de0de5b",
+      "checkedAt": "2026-08-27",
+      "notes": "材料欄を参照（島らっきょう、塩、かつお節（トッピング用）、しょうゆ（食べる時用））。FIX-016。"
+    },
+    {
+      "id": "okinawa_itoen_sanpincha",
+      "name": "沖縄伊藤園 さんぴん花茶ブランドサイト",
+      "url": "https://www.okinawa-itoen.jp/hanacha/",
+      "checkedAt": "2026-08-27",
+      "notes": "緑茶をベースにジャスミンの花で香り付けした沖縄の茶飲料であることを参照。FIX-016。"
+    },
+    {
+      "id": "ja_okinawa_shikuwasa100",
+      "name": "ＪＡおきなわ「シークヮーサー１００」",
+      "url": "https://www.ja-okinawa.or.jp/agriculture/detail.php?id=6632",
+      "checkedAt": "2026-08-27",
+      "notes": "原材料名欄を参照（シイクワシャー(沖縄県産)のみ、添加物なし）。FIX-016。"
     }
   ],
   "allergens": [
@@ -253,6 +281,30 @@
       "allergenIds": [],
       "restrictionIds": ["halal_alcohol", "non_alcoholic_alcohol"],
       "sourceIds": ["orion_beer_official_lineup"]
+    },
+    {
+      "id": "katsuobushi",
+      "canonicalName": "かつお節",
+      "aliases": ["鰹節", "かつおぶし"],
+      "allergenIds": [],
+      "restrictionIds": ["vegan_animal_product"],
+      "sourceIds": ["kurashiru_shima_rakkyo_shiozuke"]
+    },
+    {
+      "id": "green_tea",
+      "canonicalName": "緑茶",
+      "aliases": ["茶葉"],
+      "allergenIds": [],
+      "restrictionIds": [],
+      "sourceIds": ["okinawa_itoen_sanpincha"]
+    },
+    {
+      "id": "shikuwasa",
+      "canonicalName": "シークヮーサー",
+      "aliases": ["シークワーサー", "シイクワシャー"],
+      "allergenIds": [],
+      "restrictionIds": [],
+      "sourceIds": ["ja_okinawa_shikuwasa100"]
     }
   ],
   "dishes": [
@@ -332,6 +384,34 @@
       "region": "okinawa",
       "aliases": ["ドラフトビール"],
       "sourceIds": ["orion_beer_official_lineup"]
+    },
+    {
+      "id": "poke_tamago",
+      "canonicalName": "ポーク玉子",
+      "region": "okinawa",
+      "aliases": ["ポークたまご", "ポーク卵", "ポーたま"],
+      "sourceIds": ["wikipedia_ja_poke_tamago"]
+    },
+    {
+      "id": "shima_rakkyo_shiozuke",
+      "canonicalName": "島らっきょうの塩漬け",
+      "region": "okinawa",
+      "aliases": ["島らっきょう塩漬け", "しまらっきょうの塩漬け", "島らっきょうの塩浅漬け"],
+      "sourceIds": ["kurashiru_shima_rakkyo_shiozuke"]
+    },
+    {
+      "id": "sanpincha",
+      "canonicalName": "さんぴん茶",
+      "region": "okinawa",
+      "aliases": ["サンピン茶", "さんぴんちゃ"],
+      "sourceIds": ["okinawa_itoen_sanpincha"]
+    },
+    {
+      "id": "shikuwasa_juice",
+      "canonicalName": "シークヮーサージュース",
+      "region": "okinawa",
+      "aliases": ["シークワーサージュース", "シークヮーサー果汁", "シークワーサー果汁"],
+      "sourceIds": ["ja_okinawa_shikuwasa100"]
     }
   ],
   "dishIngredients": [
@@ -598,6 +678,62 @@
       "isHiddenIngredient": false,
       "hiddenIngredientCategory": null,
       "sourceIds": ["orion_beer_official_lineup"]
+    },
+    {
+      "dishId": "poke_tamago",
+      "ingredientId": "pork",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["wikipedia_ja_poke_tamago"]
+    },
+    {
+      "dishId": "poke_tamago",
+      "ingredientId": "egg",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["wikipedia_ja_poke_tamago"]
+    },
+    {
+      "dishId": "shima_rakkyo_shiozuke",
+      "ingredientId": "shima_rakkyo",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["kurashiru_shima_rakkyo_shiozuke"]
+    },
+    {
+      "dishId": "shima_rakkyo_shiozuke",
+      "ingredientId": "katsuobushi",
+      "confidence": "typical",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "seasoning",
+      "sourceIds": ["kurashiru_shima_rakkyo_shiozuke"]
+    },
+    {
+      "dishId": "shima_rakkyo_shiozuke",
+      "ingredientId": "soy_sauce",
+      "confidence": "variesByStore",
+      "isHiddenIngredient": true,
+      "hiddenIngredientCategory": "seasoning",
+      "sourceIds": ["kurashiru_shima_rakkyo_shiozuke"]
+    },
+    {
+      "dishId": "sanpincha",
+      "ingredientId": "green_tea",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["okinawa_itoen_sanpincha"]
+    },
+    {
+      "dishId": "shikuwasa_juice",
+      "ingredientId": "shikuwasa",
+      "confidence": "confirmed",
+      "isHiddenIngredient": false,
+      "hiddenIngredientCategory": null,
+      "sourceIds": ["ja_okinawa_shikuwasa100"]
     }
   ]
 }

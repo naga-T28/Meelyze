@@ -101,6 +101,16 @@ struct MenuAliasResolverTests {
             ("オリオン生ビール", "orion_draft_beer"),
             ("オリオンビール", "orion_draft_beer"),
             ("生ビール", "draft_beer_generic"),
+            // FIX-016: デモ画像更新に伴い写り込んだ実在料理を追加した際の回帰アンカー。
+            ("ポーク玉子", "poke_tamago"),
+            ("ポークたまご", "poke_tamago"),
+            ("ポーたま", "poke_tamago"),
+            ("島らっきょうの塩漬け", "shima_rakkyo_shiozuke"),
+            ("島らっきょう塩漬け", "shima_rakkyo_shiozuke"),
+            ("さんぴん茶", "sanpincha"),
+            ("サンピン茶", "sanpincha"),
+            ("シークヮーサージュース", "shikuwasa_juice"),
+            ("シークワーサージュース", "shikuwasa_juice"),
         ]
 
         for expectation in expectations {
@@ -149,6 +159,12 @@ struct MenuAliasResolverTests {
             ("島らっきょう", "shima_rakkyo"),
             ("天ぷら衣", "tempura_batter"),
             ("ビール", "beer"),
+            // FIX-016: デモ画像更新に伴い写り込んだ実在料理を追加した際の回帰アンカー。
+            ("かつお節", "katsuobushi"),
+            ("鰹節", "katsuobushi"),
+            ("緑茶", "green_tea"),
+            ("シークヮーサー", "shikuwasa"),
+            ("シークワーサー", "shikuwasa"),
         ]
 
         for expectation in expectations {

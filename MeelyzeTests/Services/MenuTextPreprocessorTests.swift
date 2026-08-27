@@ -150,4 +150,29 @@ struct MenuTextPreprocessorTests {
         #expect(result.segments[0].analysisText == nil)
         #expect(result.evidence[0].rawText == "前菜3種盛り")
     }
+
+    // MARK: - hasNoAnalyzableContent (FIX-013)
+
+    @Test func hasNoAnalyzableContentIsTrueForPriceOnlyText() {
+        let preprocessor = MenuTextPreprocessor()
+
+        #expect(preprocessor.hasNoAnalyzableContent("500円"))
+        #expect(preprocessor.hasNoAnalyzableContent("¥1,280"))
+        #expect(preprocessor.hasNoAnalyzableContent("  980円  "))
+    }
+
+    @Test func hasNoAnalyzableContentIsTrueForMenuNumberOrNoiseSymbolOnlyText() {
+        let preprocessor = MenuTextPreprocessor()
+
+        #expect(preprocessor.hasNoAnalyzableContent("No.12"))
+        #expect(preprocessor.hasNoAnalyzableContent("★☆"))
+    }
+
+    @Test func hasNoAnalyzableContentIsFalseWhenDishNameRemains() {
+        let preprocessor = MenuTextPreprocessor()
+
+        #expect(!preprocessor.hasNoAnalyzableContent("ラフテー 980円"))
+        #expect(!preprocessor.hasNoAnalyzableContent("沖縄そば"))
+        #expect(!preprocessor.hasNoAnalyzableContent("★本日のおすすめ☆"))
+    }
 }

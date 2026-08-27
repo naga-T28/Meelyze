@@ -53,7 +53,7 @@ struct StubMenuAnalysisService: MenuAnalysisService {
                     evidence: [RiskEvidence(kind: .dishDatabase, resolvedEntity: MenuAliasResolvedEntity(id: "dish-rafute", canonicalName: "ラフテー"))]
                 )]
             ),
-            boundingBoxes: [CGRect(x: 0.1, y: 0.75, width: 0.35, height: 0.08)]
+            boundingBoxes: [CGRect(x: 0.1, y: 0.67, width: 0.35, height: 0.08)]
         )
         let noRecordedMatch = MenuAnalysisItemResult(
             evaluation: MenuItemRiskEvaluation(
@@ -64,7 +64,11 @@ struct StubMenuAnalysisService: MenuAnalysisService {
                     evidence: [RiskEvidence(kind: .dishDatabase, resolvedEntity: MenuAliasResolvedEntity(id: "dish-goya", canonicalName: "ゴーヤーチャンプルー"))]
                 )]
             ),
-            boundingBoxes: [CGRect(x: 0.1, y: 0.5, width: 0.35, height: 0.08)]
+            // FIX-015: 3項目を均等（画像高さの0.25刻み）に配置すると、S08の最上段タグが常時注意文
+            // （`ResultOverlayView.topNotices`）に近すぎる位置になり、`XCTest.performAccessibilityAudit()`
+            // のコントラスト判定がタグと常時注意文の色を混在させて誤って"Contrast failed"と判定する
+            // ことを確認した。0.30刻みへ広げ、実際のメニュー写真により近い間隔にした。
+            boundingBoxes: [CGRect(x: 0.1, y: 0.37, width: 0.35, height: 0.08)]
         )
         let undetermined = MenuAnalysisItemResult(
             evaluation: MenuItemRiskEvaluation(
@@ -75,7 +79,7 @@ struct StubMenuAnalysisService: MenuAnalysisService {
                     evidence: [RiskEvidence(kind: .unknown, inferredOrigin: .unresolvedTerm)]
                 )]
             ),
-            boundingBoxes: [CGRect(x: 0.1, y: 0.25, width: 0.35, height: 0.08)]
+            boundingBoxes: [CGRect(x: 0.1, y: 0.07, width: 0.35, height: 0.08)]
         )
         return .completed(MenuAnalysisSummary(items: [likelyContains, noRecordedMatch, undetermined], failures: []))
     }

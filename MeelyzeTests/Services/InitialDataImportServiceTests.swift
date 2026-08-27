@@ -84,13 +84,13 @@ struct InitialDataImportServiceTests {
         let summary = try service.importBundledInitialDataIfNeeded()
 
         #expect(summary.didImport == true)
-        // FIX-012でデモ画像に写る実在料理を追加した際、`dataVersion`を更新した
+        // FIX-012・FIX-016でデモ画像に写る実在料理を追加した際、`dataVersion`を更新した
         // （同梱JSONの`dataVersion`が実際の内容と共に更新されたことを確認する回帰アンカー）。
-        #expect(summary.dataVersion == "2026-08-27-demo-dish-expansion")
+        #expect(summary.dataVersion == "2026-08-27-demo-dish-expansion-2")
         #expect(summary.dishCount > 0)
         #expect(summary.ingredientCount > 0)
         #expect(summary.dishIngredientCount > 0)
-        #expect(try repository.hasImportedDataVersion("2026-08-27-demo-dish-expansion") == true)
+        #expect(try repository.hasImportedDataVersion("2026-08-27-demo-dish-expansion-2") == true)
     }
 
     private var sampleInitialData: Data {

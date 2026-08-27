@@ -52,6 +52,7 @@
 		5FC4E8E8CE2A56E09243A13F /* OCRReadingOrderSorter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478141DC1992F13737ED94D1 /* OCRReadingOrderSorter.swift */; };
 		615C522CBFB3EB71075EF071 /* AppleDishNameTranslationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE3D9C614348AD5D37F316D8 /* AppleDishNameTranslationService.swift */; };
 		62AFAFDDDDF6286AC1EB60EC /* RiskLLMSignalExtractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06625BBCFB6784935266A530 /* RiskLLMSignalExtractorTests.swift */; };
+		64537FAE67D89FE71FBD842B /* ResultOverlayViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200C1A3527F96A1FECF6CBF0 /* ResultOverlayViewTests.swift */; };
 		678A51F22B93BB866464E920 /* MenuTextPreprocessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B8BA499FE180C8AFBEDD052 /* MenuTextPreprocessorTests.swift */; };
 		6919E6C2D047B25B51ADE3A3 /* EvidenceRowViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 730AC1D8301FFAA1F669E4E3 /* EvidenceRowViewTests.swift */; };
 		6C88114F4B1036D6004D9480 /* LocalizedText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB2E62A449F012C3E98BE9B /* LocalizedText.swift */; };
@@ -174,6 +175,7 @@
 		1DB92545554B577741C8D9A2 /* AllergenItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllergenItem.swift; sourceTree = "<group>"; };
 		1ED5FCB568B68A4838C4F470 /* OCRResultTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRResultTests.swift; sourceTree = "<group>"; };
 		1F27D646860985637456DBB0 /* MenuUnderstandingPrompt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuUnderstandingPrompt.swift; sourceTree = "<group>"; };
+		200C1A3527F96A1FECF6CBF0 /* ResultOverlayViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultOverlayViewTests.swift; sourceTree = "<group>"; };
 		218521C806E7B0ABB02FB2F9 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2213B89C1110A6074EBE9E49 /* LanguageSelectionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageSelectionViewModelTests.swift; sourceTree = "<group>"; };
 		269DCC6B96871ED9ABAB553E /* AppleDishNameTranslationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleDishNameTranslationServiceTests.swift; sourceTree = "<group>"; };
@@ -187,7 +189,7 @@
 		3BABDA2B8802E538E0DFBD12 /* RiskEvaluationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiskEvaluationService.swift; sourceTree = "<group>"; };
 		3EBFA2E920EFBF32275500C8 /* SwiftDataProfileRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataProfileRepositoryTests.swift; sourceTree = "<group>"; };
 		407578B39F2E8396549A8123 /* IngredientAllergen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IngredientAllergen.swift; sourceTree = "<group>"; };
-		44C4319B950F229F30D4E81C /* Meelyze.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Meelyze.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		44C4319B950F229F30D4E81C /* Meelyze.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Meelyze.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		467A14158007AB7CD392229C /* MenuTextPreprocessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuTextPreprocessor.swift; sourceTree = "<group>"; };
 		478141DC1992F13737ED94D1 /* OCRReadingOrderSorter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OCRReadingOrderSorter.swift; sourceTree = "<group>"; };
 		4AE5480485D13445E4995FDA /* DishNameTranslationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishNameTranslationService.swift; sourceTree = "<group>"; };
@@ -574,6 +576,7 @@
 		E05733DFC8044D394D0A93D0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				200C1A3527F96A1FECF6CBF0 /* ResultOverlayViewTests.swift */,
 				10618221E75FD96E9A0564E4 /* Components */,
 			);
 			path = Views;
@@ -665,7 +668,6 @@
 						ProvisioningStyle = Automatic;
 					};
 					AA60CB5568C3E71CD4BD3286 = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -735,6 +737,7 @@
 				9353AD4C330DEACCFA2056ED /* OCRReadingOrderSorterTests.swift in Sources */,
 				8E4ED6D9A8F15A36828C1877 /* OCRResultTests.swift in Sources */,
 				9E419E516412E13F688AE11C /* RepresentativeMenuFixtures.swift in Sources */,
+				64537FAE67D89FE71FBD842B /* ResultOverlayViewTests.swift in Sources */,
 				B7C568620D74CCB23F5D8AC6 /* RiskBadgeViewTests.swift in Sources */,
 				334EA049683CAA7D043EA80B /* RiskEvaluationModelsTests.swift in Sources */,
 				E6A184D7864194ABCA0E750F /* RiskEvaluationServiceIntegrationTests.swift in Sources */,
@@ -889,6 +892,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_ASSET_PATHS = "\"Meelyze/Preview Content\"";
+				DEVELOPMENT_TEAM = MAJ22X2A65;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Meelyze;
 				INFOPLIST_KEY_NSCameraUsageDescription = "メニューを撮影してアレルゲン・食事制限を判定するためにカメラを使用します。撮影した画像は端末外へ送信されません。";
@@ -929,6 +933,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_ASSET_PATHS = "\"Meelyze/Preview Content\"";
+				DEVELOPMENT_TEAM = MAJ22X2A65;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Meelyze;
 				INFOPLIST_KEY_NSCameraUsageDescription = "メニューを撮影してアレルゲン・食事制限を判定するためにカメラを使用します。撮影した画像は端末外へ送信されません。";

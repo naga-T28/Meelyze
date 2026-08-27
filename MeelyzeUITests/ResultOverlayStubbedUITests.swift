@@ -15,9 +15,17 @@ final class ResultOverlayStubbedUITests: XCTestCase {
         let app = launchAndCapture(analysisStubMode: "mixed")
 
         XCTAssertTrue(app.buttons["ResultOverlayRetakeButton"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.descendants(matching: .any)["RiskBadgeView_likelyContains"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.descendants(matching: .any)["RiskBadgeView_noRecordedMatch"].exists)
-        XCTAssertTrue(app.descendants(matching: .any)["RiskBadgeView_undetermined"].exists)
+        // FIX-015: S08のタグはアイコンのみ（`RiskBadgeView(showsLabel: false)`）を表示し、独自の
+        // `RiskBadgeView_*`アクセシビリティ識別子を持たない（完全な状態ラベルは`RiskResultCardView`
+        // 自体の`accessibilityLabel`に含まれる）。3件のタグそれぞれの`label`に三値の完全ラベルが
+        // 1件ずつ含まれることで、三値が混在して表示されていることを検証する。
+        let tags = app.descendants(matching: .any).matching(identifier: "RiskResultCardView_compact")
+        XCTAssertTrue(tags.firstMatch.waitForExistence(timeout: 5))
+        XCTAssertEqual(tags.count, 3)
+        let labels = (0..<tags.count).map { tags.element(boundBy: $0).label }
+        XCTAssertTrue(labels.contains { $0.contains("Likely Contains") })
+        XCTAssertTrue(labels.contains { $0.contains("No Match in Records") })
+        XCTAssertTrue(labels.contains { $0.contains("Undetermined") })
 
         // 三値にかかわらず常時注意文が表示される。
         XCTAssertTrue(app.staticTexts["PersistentResultSafetyNoticeView"].exists)
@@ -39,7 +47,10 @@ final class ResultOverlayStubbedUITests: XCTestCase {
         let app = launchAndCapture(analysisStubMode: "e03")
 
         XCTAssertTrue(app.buttons["ResultOverlayRetakeButton"].waitForExistence(timeout: 10))
-        XCTAssertTrue(app.descendants(matching: .any)["RiskBadgeView_undetermined"].waitForExistence(timeout: 5))
+        // FIX-015: S08のタグは独自の`RiskBadgeView_*`識別子を持たない（上記コメント参照）。
+        let tag = app.descendants(matching: .any).matching(identifier: "RiskResultCardView_compact").firstMatch
+        XCTAssertTrue(tag.waitForExistence(timeout: 5))
+        XCTAssertTrue(tag.label.contains("Undetermined"))
         // E03は専用バナーを出さない（`docs/ui-design.md`）。
         XCTAssertFalse(app.descendants(matching: .any)["ErrorStateCardView_E02InlineBanner"].exists)
     }

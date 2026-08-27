@@ -26,7 +26,9 @@ struct MenuTextPreprocessor {
         return MenuTextPreprocessingResult(segments: processedSegments, evidence: evidence)
     }
 
-    private func preprocess(_ rawText: String) -> (analysisText: String?, changes: [MenuTextPreprocessingChange]) {
+    /// 価格・メニュー番号・装飾記号を除去し、意味解析に使える文字列を残す正規化チェーン。
+    /// `preprocess(_:)`と`hasNoAnalyzableContent(_:)`の両方がこの結果を共有する。
+    private func stripNonDishText(from rawText: String) -> (text: String, changes: [MenuTextPreprocessingChange]) {
         var text = rawText
         var changes: [MenuTextPreprocessingChange] = []
 
@@ -68,8 +70,21 @@ struct MenuTextPreprocessor {
             changes.append(.whitespaceNormalized)
         }
 
-        guard !text.isEmpty, text != rawText else { return (nil, changes) }
         return (text, changes)
+    }
+
+    private func preprocess(_ rawText: String) -> (analysisText: String?, changes: [MenuTextPreprocessingChange]) {
+        let stripped = stripNonDishText(from: rawText)
+        guard !stripped.text.isEmpty, stripped.text != rawText else { return (nil, stripped.changes) }
+        return (stripped.text, stripped.changes)
+    }
+
+    /// `rawText`が価格・メニュー番号・装飾記号のみで構成され、除去後に料理名として意味のある文字が
+    /// 一切残らないかどうかを判定する。`MenuAnalysisService`のFoundation Models利用不可時
+    /// フォールバック（OCRセグメント1件を1判定対象itemとみなす）が、価格だけのセグメント等を
+    /// 無意味な判定対象にしないために使う（FIX-013）。
+    func hasNoAnalyzableContent(_ rawText: String) -> Bool {
+        stripNonDishText(from: rawText).text.isEmpty
     }
 
     private static func replacingMatches(in text: String, pattern: String, with replacement: String) -> String {
