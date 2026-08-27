@@ -28,7 +28,13 @@ struct RootView: View {
                         self.destination = .scan(profile.displayLanguage)
                     }
                 case .scan(let displayLanguage):
-                    ScanView(displayLanguage: displayLanguage, cameraService: cameraService, ocrService: ocrService)
+                    ScanView(
+                        displayLanguage: displayLanguage,
+                        cameraService: cameraService,
+                        ocrService: ocrService,
+                        menuAnalysisService: menuAnalysisService,
+                        profileRepository: profileRepository
+                    )
                 }
             } else {
                 ProgressView()
@@ -48,6 +54,27 @@ struct RootView: View {
 
     private var menuKnowledgeRepository: MenuKnowledgeRepository {
         SwiftDataMenuKnowledgeRepository(modelContext: modelContext)
+    }
+
+    /// OCR結果からRule Engineまでを結ぶ解析Serviceの組み立て。`UITEST_ANALYSIS_STUB_MODE`が指定された
+    /// 場合は`StubMenuAnalysisService`（三値混在・E02・E03・処理長時間化を決定論的に再現、
+    /// `Meelyze/Services/UITestAnalysisStubs.swift`参照）を使う。それ以外は本番用の組み立てを使う。
+    /// Foundation Modelsが利用不可な端末・環境でも、`DefaultRiskEvaluationService`/
+    /// `DefaultMenuAnalysisService`が安全側（`undetermined`）へ縮退させるため、本番経路での
+    /// 利用可否分岐は行わない（Issue #19の設計を踏襲）。
+    private var menuAnalysisService: MenuAnalysisService {
+        if
+            let rawMode = ProcessInfo.processInfo.environment["UITEST_ANALYSIS_STUB_MODE"],
+            let mode = StubMenuAnalysisService.Mode(rawValue: rawMode)
+        {
+            return StubMenuAnalysisService(mode: mode)
+        }
+        return DefaultMenuAnalysisService(
+            riskEvaluationService: DefaultRiskEvaluationService(
+                repository: menuKnowledgeRepository,
+                understandingService: FoundationModelsMenuParser()
+            )
+        )
     }
 
     private func determineInitialDestination() {

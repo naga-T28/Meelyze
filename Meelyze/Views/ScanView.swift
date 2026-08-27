@@ -5,15 +5,33 @@ import UIKit
 /// （`docs/ui-design.md`「Navigation」方針によりS06は`fullScreenCover`を使わない）。撮影→OCR実行の
 /// 結果が0件・失敗の場合はE01（`OCRFailureView`）へ切り替える。
 ///
-/// カメラ・OCRへのアクセスは`CameraService` `OCRService`経由（`ScanViewModel`が保持）にとどめ、
-/// AVFoundation・Visionを直接importしない。
+/// OCRが1件以上取得できた場合（`.recognized`）は、`docs/ui-design.md`が定める「同一スキャン内の
+/// 状態置換」方針（S06→S07→S08を別画面としてスタックしない）に従い、本View自身が
+/// `MenuAnalysisViewModel`を呼び出してS07/S08相当の表示へ切り替える（TASK-043）。実際のS07/S08の
+/// 画面デザインはTASK-049・TASK-048が担当するため、`AnalysisResultPlaceholderView`はそれまでの
+/// 暫定表示に留める。
+///
+/// カメラ・OCR・解析へのアクセスは`CameraService` `OCRService` `MenuAnalysisService`経由
+/// （ViewModelが保持）にとどめ、AVFoundation・Vision・Foundation Modelsを直接importしない。
 struct ScanView: View {
     @State private var viewModel: ScanViewModel
+    @State private var analysisViewModel: MenuAnalysisViewModel
+    @State private var dishNameTranslationService = AppleDishNameTranslationService()
     let displayLanguage: DisplayLanguage
 
-    init(displayLanguage: DisplayLanguage, cameraService: CameraService, ocrService: OCRService) {
+    init(
+        displayLanguage: DisplayLanguage,
+        cameraService: CameraService,
+        ocrService: OCRService,
+        menuAnalysisService: MenuAnalysisService,
+        profileRepository: ProfileRepository
+    ) {
         self.displayLanguage = displayLanguage
         self._viewModel = State(initialValue: ScanViewModel(cameraService: cameraService, ocrService: ocrService))
+        self._analysisViewModel = State(initialValue: MenuAnalysisViewModel(
+            menuAnalysisService: menuAnalysisService,
+            profileRepository: profileRepository
+        ))
     }
 
     var body: some View {
@@ -23,8 +41,18 @@ struct ScanView: View {
                 OCRFailureView(displayLanguage: displayLanguage) {
                     viewModel.retake()
                 }
-            case .idle, .capturing, .recognizing, .recognized:
+            case .idle, .capturing, .recognizing:
                 cameraContent
+            case .recognized(let ocrResult, let imageData):
+                AnalysisResultPlaceholderView(
+                    ocrResult: ocrResult,
+                    imageData: imageData,
+                    displayLanguage: displayLanguage,
+                    analysisViewModel: analysisViewModel,
+                    translationService: dishNameTranslationService,
+                    onRetake: { viewModel.retake() }
+                )
+                .dishNameTranslationSession(using: dishNameTranslationService)
             }
         }
         .task {
@@ -54,16 +82,6 @@ struct ScanView: View {
                 .ignoresSafeArea()
 
             CameraGuideOverlayView(message: ScanViewText.guideMessage.value(for: displayLanguage))
-
-            #if DEBUG
-            if case .recognized(let result) = viewModel.scanState {
-                VStack {
-                    Spacer()
-                    DebugOCRResultOverlay(result: result)
-                        .padding(.bottom, 120)
-                }
-            }
-            #endif
 
             VStack {
                 Spacer()
@@ -120,43 +138,77 @@ private enum ScanViewText {
     )
 }
 
-#if DEBUG
-/// デバッグ専用の簡易表示。OCR成功時（`.recognized`）に認識できた文字列とConfidenceを一覧表示し、
-/// シャッター操作が実際にOCRまで到達しているかを手動テストで確認できるようにする。
-///
-/// S07（解析中）・S08（判定結果オーバーレイ）は別Issue（#19・#20）の担当範囲であり、本Viewはそれらの
-/// 代替ではない。`#if DEBUG`でRelease/実配布ビルドからは常に除外される一時的な開発補助であり、
-/// `docs/ui-design.md`のS06/E01デザインの一部ではない。
-private struct DebugOCRResultOverlay: View {
-    let result: OCRResult
+/// OCRが1件以上取得できた後（`.recognized`）に表示する、S07（解析中）・S08（判定結果オーバーレイ）
+/// 相当の表示へのハブ。`.idle` `.processing`ではTASK-049の`AnalysisProgressView`（S07）、
+/// `.completed`ではTASK-048の`ResultOverlayView`（S08）を表示する。`.failed`
+/// `.noRecognizableText`は本タスク（#20）の対象外の稀なケースのため、暫定表示のままとする。
+private struct AnalysisResultPlaceholderView: View {
+    let ocrResult: OCRResult
+    let imageData: Data
+    let displayLanguage: DisplayLanguage
+    let analysisViewModel: MenuAnalysisViewModel
+    let translationService: any DishNameTranslationService
+    let onRetake: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("DEBUG: \(result.observations.count) text(s) recognized")
-                .font(.caption.bold())
-                .foregroundStyle(.yellow)
-
-            ScrollView {
-                VStack(alignment: .leading, spacing: 2) {
-                    ForEach(Array(result.observations.enumerated()), id: \.offset) { _, observation in
-                        Text("\(observation.text)  (\(String(format: "%.2f", observation.confidence)))")
-                            .font(.caption2)
-                            .foregroundStyle(.white)
-                    }
-                }
+        Group {
+            switch analysisViewModel.analysisState {
+            case .idle, .processing:
+                AnalysisProgressView(displayLanguage: displayLanguage)
+            case .completed(let result):
+                completedContent(for: result)
+            case .failed:
+                retakePrompt(message: "Couldn't analyze the menu.", identifier: "AnalysisFailedPlaceholder")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(Color.black.ignoresSafeArea())
             }
-            .frame(maxHeight: 220)
         }
-        .padding(10)
-        .background(.black.opacity(0.75), in: RoundedRectangle(cornerRadius: 10))
-        .padding(.horizontal, 16)
-        .accessibilityIdentifier("DebugOCRResultOverlay")
+        .task(id: ocrResult) {
+            await analysisViewModel.analyze(ocrResult: ocrResult)
+        }
+    }
+
+    @ViewBuilder
+    private func completedContent(for result: MenuAnalysisResult) -> some View {
+        switch result {
+        case .noRecognizableText:
+            retakePrompt(message: "No recognizable menu text.", identifier: "AnalysisCompletedPlaceholder")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.black.ignoresSafeArea())
+        case .completed(let summary):
+            ResultOverlayView(
+                imageData: imageData,
+                summary: summary,
+                displayLanguage: displayLanguage,
+                translationService: translationService,
+                onRetake: onRetake,
+                onRetryAnalysis: { Task { await analysisViewModel.analyze(ocrResult: ocrResult) } }
+            )
+        }
+    }
+
+    /// `message`・`identifier`はTASK-048/TASK-049が本Viewを置き換えるまでの暫定値。identifierは
+    /// メッセージのText自身へ付与する（`OCRFailureView`と同様、共有コンテナへは付与しない）。
+    private func retakePrompt(message: String, identifier: String) -> some View {
+        VStack(spacing: 16) {
+            Text(message)
+                .foregroundStyle(.white)
+                .accessibilityIdentifier(identifier)
+            Button("Retake", action: onRetake)
+                .accessibilityIdentifier("AnalysisPlaceholderRetakeButton")
+        }
+        .padding()
     }
 }
-#endif
 
 #Preview {
-    ScanView(displayLanguage: .english, cameraService: PreviewCameraService(), ocrService: PreviewOCRService())
+    ScanView(
+        displayLanguage: .english,
+        cameraService: PreviewCameraService(),
+        ocrService: PreviewOCRService(),
+        menuAnalysisService: PreviewMenuAnalysisService(),
+        profileRepository: PreviewProfileRepository()
+    )
 }
 
 /// Preview専用の`CameraService`スタブ。実際のカメラ・権限フローには接続しない。
@@ -174,4 +226,20 @@ private struct PreviewOCRService: OCRService {
     func recognizeText(in imageData: Data) async throws -> OCRResult {
         OCRResult(observations: [])
     }
+}
+
+/// Preview専用の`MenuAnalysisService`スタブ。常に空の解析結果を返す。
+private struct PreviewMenuAnalysisService: MenuAnalysisService {
+    func analyze(_ ocrResult: OCRResult, profile: UserProfile) async -> MenuAnalysisResult {
+        .completed(MenuAnalysisSummary(items: [], failures: []))
+    }
+}
+
+/// Preview専用の`ProfileRepository`スタブ。常に初期設定済みの固定プロファイルを返す。
+private struct PreviewProfileRepository: ProfileRepository {
+    func currentProfile() throws -> UserProfile? {
+        UserProfile(isInitialSetupCompleted: true)
+    }
+
+    func save(_ profile: UserProfile) throws {}
 }

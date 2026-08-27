@@ -28,9 +28,11 @@ final class ScanViewModel {
         case capturing
         /// 撮影完了、OCR実行中。
         case recognizing
-        /// OCRが1件以上のテキスト領域を取得できた（低Confidenceを含む）。S08結果表示自体は別Issueの
-        /// 範囲のため、本ViewModelは後続Issueが参照できる形で`OCRResult`を保持するところまでを担う。
-        case recognized(OCRResult)
+        /// OCRが1件以上のテキスト領域を取得できた（低Confidenceを含む）。判定結果を撮影したメニュー
+        /// 画像上へ重畳表示するため（`docs/requirements.md` NFR-4.6、`docs/mvp-scope.md` §2.4）、
+        /// OCR結果と併せて撮影画像データも保持する。画像はメモリ上でのみ保持し、ディスク・SwiftDataへ
+        /// 保存しない（`capturePhoto()`のコメント参照）。
+        case recognized(OCRResult, imageData: Data)
         /// OCRが0件、または撮影・OCR処理自体が失敗した。E01フォールバックUIを表示する。
         case failed
     }
@@ -100,7 +102,7 @@ final class ScanViewModel {
             return
         }
 
-        scanState = result.isEmpty ? .failed : .recognized(result)
+        scanState = result.isEmpty ? .failed : .recognized(result, imageData: imageData)
     }
 
     /// E01の主操作「再撮影」。S06（撮影前）の状態へ戻す。プロファイルは保持し、カメラSessionは

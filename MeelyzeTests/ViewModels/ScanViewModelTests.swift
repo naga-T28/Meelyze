@@ -68,11 +68,32 @@ struct ScanViewModelTests {
         let observation = RecognizedTextObservation(text: "唐揚げ定食", confidence: 0.9, boundingBox: .zero)
         let ocrService = FakeOCRService()
         ocrService.recognizeTextResult = .success(OCRResult(observations: [observation]))
-        let viewModel = ScanViewModel(cameraService: FakeCameraService(), ocrService: ocrService)
+        let cameraService = FakeCameraService()
+        cameraService.capturePhotoResult = .success(Data([0x01]))
+        let viewModel = ScanViewModel(cameraService: cameraService, ocrService: ocrService)
 
         await viewModel.capturePhoto()
 
-        #expect(viewModel.scanState == .recognized(OCRResult(observations: [observation])))
+        #expect(viewModel.scanState == .recognized(OCRResult(observations: [observation]), imageData: Data([0x01])))
+    }
+
+    @Test func successfulCaptureRetainsCapturedImageDataForResultDisplay() async {
+        let capturedImageData = Data([0xFF, 0xD8, 0xFF, 0xE0])
+        let ocrService = FakeOCRService()
+        ocrService.recognizeTextResult = .success(OCRResult(observations: [
+            RecognizedTextObservation(text: "ゴーヤーチャンプルー", confidence: 0.95, boundingBox: .zero)
+        ]))
+        let cameraService = FakeCameraService()
+        cameraService.capturePhotoResult = .success(capturedImageData)
+        let viewModel = ScanViewModel(cameraService: cameraService, ocrService: ocrService)
+
+        await viewModel.capturePhoto()
+
+        guard case .recognized(_, let imageData) = viewModel.scanState else {
+            Issue.record("Expected .recognized state, got \(viewModel.scanState)")
+            return
+        }
+        #expect(imageData == capturedImageData)
     }
 
     @Test func lowConfidenceSingleObservationIsNotTreatedAsFailure() async {

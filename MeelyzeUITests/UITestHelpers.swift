@@ -53,6 +53,19 @@ private extension XCUIElement {
     }
 }
 
+/// 要素が存在してもヒットテスト座標が確定するまで数フレームかかる場合がある（TASK-053で発見。
+/// 極端なDynamic Typeサイズ等、周辺レイアウトの再計算が絡む画面で顕著）。`waitForExistence`の
+/// 直後に`isHittable`を1回だけ確認すると、フルスイート実行時の負荷下で不安定になることがあるため、
+/// `ResultOverlayAccessibilityUITests` `ResultOverlayStubbedUITests`など複数のUI Testで共用する。
+extension XCUIElement {
+    @MainActor
+    func waitForHittable(timeout: TimeInterval) -> Bool {
+        let predicate = NSPredicate(format: "isHittable == true")
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: self)
+        return XCTWaiter.wait(for: [expectation], timeout: timeout) == .completed
+    }
+}
+
 @MainActor
 private func waitUntil(timeout: TimeInterval, condition: () -> Bool) -> Bool {
     let deadline = Date().addingTimeInterval(timeout)

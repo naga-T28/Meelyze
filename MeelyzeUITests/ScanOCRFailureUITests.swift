@@ -51,6 +51,9 @@ final class ScanOCRFailureUITests: XCTestCase {
 
         // OCRが1件以上取得できた場合（低Confidenceを含む）は全体失敗にせず、E01を表示しない。
         XCTAssertFalse(app.staticTexts["Couldn't read the menu text"].waitForExistence(timeout: 3))
-        XCTAssertTrue(app.buttons["ShutterButton"].waitForExistence(timeout: 5))
+        // TASK-043（Issue #20）以降、OCR成功後は同一スキャン内の状態置換でS07/S08相当の表示へ
+        // 切り替わり、S06のシャッターボタンはもう表示されない（`ScanView.AnalysisResultPlaceholderView`
+        // 参照。実際のS07/S08デザインはTASK-049/TASK-048が担当）。
+        XCTAssertFalse(app.buttons["ShutterButton"].exists)
     }
 }

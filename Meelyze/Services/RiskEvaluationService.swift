@@ -4,6 +4,18 @@ import Foundation
 /// `OCRResult`からrequestを組み立てる画面状態管理や`ScanViewModel`への接続はIssue #19の範囲。
 protocol RiskEvaluationService {
     /// source ID付きのOCR segment相当のrequestと対象UserProfileから、メニュー全体のRisk評価を返す。
+    ///
+    /// `@MainActor`で宣言する理由（TASK-044、Issue #19 TASK-040の作業ログが指摘した警告の修正）:
+    /// 実装（`DefaultRiskEvaluationService.evaluate`）は`await understandingService.analyze(...)`という
+    /// 1箇所のサスペンションポイントを挟んだ後、`MenuAliasResolver` `RiskFactBuilder`経由で
+    /// `SwiftDataMenuKnowledgeRepository`が保持する、メインキューで生成された`ModelContext`へ同期
+    /// アクセスする。このメソッドがアクター非隔離のままだと、awaitの再開先が保証されず
+    /// （`RootView`から実際に呼び出す本番経路で）`SwiftData.ModelContext: Unbinding from the main
+    /// queue`という実行時警告が発生していた。`@MainActor`にすることで、await前後を含む本メソッド
+    /// 全体の実行がメインアクターへ固定され、ModelContextへのアクセスが常にそれが生成されたキューと
+    /// 一致する。`init`側は`ModelContext`へアクセスしないため隔離不要とし、影響範囲をこのメソッドの
+    /// 呼び出し規約だけに限定する。
+    @MainActor
     func evaluate(_ request: MenuUnderstandingRequest, profile: UserProfile) async -> MenuRiskEvaluationResult
 }
 
@@ -35,6 +47,7 @@ struct DefaultRiskEvaluationService: RiskEvaluationService {
         self.signalExtractor = signalExtractor
     }
 
+    @MainActor
     func evaluate(_ request: MenuUnderstandingRequest, profile: UserProfile) async -> MenuRiskEvaluationResult {
         let preprocessed = preprocessor.preprocess(request.segments)
         var understandingRequest = request
